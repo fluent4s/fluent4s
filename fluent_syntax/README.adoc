@@ -1,4 +1,6 @@
 = Fluent-Scala
+
+[abstract]
 `fluent-scala` is a collection of Scala modules implementing https://projectfluent.org/[Project Fluent].
 
 NOTE: Work In Progress / Early Stage
