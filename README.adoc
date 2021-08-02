@@ -1,0 +1,18 @@
+= Fluent-Scala
+`fluent-scala` is a collection of Scala modules implementing https://projectfluent.org/[Project Fluent].
+
+NOTE: Work In Progress / Early Stage
+
+== Objectives
+
+* Offer a JVM implementation with a great Scala and Java interfaces.
+* Try to follow and stick to the https://github.com/projectfluent/fluent[specs].
+
+== Modules
+
+- `fluent-syntax` will be the center of Fluent-Scala with its parser, AST and more...
+
+== Get involved
+
+fluent-scala is open-source, licensed under both the MIT license and the Apache License, Version 2.0. 
+We encourage everyone to take a look at our code and we’ll listen to your feedback.
