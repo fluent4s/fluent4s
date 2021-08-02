@@ -1,5 +1,5 @@
 package parser
-import cats.parse.{Parser0, Parser => P, Numbers, Accumulator}
+import cats.parse.{Parser0, Parser => P, Numbers, Accumulator, Rfc5234}
 
 object Ftl {
   /* whitespaces */
@@ -61,4 +61,68 @@ object Ftl {
    * See: https://github.com/projectfluent/fluent/blob/master/spec/fluent.ebnf#L87-L96
    */
   private[this] val any_char: P[Char] = P.charIn('\u0000' to '\uFFFF')
+
+  /* Content Characters */
+  private[this] val identifier: P[String] =
+    (Rfc5234.alpha ~ (Rfc5234.alpha | digit | P.charIn(List('-', '_'))).rep0)
+      .map((head, tail) => (head :: tail).mkString(""));
+
+  /* Block Expressions */
+  private[this] val variant_key: Parser0[_] = (number_literal | identifier)
+    .between(P.char('[') <* blank.?, blank.? *> P.char(']'));
+  private[this] val variant = ??? /* TODO: need pattern */
+  private[this] val default_variant = ??? /* TODO: need pattern */
+  private[this] val variant_list = ??? /* TODO: need variant, default_variant */
+  private[this] val select_expression =
+    ??? /* TODO: need variant_list, inline_expression */
+
+  /* Inline Expressions */
+  private[this] val function_reference = ??? /* TODO: need call_argument */
+  private[this] val message_reference: P[(String, Option[String])] =
+    identifier ~ attributes_accessor.?;
+  private[this] val term_reference = ??? /* TODO: need call_argument */
+  private[this] val variable_reference: P[String] = P.char('$') *> identifier;
+  private[this] val attributes_accessor: P[String] = P.char('.') *> identifier;
+  private[this] val call_argument = ??? /* TODO: need argument_list */
+  private[this] val argument_list = ??? /* TODO: need argument */
+  private[this] val argument = ??? /* TODO: need inline_expression */
+  private[this] val named_argument = identifier ~ P
+    .char(':')
+    .surroundedBy(blank.?) ~ (string_literal | number_literal);
+
+  /* Literals */
+  private[this] val string_literal: P[String] =
+    (P.char('"') *> quoted_char.rep0 <* P.char('"')).map(_.mkString(""));
+  private[this] val number_literal: Parser0[(Boolean, Int, Option[Int])] =
+    (P.char('-').? ~ digits ~ (P.char('.') *> digits).?).map((a, b) =>
+      (a._1.isDefined, a._2.toInt, b.map(_.toInt))
+    )
+
+  /* Rules */
+  private[this] val inline_expression =
+    ??? /* TODO: need function_reference, term_reference, inline_placeable */
+
+  /* TextElements & Placeable */
+  private[this] val inline_placeable =
+    ??? /* TODO: need inline_expression, select_expression */
+  private[this] val block_placeable = ??? /* TODO: need inline_placeable */
+  private[this] val inline_text: P[String] =
+    text_char.rep.map(_.toList.mkString(""));
+  private[this] val block_text: Parser0[Option[String]] =
+    blank_block *> blank_inline *> indented_char *> inline_text.?;
+  private[this] val pattern_element =
+    ??? /* TODO: need inline_placeable, block_placeable */
+
+  /* Pattern */
+  private[this] val pattern = ??? /* TODO: need pattern_element */
+
+  /* Attribute */
+  private[this] val attribute = ??? /* TODO: need pattern */
+
+  /* Junk */
+  private[this] val junk_line: Parser0[Unit] =
+    (P.until0(P.char('\n')) ~ (P.char('\u000A') | P.end)).void;
+  private[this] val junk: Parser0[Unit] =
+    ??? /* WIP junk_line.repUntil0(P.charIn(List('#', '-')) | Rfc5234.alpha).void; */
+
 }
