@@ -7,8 +7,8 @@ object Ftl {
   private[this] val line_end: P[Unit] =
     (P.string("\u000D\u000A") orElse (P.char('\u000A'))).void;
   private[this] val end_of_file: Parser0[Unit] = P.end;
-  private[this] val blank_block: Parser0[Unit] =
-    ((blank_inline | line_end).rep.?.void <* end_of_file.?);
+  private[this] val blank_block: P[Unit] =
+    (blank_inline | line_end).rep.void;
   private[this] val blank: Parser0[Unit] =
     (blank_inline orElse line_end).rep.?.void <* end_of_file.?;
 
@@ -68,24 +68,35 @@ object Ftl {
       .map((head, tail) => (head :: tail).mkString(""));
 
   /* Block Expressions */
-  private[this] val variant_key: Parser0[_] = (number_literal | identifier)
+  private[this] val variant_key: P[_] = (number_literal | identifier)
     .between(P.char('[') <* blank.?, blank.? *> P.char(']'));
-  private[this] val variant = ??? /* TODO: need pattern */
-  private[this] val default_variant = ??? /* TODO: need pattern */
-  private[this] val variant_list = ??? /* TODO: need variant, default_variant */
+  private[this] val variant =
+    (line_end *> blank.? *> (variant_key <* blank_inline.?)) ~ P.defer(pattern);
+  private[this] val default_variant =
+    (line_end *> blank.? *> P.char('*') *> (variant_key <* blank_inline.?)) ~ P
+      .defer(pattern);
+  private[this] val variant_list =
+    variant.rep0.with1 ~ default_variant ~ (variant.rep0 <* line_end);
   private[this] val select_expression =
-    ??? /* TODO: need variant_list, inline_expression */
+    (P.defer(inline_expression) <* blank.? <* P.string(
+      "->"
+    ) <* blank_inline.?) ~ variant_list;
 
   /* Inline Expressions */
-  private[this] val function_reference = ??? /* TODO: need call_argument */
+  private[this] val function_reference = identifier ~ call_argument;
   private[this] val message_reference: P[(String, Option[String])] =
     identifier ~ attributes_accessor.?;
-  private[this] val term_reference = ??? /* TODO: need call_argument */
+  private[this] val term_reference =
+    P.char('-') *> identifier ~ attributes_accessor.? ~ call_argument.?;
   private[this] val variable_reference: P[String] = P.char('$') *> identifier;
   private[this] val attributes_accessor: P[String] = P.char('.') *> identifier;
-  private[this] val call_argument = ??? /* TODO: need argument_list */
-  private[this] val argument_list = ??? /* TODO: need argument */
-  private[this] val argument = ??? /* TODO: need inline_expression */
+  private[this] val call_argument = argument_list.between(
+    P.char('(').surroundedBy(blank.?),
+    blank.? ~ P.char(')')
+  );
+  private[this] val argument_list =
+    argument.repSep(P.char(',').surroundedBy(blank.?));
+  private[this] val argument = named_argument | P.defer(inline_expression);
   private[this] val named_argument = identifier ~ P
     .char(':')
     .surroundedBy(blank.?) ~ (string_literal | number_literal);
@@ -93,36 +104,73 @@ object Ftl {
   /* Literals */
   private[this] val string_literal: P[String] =
     (P.char('"') *> quoted_char.rep0 <* P.char('"')).map(_.mkString(""));
-  private[this] val number_literal: Parser0[(Boolean, Int, Option[Int])] =
-    (P.char('-').? ~ digits ~ (P.char('.') *> digits).?).map((a, b) =>
+  private[this] val number_literal: P[(Boolean, Int, Option[Int])] =
+    (P.char('-').?.with1 ~ digits ~ (P.char('.') *> digits).?).map((a, b) =>
       (a._1.isDefined, a._2.toInt, b.map(_.toInt))
     )
 
   /* Rules */
-  private[this] val inline_expression =
-    ??? /* TODO: need function_reference, term_reference, inline_placeable */
+  private[this] val inline_expression = string_literal
+  | number_literal
+    | function_reference
+    | message_reference
+    | term_reference
+    | variable_reference
+    | inline_placeable
 
   /* TextElements & Placeable */
   private[this] val inline_placeable =
-    ??? /* TODO: need inline_expression, select_expression */
-  private[this] val block_placeable = ??? /* TODO: need inline_placeable */
+    (select_expression | P.defer(inline_expression))
+      .between(P.char('{') ~ blank.?, blank.? ~ P.char('}'))
+  private[this] val block_placeable =
+    (blank_block ~ blank_inline.?).with1 ~ inline_placeable
   private[this] val inline_text: P[String] =
     text_char.rep.map(_.toList.mkString(""));
-  private[this] val block_text: Parser0[Option[String]] =
-    blank_block *> blank_inline *> indented_char *> inline_text.?;
+  private[this] val block_text: P[Option[String]] =
+    blank_block.with1 *> blank_inline *> indented_char *> inline_text.?;
   private[this] val pattern_element =
-    ??? /* TODO: need inline_placeable, block_placeable */
+    inline_text | block_text | inline_placeable | block_placeable
 
   /* Pattern */
-  private[this] val pattern = ??? /* TODO: need pattern_element */
+  private[this] val pattern = pattern_element.rep;
 
   /* Attribute */
-  private[this] val attribute = ??? /* TODO: need pattern */
+  private[this] val attribute = line_end *> blank.? *> P.char(
+    '.'
+  ) *> identifier <* P.char('=').surroundedBy(blank_inline.?) ~ pattern;
 
   /* Junk */
-  private[this] val junk_line: Parser0[Unit] =
-    (P.until0(P.char('\n')) ~ (P.char('\u000A') | P.end)).void;
-  private[this] val junk: Parser0[Unit] =
-    ??? /* WIP junk_line.repUntil0(P.charIn(List('#', '-')) | Rfc5234.alpha).void; */
+  private[this] val junk_line: P[String] =
+    (P.until0(P.char('\n')).with1 <* P.char('\u000A'));
+  private[this] val junk_eof: Parser0[String] =
+    (P.until0(P.char('\n')) <* P.end);
+  private[this] val junk: P[String] =
+    (junk_line.repUntil(
+      P.charIn(List('#', '-')) | Rfc5234.alpha
+    ) ~ junk_eof.?).map(_ match {
+      case (t1, Some(t2)) => t1.toList.mkString("") + t2
+      case (t1, _)        => t1.toList.mkString("")
+    });
 
+  /* Comments */
+  private[this] val comment_char: P[Char] =
+    P.not(P.char('\n')).with1 *> any_char;
+  private[this] val comment_line: P[Option[String]] =
+    P.char('#').rep(1, 3) *> (P.char('\u0020') *> comment_char.rep0.map(
+      _.toList.mkString("")
+    )).? <* line_end;
+
+  /* Entries */
+  private[this] val message = identifier <* P
+    .char('=')
+    .surroundedBy(blank_inline.?) ~ (pattern ~ attribute.rep0 | attribute.rep);
+  private[this] val term = P.char('-') *> identifier <* P
+    .char('=')
+    .surroundedBy(blank_inline.?) ~ pattern ~ attribute.rep0;
+  private[this] val entry =
+    (message ~ line_end) | (term ~ line_end) | comment_line;
+
+  /* Resource */
+  private[this] val resource: Parser0[_] = (entry | blank_block | junk)
+    .repUntil0(junk_eof orElse P.end) ~ (junk_eof.? orElse P.end);
 }
