@@ -1,5 +1,7 @@
 package parser
 import cats.parse.{Parser0, Parser => P, Numbers, Accumulator, Rfc5234}
+import ast._
+import cats.data.NonEmptyList
 
 object Ftl {
   /* whitespaces */
@@ -63,114 +65,200 @@ object Ftl {
   private[this] val any_char: P[Char] = P.charIn('\u0000' to '\uFFFF')
 
   /* Content Characters */
-  private[this] val identifier: P[String] =
+  private[this] val identifier: P[FIdentifier] =
     (Rfc5234.alpha ~ (Rfc5234.alpha | digit | P.charIn(List('-', '_'))).rep0)
-      .map((head, tail) => (head :: tail).mkString(""));
+      .map((head, tail) => new FIdentifier((head :: tail).mkString("")));
 
   /* Block Expressions */
-  private[this] val variant_key: P[_] = (number_literal | identifier)
+  private[this] val variant_key: P[FVariantKey] = (number_literal.map(
+    new NumberLiteralKey(_)
+  ) | identifier.map(new IdentifierKey(_)))
     .between(P.char('[') <* blank.?, blank.? *> P.char(']'));
-  private[this] val variant =
-    (line_end *> blank.? *> (variant_key <* blank_inline.?)) ~ P.defer(pattern);
-  private[this] val default_variant =
-    (line_end *> blank.? *> P.char('*') *> (variant_key <* blank_inline.?)) ~ P
-      .defer(pattern);
-  private[this] val variant_list =
-    variant.rep0.with1 ~ default_variant ~ (variant.rep0 <* line_end);
-  private[this] val select_expression =
-    (P.defer(inline_expression) <* blank.? <* P.string(
+  private[this] val variant: P[FVariant] =
+    ((line_end *> blank.? *> (variant_key <* blank_inline.?)) ~ P.defer(
+      pattern
+    )).map({ case (key, value) => new FVariant(key, value, false) });
+  private[this] val default_variant: P[FVariant] =
+    ((line_end *> blank.? *> P.char('*') *> (variant_key <* blank_inline.?)) ~ P
+      .defer(pattern)).map({ case (key, value) =>
+      new FVariant(key, value, true)
+    });
+  private[this] val variant_list: P[List[FVariant]] =
+    (variant.rep0.with1 ~ (default_variant ~ (variant.rep0 <* line_end))).map({
+      case (pre: List[FVariant], (default: FVariant, after: List[FVariant])) =>
+        pre ::: (default :: after)
+    });
+  private[this] val select_expression: P[Select] =
+    ((P.defer(inline_expression) <* blank.? <* P.string(
       "->"
-    ) <* blank_inline.?) ~ variant_list;
+    ) <* blank_inline.?) ~ variant_list).map(new Select(_, _));
 
   /* Inline Expressions */
-  private[this] val function_reference = identifier ~ call_argument;
-  private[this] val message_reference: P[(String, Option[String])] =
-    identifier ~ attributes_accessor.?;
-  private[this] val term_reference =
-    P.char('-') *> identifier ~ attributes_accessor.? ~ call_argument.?;
-  private[this] val variable_reference: P[String] = P.char('$') *> identifier;
-  private[this] val attributes_accessor: P[String] = P.char('.') *> identifier;
-  private[this] val call_argument = argument_list.between(
-    P.char('(').surroundedBy(blank.?),
-    blank.? ~ P.char(')')
-  );
-  private[this] val argument_list =
-    argument.repSep(P.char(',').surroundedBy(blank.?));
-  private[this] val argument = named_argument | P.defer(inline_expression);
-  private[this] val named_argument = identifier ~ P
+  private[this] val function_reference: P[FunctionReference] =
+    (identifier ~ call_argument)
+      .map({ case (id: FIdentifier, arguments: FCallArguments) =>
+        new FunctionReference(id, arguments)
+      });
+  private[this] val message_reference: P[MessageReference] =
+    (identifier ~ attributes_accessor.?).map({
+      case (id: FIdentifier, attribute: Option[FIdentifier]) =>
+        new MessageReference(id, attribute)
+    });
+  private[this] val term_reference: P[TermReference] =
+    ((P.char('-') *> identifier) ~ (attributes_accessor.? ~ call_argument.?))
+      .map({
+        case (
+              id: FIdentifier,
+              (
+                attribute: Option[FIdentifier],
+                arguments: Option[FCallArguments]
+              )
+            ) =>
+          new TermReference(id, attribute, arguments)
+      });
+  private[this] val variable_reference: P[VariableReference] =
+    P.char('$') *> identifier.map(new VariableReference(_));
+  private[this] val attributes_accessor: P[FIdentifier] =
+    P.char('.') *> identifier;
+  private[this] val call_argument: P[FCallArguments] =
+    (P.char('(').surroundedBy(blank.?) *> argument_list
+      <* (blank.? ~ P.char(')')))
+      .map(_.fold((List.empty[NamedArgument], List.empty[FInlineExpression])) {
+        case (
+              (named: List[NamedArgument], pos: List[FInlineExpression]),
+              arg: FArgument
+            ) =>
+          arg match {
+            case NamedArgument(name, value) =>
+              (new NamedArgument(name, value) :: named, pos)
+            case PositionalArgument(value) => (named, value :: pos)
+          }
+      })
+      .map({ case (named: List[NamedArgument], pos: List[FInlineExpression]) =>
+        new FCallArguments(pos, named)
+      });
+  private[this] val argument_list: Parser0[List[FArgument]] =
+    argument.repSep0(P.char(',').surroundedBy(blank.?));
+  private[this] val argument: P[FArgument] =
+    named_argument | P.defer(inline_expression).map(new PositionalArgument(_));
+  private[this] val named_argument: P[NamedArgument] = ((identifier <* P
     .char(':')
-    .surroundedBy(blank.?) ~ (string_literal | number_literal);
+    .surroundedBy(blank.?)) ~ (string_literal.map(
+    new StringLiteral(_)
+  ) | number_literal.map(new NumberLiteral(_)))).map(new NamedArgument(_, _));
 
   /* Literals */
   private[this] val string_literal: P[String] =
     (P.char('"') *> quoted_char.rep0 <* P.char('"')).map(_.mkString(""));
-  private[this] val number_literal: P[(Boolean, Int, Option[Int])] =
-    (P.char('-').?.with1 ~ digits ~ (P.char('.') *> digits).?).map((a, b) =>
-      (a._1.isDefined, a._2.toInt, b.map(_.toInt))
-    )
+  private[this] val number_literal: P[String] =
+    (P.char('-').string.?.with1 ~ (digits.string ~ (P
+      .char('.')
+      .string ~ digits.string).?)).map({
+      case (Some(a: String), (b: String, Some(c: String, d: String))) =>
+        a + b + c + d
+      case (_, (b: String, Some(c: String, d: String))) => b + c + d
+      case (Some(a: String), (b: String, _))            => a + b
+      case (_, (b: String, _))                          => b
+    })
 
   /* Rules */
-  private[this] val inline_expression = string_literal
-  | number_literal
-    | function_reference
-    | message_reference
-    | term_reference
-    | variable_reference
-    | inline_placeable
+  private[this] val inline_expression: P[FInlineExpression] = string_literal
+    .map(new StringLiteral(_))
+    .orElse(number_literal.map(new NumberLiteral(_)))
+    .orElse(function_reference)
+    .orElse(message_reference)
+    .orElse(term_reference)
+    .orElse(variable_reference)
+    .orElse(inline_placeable)
 
   /* TextElements & Placeable */
-  private[this] val inline_placeable =
-    (select_expression | P.defer(inline_expression))
+  private[this] val inline_placeable: P[PlaceableExpr] =
+    (select_expression | P.defer(inline_expression).map(new Inline(_)))
       .between(P.char('{') ~ blank.?, blank.? ~ P.char('}'))
-  private[this] val block_placeable =
-    (blank_block ~ blank_inline.?).with1 ~ inline_placeable
+      .map(new PlaceableExpr(_));
+  private[this] val block_placeable: P[PlaceableExpr] =
+    (blank_block ~ blank_inline.?).with1 *> inline_placeable
   private[this] val inline_text: P[String] =
     text_char.rep.map(_.toList.mkString(""));
-  private[this] val block_text: P[Option[String]] =
-    blank_block.with1 *> blank_inline *> indented_char *> inline_text.?;
-  private[this] val pattern_element =
-    inline_text | block_text | inline_placeable | block_placeable
+  private[this] val block_text: P[String] =
+    blank_block.with1 *> blank_inline *> indented_char *> inline_text.?.string;
+  private[this] val pattern_element: P[FPatternElement] =
+    inline_text
+      .map(new TextElement(_))
+      .orElse(block_text.map(new TextElement(_)))
+      .orElse(inline_placeable.map(new Inline(_)).map(new Placeable(_)))
+      .orElse(block_placeable.map(new Inline(_)).map(new Placeable(_)))
 
   /* Pattern */
-  private[this] val pattern = pattern_element.rep;
+  private[this] val pattern: P[FPattern] =
+    pattern_element.rep.map({ case elements: NonEmptyList[FPatternElement] => new FPattern(elements.toList)});
 
   /* Attribute */
-  private[this] val attribute = line_end *> blank.? *> P.char(
+  private[this] val attribute: P[FAttribute] = ((line_end *> blank.? *> P.char(
     '.'
-  ) *> identifier <* P.char('=').surroundedBy(blank_inline.?) ~ pattern;
+  ) *> identifier <* P.char('=').surroundedBy(blank_inline.?)) ~ pattern).map({
+    case (id: FIdentifier, pat: FPattern) => new FAttribute(id, pat)
+  });
 
   /* Junk */
   private[this] val junk_line: P[String] =
     (P.until0(P.char('\n')).with1 <* P.char('\u000A'));
   private[this] val junk_eof: Parser0[String] =
     (P.until0(P.char('\n')) <* P.end);
-  private[this] val junk: P[String] =
+  private[this] val junk: P[Junk] =
     (junk_line.repUntil(
-      P.charIn(List('#', '-')) | Rfc5234.alpha
+      P.charIn(List('#', '-')) | Rfc5234.alpha | P.end
     ) ~ junk_eof.?).map(_ match {
-      case (t1, Some(t2)) => t1.toList.mkString("") + t2
-      case (t1, _)        => t1.toList.mkString("")
+      case (t1, Some(t2)) => new Junk(t1.toList.mkString("") + t2)
+      case (t1, _)        => new Junk(t1.toList.mkString(""))
     });
 
   /* Comments */
   private[this] val comment_char: P[Char] =
     P.not(P.char('\n')).with1 *> any_char;
-  private[this] val comment_line: P[Option[String]] =
-    P.char('#').rep(1, 3) *> (P.char('\u0020') *> comment_char.rep0.map(
+  private[this] val comment_line: P[FEntry] =
+    (P.char('#').rep(1, 3).string ~ (P.char('\u0020') *> comment_char.rep0.map(
       _.toList.mkString("")
-    )).? <* line_end;
+    )).? <* line_end).map({
+      case (prefix, comment) => {
+        val com = new FComment(comment.getOrElse(""));
+        prefix.length match {
+          case 1 => new Comment(com)
+          case 2 => new GroupComment(com)
+          case 3 => new ResourceComment(com)
+        }
+      }
+    });
 
   /* Entries */
-  private[this] val message = identifier <* P
+  private[this] val message: P[FMessage] = ((identifier <* P
     .char('=')
-    .surroundedBy(blank_inline.?) ~ (pattern ~ attribute.rep0 | attribute.rep);
-  private[this] val term = P.char('-') *> identifier <* P
+    .surroundedBy(blank_inline.?)) ~ (pattern ~ attribute.rep0 | attribute.rep
+    .map(_.toList)))
+    .map({
+      case (id: FIdentifier, (value: FPattern, attrs: List[FAttribute])) =>
+        new FMessage(id, Some(value), attrs, None)
+      case (id: FIdentifier, attrs: List[FAttribute]) =>
+        new FMessage(id, None, attrs, None)
+    });
+  private[this] val term: P[FTerm] = (P.char('-') *> (identifier <* P
     .char('=')
-    .surroundedBy(blank_inline.?) ~ pattern ~ attribute.rep0;
-  private[this] val entry =
-    (message ~ line_end) | (term ~ line_end) | comment_line;
+    .surroundedBy(blank_inline.?)) ~ (pattern ~ attribute.rep0))
+    .map({ case (id: FIdentifier, (value: FPattern, attrs: List[FAttribute])) =>
+      new FTerm(id, value, attrs, None)
+    });
+  private[this] val entry: P[FEntry] =
+    (message.map(new Message(_)) <* line_end) | (term.map(
+      new Term(_)
+    ) <* line_end) | comment_line;
 
   /* Resource */
-  private[this] val resource: Parser0[_] = (entry | blank_block | junk)
-    .repUntil0(junk_eof orElse P.end) ~ (junk_eof.? orElse P.end);
+  private[this] val resource: Parser0[_] = ((entry | blank_block | junk)
+    .repUntil0(junk_eof orElse P.end)
+    .map(_.filter(_.isInstanceOf[FEntry])) ~ (junk_eof.map(new Junk(_)).map(Some(_)) orElse P.end.as(Option.empty)))
+    .map({
+      case (entries: List[FEntry], Some(last: FEntry)) =>
+        new FResource(last :: entries)
+      case (entries: List[FEntry], None) => new FResource(entries)
+    });
 }
