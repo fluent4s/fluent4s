@@ -1,4 +1,4 @@
-package ast
+package fluent_syntax.ast
 
 import scala.collection.mutable
 

@@ -1,6 +1,6 @@
-package parser
+package fluent_syntax.parser
 import cats.parse.{Parser0, Parser => P, Numbers, Accumulator, Rfc5234}
-import ast._
+import fluent_syntax.ast._
 import cats.data.NonEmptyList
 
 object Ftl {
@@ -191,7 +191,9 @@ object Ftl {
 
   /* Pattern */
   private[this] val pattern: P[FPattern] =
-    pattern_element.rep.map({ case elements: NonEmptyList[FPatternElement] => new FPattern(elements.toList)});
+    pattern_element.rep.map({ case elements: NonEmptyList[FPatternElement] =>
+      new FPattern(elements.toList)
+    });
 
   /* Attribute */
   private[this] val attribute: P[FAttribute] = ((line_end *> blank.? *> P.char(
@@ -255,7 +257,9 @@ object Ftl {
   /* Resource */
   private[this] val resource: Parser0[_] = ((entry | blank_block | junk)
     .repUntil0(junk_eof orElse P.end)
-    .map(_.filter(_.isInstanceOf[FEntry])) ~ (junk_eof.map(new Junk(_)).map(Some(_)) orElse P.end.as(Option.empty)))
+    .map(_.filter(_.isInstanceOf[FEntry])) ~ (junk_eof
+    .map(new Junk(_))
+    .map(Some(_)) orElse P.end.as(Option.empty)))
     .map({
       case (entries: List[FEntry], Some(last: FEntry)) =>
         new FResource(last :: entries)
