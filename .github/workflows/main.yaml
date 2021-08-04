@@ -1,4 +1,4 @@
-name: Build
+name: Build & Test
 
 on:
   push:
@@ -16,3 +16,5 @@ jobs:
           mill-version: 0.9.9
       - name: Compile all
         run: mill _.compile 
+      - name: Test all
+        run: mill _.test

@@ -24,4 +24,8 @@ object fluent_syntax extends SbtModule with ScalafmtModule {
       Developer("fusetim", "Timothée B.", "https://github.com/fusetim")
     )
   )
+
+  object test extends Tests with TestModule.ScalaTest with ScalafmtModule {
+    def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.2.9")
+  }
 }
