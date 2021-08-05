@@ -51,23 +51,17 @@ object Ftl {
       .map(_.toList.mkString(""))
       .map(Integer.parseInt(_, 16))
       .map(Utf8.from_codepoint(_));
-  private[parser] val quoted_char: P[String] = any_char
-    .map(_.toString)
-    .filter(c =>
-      special_quoted_char.parse(c).isLeft && line_end
-        .parse(c)
-        .isLeft && end_of_file.parse(c).isLeft
-    ) | special_escape.map(_.toString) | unicode_escape;
+  private[parser] val quoted_char: P[String] = ((P
+    .not(special_quoted_char | P.end)
+    .with1 *> any_char).backtrack | special_escape.backtrack)
+    .map(_.toString) | unicode_escape
 
   /* Text elements */
   private[parser] val special_text_char: P[Unit] = P.char('{') | P.char('}');
-  private[parser] val text_char: P[Char] = any_char.filter(c =>
-    special_text_char.parse(c.toString).isLeft && line_end
-      .parse(c.toString)
-      .isLeft && end_of_file.parse(c.toString).isLeft
-  );
+  private[parser] val text_char: P[Char] =
+    P.not(special_text_char | P.end).with1 *> any_char;
   private[parser] val indented_char: P[Char] =
-    text_char.filter(!List('[', '*', '.').contains(_));
+    P.not(P.charIn(List('[', '*', '.'))).with1 *> text_char;
 
   /* Literals */
   private[parser] val string_literal: P[String] =
