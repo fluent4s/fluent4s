@@ -4,10 +4,13 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.PrivateMethodTester._
 import cats.parse.{Parser, Parser0}
 import fluent_syntax.parser.Ftl
+import fluent_syntax.ast._
 import org.scalatest.matchers.should._
 import scala.collection.mutable
 
 class FtlSpec extends AnyFlatSpec with Matchers {
+  val r = util.Random
+
   "blank_inline parser" should "successfully parse an arbitrary number of whitespace" in {
     for {
       n <- 1 to 50
@@ -251,23 +254,270 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "parse full string" in {
-    val r = util.Random
     withClue("parsing digit") {
-      val digits = r.nextInt.toString
-      withClue("parsing \"" + digits + "\"") {
-        for (i <- '0' to '9')
+      for (i <- 0 to 10) {
+        val digits = r.nextInt.toString
+        withClue(s"parsing \"$digits\"") {
           assert(
-            Ftl.string_literal.parseAll('"' + digits + '"') == Right(digits)
+              Ftl.string_literal.parseAll(s"\"$digits\"") == Right(digits)
           )
+        }
       }
     }
     withClue("parsing string") {
-      val value = r.nextString(r.nextInt(400))
-      withClue("parsing \"" + value + "\"") {
-        for (i <- '0' to '9')
-          assert(Ftl.string_literal.parseAll('"' + value + '"') == Right(value))
+      for (i <- 0 to 10) {
+        val value = r.nextString(r.nextInt(400))
+        withClue(s"parsing \"$value\"") {
+        
+            assert(Ftl.string_literal.parseAll(s"\"$value\"") == Right(value))
+        }
       }
     }
   }
 
+  "number_literal parser" should "parse signed and unsigned integers" in {
+    withClue("parsing unsigned number") {
+      for (i <- 0 to 10) {
+        val digits = r.nextInt(Int.MaxValue).toString
+        withClue(s"parsing $digits") {
+          assert(
+              Ftl.number_literal.parseAll(s"$digits") == Right(digits)
+          )
+        }
+      }
+    }
+    withClue("parsing signed number") {
+      for (i <- 0 to 10) {
+        val digits = r.nextInt(Int.MaxValue).toString
+        withClue(s"parsing -$digits") {
+          assert(
+              Ftl.number_literal.parseAll(s"-$digits") == Right(s"-$digits")
+          )
+        }
+      }
+    }
+  }
+
+  it should "parse signed and unsigned float" in {
+    withClue("parsing unsigned number") {
+      for (i <- 0 to 10) {
+        val digits = r.nextFloat.toString
+        withClue(s"parsing $digits") {
+          assert(
+              Ftl.number_literal.parseAll(s"$digits") == Right(digits)
+          )
+        }
+      }
+    }
+    withClue("parsing signed number") {
+      for (i <- 0 to 10) {
+        val digits = r.nextFloat.toString
+        withClue(s"parsing -$digits") {
+          assert(
+              Ftl.number_literal.parseAll(s"-$digits") == Right(s"-$digits")
+          )
+        }
+      }
+    }
+  }
+
+  "identifier parser" should "parse an alphanumerical string starting with a letter" in {
+    withClue("one letter only") {
+      for (i <- 'a' to 'z') {
+        Ftl.identifier.parseAll(s"$i") match {
+          case Left(e) => fail(e.toString)
+          case Right(id) => assert(id.name === i.toString)
+        }
+      }
+      for (i <- 'A' to 'Z') {
+        Ftl.identifier.parseAll(s"$i") match {
+          case Left(e) => fail(e.toString)
+          case Right(id) => assert(id.name === i.toString)
+        }
+      }
+    }
+    for (i <- 'a' to 'z') {
+      val random_tail = r.alphanumeric.take(r.nextInt(200)).mkString("");
+      withClue(s"parsing id: $i$random_tail") {
+        Ftl.identifier.parseAll(s"$i$random_tail") match {
+          case Left(e) => fail(e.toString)
+          case Right(id) => assert(id.name === s"$i$random_tail")
+        }
+      }
+    }
+    for (i <- 'A' to 'Z') {
+      val random_tail = r.alphanumeric.take(r.nextInt(200)).mkString("_");
+      withClue(s"parsing id: $i$random_tail") {
+        Ftl.identifier.parseAll(s"$i$random_tail") match {
+          case Left(e) => fail(e.toString)
+          case Right(id) => assert(id.name === s"$i$random_tail")
+        }
+      }
+    }
+    for (i <- 'a' to 'z') {
+      val random_tail = r.alphanumeric.take(r.nextInt(200)).mkString("-");
+      withClue(s"parsing id: $i$random_tail") {
+        Ftl.identifier.parseAll(s"$i$random_tail") match {
+          case Left(e) => fail(e.toString)
+          case Right(id) => assert(id.name === s"$i$random_tail")
+        }
+      }
+    }
+  }
+
+  it should "not parse an identifier starting by a digit" in {
+
+    for (i <- '0' to '9') {
+      withClue(s"parsing id: $i") {
+        Ftl.identifier.parseAll(s"$i") match {
+            case Left(e) => succeed
+            case Right(id) => fail(s"parsed: ${id.name}")
+        }
+      }
+      val random_tail = r.alphanumeric.take(r.nextInt(200)).mkString("");
+      withClue(s"parsing id: $i$random_tail") {
+        Ftl.identifier.parseAll(s"$i$random_tail") match {
+            case Left(e) => succeed
+            case Right(id) => fail(s"parsed: ${id.name}")
+        }
+      }
+    }
+  }
+
+  "variant_key parser" should "parse numeral keys" in {
+    for (i <- 0 to 10) {
+      withClue("parsing signed/unsigned integers") {
+        val value = r.nextInt(200)-100;
+        withClue(s"parsing: [$value]") {
+          Ftl.variant_key.parseAll(s"[$value]") match {
+              case Left(e) => fail(e.toString)
+              case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+              case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+          }
+        }
+        withClue(s"parsing: [ $value]") {
+          Ftl.variant_key.parseAll(s"[ $value]") match {
+              case Left(e) => fail(e.toString)
+              case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+              case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+          }
+        }
+        withClue(s"parsing: [ $value ]") {
+          Ftl.variant_key.parseAll(s"[ $value ]") match {
+              case Left(e) => fail(e.toString)
+              case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+              case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+          }
+        }
+        withClue(s"parsing: [$value ]") {
+          Ftl.variant_key.parseAll(s"[$value ]") match {
+              case Left(e) => fail(e.toString)
+              case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+              case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+          }
+        }
+      }
+    }
+    withClue("parsing signed/unsigned floating number") {
+      var sign = "-" * r.nextInt(1)
+      val a = r.nextInt(50)
+      val b = r.nextInt(50)
+      withClue(s"parsing: [$sign$a$b]") {
+        Ftl.variant_key.parseAll(s"[$sign$a$b]") match {
+            case Left(e) => fail(e.toString)
+            case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+            case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+        }
+      }
+      withClue(s"parsing: [ $sign$a$b]") {
+        Ftl.variant_key.parseAll(s"[ $sign$a$b]") match {
+            case Left(e) => fail(e.toString)
+            case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+            case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+        }
+      }
+      withClue(s"parsing: [ $sign$a$b ]") {
+        Ftl.variant_key.parseAll(s"[ $sign$a$b ]") match {
+            case Left(e) => fail(e.toString)
+            case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+            case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+        }
+      }
+      withClue(s"parsing: [$sign$a$b ]") {
+        Ftl.variant_key.parseAll(s"[$sign$a$b ]") match {
+            case Left(e) => fail(e.toString)
+            case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
+            case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+        }
+      }
+    }
+  }
+
+  it should "parse identifier keys" in {
+    for (i <- 'a' to 'z') {
+      val random_tail = r.alphanumeric.take(r.nextInt(200)).mkString("");
+      withClue(s"parsing: [ $i$random_tail]") {
+        Ftl.variant_key.parseAll(s"[ $i$random_tail]") match {
+          case Left(e) => fail(e.toString)
+          case Right(IdentifierKey(id)) => assert(id.name === s"$i$random_tail")
+          case Right(NumberLiteralKey(key)) => fail(s"number literal parsed: ${key}")
+        }
+      }
+    }
+    for (i <- 'A' to 'Z') {
+      val random_tail = r.alphanumeric.take(r.nextInt(200)).mkString("");
+      withClue(s"parsing: [$i$random_tail ]") {
+        Ftl.variant_key.parseAll(s"[$i$random_tail ]") match {
+          case Left(e) => fail(e.toString)
+          case Right(IdentifierKey(id)) => assert(id.name === s"$i$random_tail")
+          case Right(NumberLiteralKey(key)) => fail(s"number literal parsed: ${key}")
+        }
+      }
+    }
+  }
+
+  "variant parser" should "parse numeral variants" in {
+    for (variant <- List("\n[0] Zero", "\n[ 1 ] One", "\n[ 2] Two", "\n[3 ] Three", "\n[4]Four", "\n[5]    Five", "\n[6.0] Six", "\n[-7] Minus Seven", "\n[-7.0] Minus Seven Dot Zero")) {
+      withClue(s"parsing: $variant") {
+        Ftl.variant.parseAll(variant) match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => assert(pars.default == false && pars.key.isInstanceOf[NumberLiteralKey])
+        }
+      }
+    }
+  }
+
+  it should "parse identifier variants" in {
+    for (variant <- List("\n[zero] Zero", "\n[ more ] More", "\n[ once] Upon a Time", "\n[male ] Him", "\n[female]Her", "\n[null]    None")) {
+      withClue(s"parsing: $variant") {
+        Ftl.variant.parseAll(variant) match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => assert(pars.default == false && pars.key.isInstanceOf[IdentifierKey])
+        }
+      }
+    }
+  }
+
+  "default_variant parser" should "parse numeral variants" in {
+    for (variant <- List("\n*[0] Zero", "\n*[ 1 ] One", "\n*[ 2] Two", "\n*[3 ] Three", "\n*[4]Four", "\n*[5]    Five", "\n*[6.0] Six", "\n*[-7] Minus Seven", "\n*[-7.0] Minus Seven Dot Zero")) {
+      withClue(s"parsing: $variant") {
+        Ftl.default_variant.parseAll(variant) match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => assert(pars.default == true && pars.key.isInstanceOf[NumberLiteralKey])
+        }
+      }
+    }
+  }
+
+  it should "parse identifier variants" in {
+    for (variant <- List("\n*[zero] Zero", "\n*[ more ] More", "\n*[ once] Upon a Time", "\n*[male ] Him", "\n*[female]Her", "\n*[null]    None")) {
+      withClue(s"parsing: $variant") {
+        Ftl.default_variant.parseAll(variant) match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => assert(pars.default == true && pars.key.isInstanceOf[IdentifierKey])
+        }
+      }
+    }
+  }
 }
+
