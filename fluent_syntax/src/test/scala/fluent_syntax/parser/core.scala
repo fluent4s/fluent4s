@@ -519,5 +519,224 @@ class FtlSpec extends AnyFlatSpec with Matchers {
       }
     }
   }
+
+  "variant_list parser" should "parse a list of variants (with one and only one default variant)" in {
+    Ftl.variant_list.parseAll("\n[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(pars) => succeed
+    }
+
+    /* Should not parse more than a default variant! */
+    Ftl.variant_list.parseAll("\n*[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) => succeed
+      case Right(pars) => fail(s"shoud not parse but parsed: $pars")
+    }
+  }
+
+  "select_expression parser" should "parse a valid expression using variants (and a default one)" in {
+    Ftl.select_expression.parseAll("$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(pars) => succeed
+    }
+    Ftl.select_expression.parseAll("$userGender ->\n*[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) => succeed
+      case Right(pars) => fail(s"shoud not parse but parsed: $pars")
+    }
+  }
+
+  "named_argument parser" should "parse a given number/string literal as argument" in {
+    for {
+      named <- List("full_alpha", "one1digit", "a-function", "come0n ")
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009", " \"some space\"")
+    } {
+      withClue(s"arg name: $named, value: $value") {
+        Ftl.named_argument.parseAll(s"$named:$value") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+
+  "argument parser" should "parse a given number/string literal as argument" in {
+    for {
+      named <- List("full_alpha", "one1digit", "a-function", "come0n ")
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009", " \"some space\"")
+    } {
+      withClue(s"arg name: $named, value: $value") {
+        Ftl.argument.parseAll(s"$named:$value") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+
+  it should "parse a given inline expression (in theory; in practice only need number/string literals) as a positional argument" in {
+    for {
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+    } {
+      withClue(s"value: $value") {
+        Ftl.argument.parseAll(s"$value") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+
+  "argument_list parser" should "parse 1 argument" in {
+    for {
+      named <- List("full_alpha", "one1digit", "a-function", "come0n ")
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+    } {
+      withClue(s"named / arg name: $named, value: $value") {
+        Ftl.argument_list.parseAll(s"$named:$value") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+      withClue(s"positional / value: $value") {
+        Ftl.argument_list.parseAll(s"$value") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+
+  ignore should "parse 0 argument" in {
+    /* For some reason we get a NPE using this parser with an empty or blank string */ 
+    Ftl.argument_list.parseAll("") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.argument_list.parseAll(" ") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+  }
+
+  it should "parse more than 1 argument" in {
+    for {
+      named <- List("full_alpha", "one1digit", "a-function", "come0n ")
+      named2 <- List(" full_alpha1", "one1digit2", " a-function3", "come0n4 ")
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+      value2 <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+    } {
+      withClue(s"full-named / name: $named, value: $value, name2: $named, value2: $value2") {
+        Ftl.argument_list.parseAll(s"$named:$value,$named2:$value2") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+      withClue(s"full-positional / value: $value, value2: $value2") {
+        Ftl.argument_list.parseAll(s"$value,$value2") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+      withClue(s"mix3 / name: $named, value: $value, name2: $named, value2: $value2, value3: $value2") {
+        Ftl.argument_list.parseAll(s"$named:$value,$named2:$value2,$value2") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+
+  "call_argument parser" should "parse 1 argument" in {
+    for {
+      named <- List(" full_alpha", "one1digit", "a-function", "come0n ")
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+    } {
+      withClue(s"named / arg name: $named, value: $value") {
+        Ftl.call_argument.parseAll(s" ($named:$value)") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+      withClue(s"positional / value: $value") {
+        Ftl.call_argument.parseAll(s" ($value)") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+  ignore should "parse 0 argument" in {
+    /* For some reason we get a NPE using this parser with an empty or blank string -- see argument_list tests*/ 
+    Ftl.call_argument.parseAll("()") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.call_argument.parseAll(" ()") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.call_argument.parseAll(" ( )") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.call_argument.parseAll(" (  )") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+  }
+  it should "parse more than 1 argument" in {
+    for {
+      named <- List("full_alpha", "one1digit", "a-function", "come0n ")
+      named2 <- List(" full_alpha1", "one1digit2", " a-function3", "come0n4 ")
+      value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+      value2 <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
+    } {
+      withClue(s"full-named / name: $named, value: $value, name2: $named, value2: $value2") {
+        Ftl.call_argument.parseAll(s"($named:$value,$named2:$value2)") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+      withClue(s"full-positional / value: $value, value2: $value2") {
+        Ftl.call_argument.parseAll(s"($value,$value2)") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+      withClue(s"mix3 / name: $named, value: $value, name2: $named, value2: $value2, value3: $value2") {
+        Ftl.call_argument.parseAll(s"($named:$value,$named2:$value2,$value2)") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+        }
+      }
+    }
+  }
+
+  "function_reference parser" should "parse a function call" in {
+    /*withClue(s"no argument") {
+      Ftl.function_reference.parseAll(s"alpha()") match {
+        case Left(e) => fail(e.toString)
+        case Right(pars) => succeed
+      }
+    }*/
+    withClue(s"1 named") {
+      Ftl.function_reference.parseAll(s"alpha(value:\"im an angel\")") match {
+        case Left(e) => fail(e.toString)
+        case Right(pars) => succeed
+      }
+    }
+    withClue(s"1 positional") {
+      Ftl.function_reference.parseAll(s"alpha(\"im an angel\")") match {
+        case Left(e) => fail(e.toString)
+        case Right(pars) => succeed
+      }
+    }
+    withClue(s"1 positional + 1 named") {
+      Ftl.function_reference.parseAll(s"alpha(\"im an angel\",default:\"true\")") match {
+        case Left(e) => fail(e.toString)
+        case Right(pars) => succeed
+      }
+    }
+  }
+
 }
 
