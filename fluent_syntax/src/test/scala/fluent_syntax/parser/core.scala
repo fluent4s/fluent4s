@@ -585,7 +585,14 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
-  "argument_list parser" should "parse 1 argument" in {
+  "argument_list parser" should "parse 0 argument" in {
+    Ftl.argument_list.parseAll("") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+  }
+  
+  it should "parse 1 argument" in {
     for {
       named <- List("full_alpha", "one1digit", "a-function", "come0n ")
       value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
@@ -602,18 +609,6 @@ class FtlSpec extends AnyFlatSpec with Matchers {
           case Right(pars) => succeed
         }
       }
-    }
-  }
-
-  ignore should "parse 0 argument" in {
-    /* For some reason we get a NPE using this parser with an empty or blank string */ 
-    Ftl.argument_list.parseAll("") match {
-          case Left(e) => fail(e.toString)
-          case Right(pars) => succeed
-    }
-    Ftl.argument_list.parseAll(" ") match {
-          case Left(e) => fail(e.toString)
-          case Right(pars) => succeed
     }
   }
 
@@ -645,7 +640,26 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
-  "call_argument parser" should "parse 1 argument" in {
+  "call_argument parser" should "parse 0 argument" in {
+    Ftl.call_argument.parseAll("()") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.call_argument.parseAll(" ()") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.call_argument.parseAll(" ( )") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+    Ftl.call_argument.parseAll(" (  )") match {
+          case Left(e) => fail(e.toString)
+          case Right(pars) => succeed
+    }
+  }
+  
+  it should "parse 1 argument" in {
     for {
       named <- List(" full_alpha", "one1digit", "a-function", "come0n ")
       value <- List("\"a string literal\"", "\"Unicode2 \\U01F910\"", "\"Unicode3 \\u0805\"", "\"escaped slash \\\\\"", "\"escaped quote \\\"\"", "0.0", "-0.0", "1", "-1","-9.5555","-0.0009")
@@ -664,25 +678,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
       }
     }
   }
-  ignore should "parse 0 argument" in {
-    /* For some reason we get a NPE using this parser with an empty or blank string -- see argument_list tests*/ 
-    Ftl.call_argument.parseAll("()") match {
-          case Left(e) => fail(e.toString)
-          case Right(pars) => succeed
-    }
-    Ftl.call_argument.parseAll(" ()") match {
-          case Left(e) => fail(e.toString)
-          case Right(pars) => succeed
-    }
-    Ftl.call_argument.parseAll(" ( )") match {
-          case Left(e) => fail(e.toString)
-          case Right(pars) => succeed
-    }
-    Ftl.call_argument.parseAll(" (  )") match {
-          case Left(e) => fail(e.toString)
-          case Right(pars) => succeed
-    }
-  }
+
   it should "parse more than 1 argument" in {
     for {
       named <- List("full_alpha", "one1digit", "a-function", "come0n ")
@@ -712,12 +708,12 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "function_reference parser" should "parse a function call" in {
-    /*withClue(s"no argument") {
+    withClue(s"no argument") {
       Ftl.function_reference.parseAll(s"alpha()") match {
         case Left(e) => fail(e.toString)
         case Right(pars) => succeed
       }
-    }*/
+    }
     withClue(s"1 named") {
       Ftl.function_reference.parseAll(s"alpha(value:\"im an angel\")") match {
         case Left(e) => fail(e.toString)
@@ -735,6 +731,53 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Left(e) => fail(e.toString)
         case Right(pars) => succeed
       }
+    }
+  }
+
+  "message_reference" should "parse for reference to a message itself" in {
+    Ftl.message_reference.parseAll(s"identifier_mes-sage") match {
+        case Left(e) => fail(e.toString)
+        case Right(MessageReference(id, attribute)) => assert(id.name === "identifier_mes-sage" && attribute.isEmpty)
+    }
+  }
+  
+  it should "parse for reference to a message attribute" in {
+    Ftl.message_reference.parseAll(s"identifier_mes-sage.attri-bute_01") match {
+        case Left(e) => fail(e.toString)
+        case Right(MessageReference(id, Some(attribute))) => assert(id.name === "identifier_mes-sage" && attribute.name === "attri-bute_01")
+        case Right(MessageReference(_, None)) => fail("parser missed the attribute identifier")
+    }
+  }
+
+  "term_reference" should "parse for reference to a term itself" in {
+    Ftl.term_reference.parseAll(s"-identifier_t-e-r-m") match {
+        case Left(e) => fail(e.toString)
+        case Right(TermReference(id, attribute, arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.isEmpty && arguments.isEmpty)
+    }
+  }
+  
+  it should "parse for reference to a term itself (using arguments)" in {
+    Ftl.term_reference.parseAll(s"-identifier_t-e-r-m(10.2,gender:\"male\")") match {
+        case Left(e) => fail(e.toString)
+        case Right(TermReference(id, attribute, arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.isEmpty && arguments.isDefined)
+        case Right(TermReference(_,_, None)) => fail("parser missed arguments")
+    }
+  }
+
+  it should "parse for reference to a term attribute" in {
+    Ftl.term_reference.parseAll(s"-identifier_t-e-r-m.attri-bute_01") match {
+        case Left(e) => fail(e.toString)
+        case Right(TermReference(id, Some(attribute), arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.name === "attri-bute_01" && arguments.isEmpty)
+        case Right(TermReference(_,None, _)) => fail("parser missed attribute")
+      }
+  }
+  
+  it should "parse for reference to a term attribute (using arguments)" in {
+    Ftl.term_reference.parseAll(s"-identifier_t-e-r-m.attri-bute_01(10.2,gender:\"male\")") match {
+        case Left(e) => fail(e.toString)
+        case Right(TermReference(id, Some(attribute), arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.name === "attri-bute_01" && arguments.isDefined)
+        case Right(TermReference(_,None, _)) => fail("parser missed attribute")
+        case Right(TermReference(_,_, None)) => fail("parser missed arguments")
     }
   }
 

@@ -169,7 +169,7 @@ object Ftl {
     P.char('$') *> identifier.map(new VariableReference(_));
 
   /* Rules */
-  private[parser] val inline_expression: P[FInlineExpression] = string_literal
+  private[parser] def inline_expression: P[FInlineExpression] = string_literal
     .map(new StringLiteral(_))
     .orElse(number_literal.map(new NumberLiteral(_)))
     .orElse(function_reference)
