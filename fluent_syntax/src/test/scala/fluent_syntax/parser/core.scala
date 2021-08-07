@@ -734,14 +734,14 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
-  "message_reference" should "parse for reference to a message itself" in {
+  "message_reference" should "parse a reference to a message itself" in {
     Ftl.message_reference.parseAll(s"identifier_mes-sage") match {
         case Left(e) => fail(e.toString)
         case Right(MessageReference(id, attribute)) => assert(id.name === "identifier_mes-sage" && attribute.isEmpty)
     }
   }
   
-  it should "parse for reference to a message attribute" in {
+  it should "parse a reference to a message attribute" in {
     Ftl.message_reference.parseAll(s"identifier_mes-sage.attri-bute_01") match {
         case Left(e) => fail(e.toString)
         case Right(MessageReference(id, Some(attribute))) => assert(id.name === "identifier_mes-sage" && attribute.name === "attri-bute_01")
@@ -749,14 +749,14 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
-  "term_reference" should "parse for reference to a term itself" in {
+  "term_reference" should "parse a reference to a term itself" in {
     Ftl.term_reference.parseAll(s"-identifier_t-e-r-m") match {
         case Left(e) => fail(e.toString)
         case Right(TermReference(id, attribute, arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.isEmpty && arguments.isEmpty)
     }
   }
   
-  it should "parse for reference to a term itself (using arguments)" in {
+  it should "parse a reference to a term itself (using arguments)" in {
     Ftl.term_reference.parseAll(s"-identifier_t-e-r-m(10.2,gender:\"male\")") match {
         case Left(e) => fail(e.toString)
         case Right(TermReference(id, attribute, arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.isEmpty && arguments.isDefined)
@@ -764,7 +764,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
-  it should "parse for reference to a term attribute" in {
+  it should "parse a reference to a term attribute" in {
     Ftl.term_reference.parseAll(s"-identifier_t-e-r-m.attri-bute_01") match {
         case Left(e) => fail(e.toString)
         case Right(TermReference(id, Some(attribute), arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.name === "attri-bute_01" && arguments.isEmpty)
@@ -772,12 +772,132 @@ class FtlSpec extends AnyFlatSpec with Matchers {
       }
   }
   
-  it should "parse for reference to a term attribute (using arguments)" in {
+  it should "parse a reference to a term attribute (using arguments)" in {
     Ftl.term_reference.parseAll(s"-identifier_t-e-r-m.attri-bute_01(10.2,gender:\"male\")") match {
         case Left(e) => fail(e.toString)
         case Right(TermReference(id, Some(attribute), arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.name === "attri-bute_01" && arguments.isDefined)
         case Right(TermReference(_,None, _)) => fail("parser missed attribute")
         case Right(TermReference(_,_, None)) => fail("parser missed arguments")
+    }
+  }
+
+  "inline_expression parser" should "parse a string literal" in {
+    Ftl.inline_expression.parseAll("\"Hello dear\"") match {
+        case Left(e) => fail(e.toString)
+        case Right(StringLiteral(str)) => assert(str === "Hello dear")
+        case Right(pars) => fail(s"not a string literal, parsed: $pars")
+    }
+  }
+
+  it should "parse a number literal" in {
+    Ftl.inline_expression.parseAll("-10.0") match {
+        case Left(e) => fail(e.toString)
+        case Right(NumberLiteral(str)) => assert(str === "-10.0")
+        case Right(pars) => fail(s"not a number literal, parsed: $pars")
+    }
+  }
+
+  it should "parse a function reference" in {
+     Ftl.inline_expression.parseAll("function(num:-0001895.0, \"world\")") match {
+        case Left(e) => fail(e.toString)
+        case Right(FunctionReference(id, _)) => assert(id.name === "function")
+        case Right(pars) => fail(s"not a function reference, parsed: $pars")
+    }
+  }
+
+  it should "parse a message reference" in {
+     Ftl.inline_expression.parseAll("message.attribute") match {
+        case Left(e) => fail(e.toString)
+        case Right(MessageReference(id, Some(attribute))) => assert(id.name === "message", attribute.name === "atribute")
+        case Right(pars) => fail(s"not a message reference, parsed: $pars")
+    }
+  }
+
+  it should "parse a term reference" in {
+     Ftl.inline_expression.parseAll("-term.attribute") match {
+        case Left(e) => fail(e.toString)
+        case Right(TermReference(id, Some(attribute), None)) => assert(id.name === "term", attribute.name === "atribute")
+        case Right(pars) => fail(s"not a term reference, parsed: $pars")
+    }
+  }
+
+  it should "parse a variable reference" in {
+     Ftl.inline_expression.parseAll("$variable") match {
+        case Left(e) => fail(e.toString)
+        case Right(VariableReference(id)) => assert(id.name === "variable")
+        case Right(pars) => fail(s"not a variable reference, parsed: $pars")
+    }
+  }
+
+  it should "parse a placeable expression" in {
+     Ftl.inline_expression.parseAll("{\"hey\"}") match {
+        case Left(e) => fail(e.toString)
+        case Right(PlaceableExpr(_)) => succeed
+        case Right(pars) => fail(s"not a placeable expression, parsed: $pars")
+    }
+  }
+
+  "inline_placeable parser" should "parse a select expression" in {
+     Ftl.inline_placeable.parseAll("{$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n}") match {
+        case Left(e) => fail(e.toString)
+        case Right(PlaceableExpr(_: Select)) => succeed
+        case Right(pars) => fail(s"not a select expression, parsed: $pars")
+    }
+  }
+
+  it should "parse an inline expression" in {
+     Ftl.inline_placeable.parseAll("{$variable}") match {
+        case Left(e) => fail(e.toString)
+        case Right(PlaceableExpr(_: Inline)) => succeed
+        case Right(pars) => fail(s"not an inline expression, parsed: $pars")
+    }
+  }
+
+  "block_placeable parser" should "parse a select expression" in {
+     Ftl.block_placeable.parseAll(" \n { $userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream \n}") match {
+        case Left(e) => fail(e.toString)
+        case Right(PlaceableExpr(_: Select)) => succeed
+        case Right(pars) => fail(s"not a select expression, parsed: $pars")
+    }
+  }
+
+  it should "parse an inline expression" in {
+     Ftl.block_placeable.parseAll(" \n {$variable}") match {
+        case Left(e) => fail(e.toString)
+        case Right(PlaceableExpr(_: Inline)) => succeed
+        case Right(pars) => fail(s"not an inline expression, parsed: $pars")
+    }
+  }
+
+  "pattern_element parser" should "parse an inline text" in {
+     Ftl.pattern_element.parseAll("just some string") match {
+        case Left(e) => fail(e.toString)
+        case Right(TextElement(value)) => assert(value === "just some string")
+        case Right(pars) => fail(s"not an inline text pattern, parsed: $pars")
+    }
+  }
+
+  it should "parse a block text" in {
+     Ftl.pattern_element.parseAll(" \n    as long as each new line is indented") match {
+        case Left(e) => println(e); fail(e.toString)
+        case Right(BlockTextElement(ident, Some(value))) => assert(ident === 4 && value === "as long as each new line is indented")
+        case Right(pars) => fail(s"not a block text pattern\nparsed: $pars")
+    }
+  }
+
+  it should "parse a block placeable" in {
+     Ftl.pattern_element.parseAll(" \n {$variable}") match {
+        case Left(e) => println(e); fail(e.toString)
+        case Right(Placeable(_: Inline)) => succeed
+        case Right(pars) => fail(s"not a block placeable\nparsed: $pars")
+    }
+  }
+
+  it should "parse an inline placeable" in {
+     Ftl.pattern_element.parseAll("{$variable}") match {
+        case Left(e) => println(e); fail(e.toString)
+        case Right(Placeable(_: Inline)) => succeed
+        case Right(pars) => fail(s"not an inline placeable\nparsed: $pars")
     }
   }
 

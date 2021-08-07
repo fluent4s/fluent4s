@@ -169,35 +169,39 @@ object Ftl {
     P.char('$') *> identifier.map(new VariableReference(_));
 
   /* Rules */
-  private[parser] def inline_expression: P[FInlineExpression] = string_literal
+  private[parser] def inline_expression: P[FInlineExpression] = string_literal.backtrack
     .map(new StringLiteral(_))
-    .orElse(number_literal.map(new NumberLiteral(_)))
-    .orElse(function_reference)
-    .orElse(message_reference)
-    .orElse(term_reference)
-    .orElse(variable_reference)
+    .orElse(number_literal.backtrack.map(new NumberLiteral(_)))
+    .orElse(function_reference.backtrack)
+    .orElse(message_reference.backtrack)
+    .orElse(term_reference.backtrack)
+    .orElse(variable_reference.backtrack)
     .orElse(inline_placeable)
 
   /* TextElements & Placeable */
   private[parser] val inline_placeable: P[PlaceableExpr] =
-    (select_expression | P.defer(inline_expression).map(new Inline(_)))
+    (select_expression.backtrack | P.defer(inline_expression).map(new Inline(_)))
       .between(P.char('{') ~ blank.?, blank.? ~ P.char('}'))
       .map(new PlaceableExpr(_));
   private[parser] val block_placeable: P[PlaceableExpr] =
-    (blank_block ~ blank_inline.?).with1 *> inline_placeable
+    ((blank_inline ~ line_end).backtrack orElse line_end).rep.void *> blank_inline.? *> inline_placeable
   private[parser] val inline_text: P[String] =
     text_char.rep.backtrack.map(_.toList.mkString(""));
-  private[parser] val block_text: P[String] =
-    blank_block.with1 *> blank_inline *> indented_char *> inline_text.?.string;
+  private[parser] val block_text: P[BlockTextElement] =
+    ((((blank_inline ~ line_end).backtrack orElse line_end).rep.void *> (P.index ~ (blank_inline *> P.index)).map({ case (a,b) => b-a})) ~ (indented_char ~ inline_text.?).map({
+      case (a, Some(b)) => s"$a$b"
+      case (a, None) => s"$a"
+    }).?).map({
+      case (indent, text) => new BlockTextElement(indent, text)
+    })
   private[parser] val pattern_element: P[FPatternElement] =
-    inline_text.backtrack
-      .map(new TextElement(_))
-      .orElse(block_text.backtrack.map(new TextElement(_)))
+    block_placeable.backtrack.map(new Inline(_)).map(new Placeable(_))
       .orElse(
-        inline_placeable.backtrack.map(new Inline(_)).map(new Placeable(_))
+        block_text.backtrack
       )
+      .orElse(inline_placeable.backtrack.map(new Inline(_)).map(new Placeable(_)) 
       .orElse(
-        block_placeable.backtrack.map(new Inline(_)).map(new Placeable(_))
+        inline_text.backtrack.map(new TextElement(_)))
       )
 
   /* Pattern */

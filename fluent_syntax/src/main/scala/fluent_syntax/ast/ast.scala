@@ -33,6 +33,7 @@ sealed class FPattern(elements: List[FPatternElement])
 
 sealed abstract class FPatternElement
 case class TextElement(value: String) extends FPatternElement
+case class BlockTextElement(ident: Int, value: Option[String]) extends FPatternElement
 case class Placeable(expression: FExpression) extends FPatternElement
 
 sealed class FAttribute(val id: FIdentifier, val value: FPattern)
