@@ -169,18 +169,21 @@ object Ftl {
     P.char('$') *> identifier.map(new VariableReference(_));
 
   /* Rules */
-  private[parser] def inline_expression: P[FInlineExpression] = string_literal.backtrack
-    .map(new StringLiteral(_))
-    .orElse(number_literal.backtrack.map(new NumberLiteral(_)))
-    .orElse(function_reference.backtrack)
-    .orElse(message_reference.backtrack)
-    .orElse(term_reference.backtrack)
-    .orElse(variable_reference.backtrack)
-    .orElse(inline_placeable)
+  private[parser] def inline_expression: P[FInlineExpression] =
+    string_literal.backtrack
+      .map(new StringLiteral(_))
+      .orElse(number_literal.backtrack.map(new NumberLiteral(_)))
+      .orElse(function_reference.backtrack)
+      .orElse(message_reference.backtrack)
+      .orElse(term_reference.backtrack)
+      .orElse(variable_reference.backtrack)
+      .orElse(inline_placeable)
 
   /* TextElements & Placeable */
   private[parser] val inline_placeable: P[PlaceableExpr] =
-    (select_expression.backtrack | P.defer(inline_expression).map(new Inline(_)))
+    (select_expression.backtrack | P
+      .defer(inline_expression)
+      .map(new Inline(_)))
       .between(P.char('{') ~ blank.?, blank.? ~ P.char('}'))
       .map(new PlaceableExpr(_));
   private[parser] val block_placeable: P[PlaceableExpr] =
@@ -188,20 +191,27 @@ object Ftl {
   private[parser] val inline_text: P[String] =
     text_char.rep.backtrack.map(_.toList.mkString(""));
   private[parser] val block_text: P[BlockTextElement] =
-    ((((blank_inline ~ line_end).backtrack orElse line_end).rep.void *> (P.index ~ (blank_inline *> P.index)).map({ case (a,b) => b-a})) ~ (indented_char ~ inline_text.?).map({
-      case (a, Some(b)) => s"$a$b"
-      case (a, None) => s"$a"
-    }).?).map({
-      case (indent, text) => new BlockTextElement(indent, text)
+    ((((blank_inline ~ line_end).backtrack orElse line_end).rep.void *> (P.index ~ (blank_inline *> P.index))
+      .map({ case (a, b) => b - a })) ~ (indented_char ~ inline_text.?)
+      .map({
+        case (a, Some(b)) => s"$a$b"
+        case (a, None)    => s"$a"
+      })
+      .?).map({ case (indent, text) =>
+      new BlockTextElement(indent, text)
     })
   private[parser] val pattern_element: P[FPatternElement] =
-    block_placeable.backtrack.map(new Inline(_)).map(new Placeable(_))
+    block_placeable.backtrack
+      .map(new Inline(_))
+      .map(new Placeable(_))
       .orElse(
         block_text.backtrack
       )
-      .orElse(inline_placeable.backtrack.map(new Inline(_)).map(new Placeable(_)) 
       .orElse(
-        inline_text.backtrack.map(new TextElement(_)))
+        inline_placeable.backtrack
+          .map(new Inline(_))
+          .map(new Placeable(_))
+          .orElse(inline_text.backtrack.map(new TextElement(_)))
       )
 
   /* Pattern */
@@ -238,7 +248,7 @@ object Ftl {
   private[parser] val comment_line: P[FEntry] =
     (P.char('#').rep(1, 3).string ~ (P.char('\u0020') *> comment_char.rep0.map(
       _.toList.mkString("")
-    )).? <* line_end).map({
+    )).?).map({
       case (prefix, comment) => {
         val com = new FComment(comment.getOrElse(""));
         prefix.length match {
@@ -252,7 +262,9 @@ object Ftl {
   /* Entries */
   private[parser] val message: P[FMessage] = ((identifier <* P
     .char('=')
-    .surroundedBy(blank_inline.?)) ~ (pattern ~ attribute.rep0 | attribute.rep
+    .surroundedBy(
+      blank_inline.?
+    )) ~ (pattern ~ attribute.backtrack.rep0 | attribute.backtrack.rep
     .map(_.toList)))
     .map({
       case (id: FIdentifier, (value: FPattern, attrs: List[FAttribute])) =>
@@ -262,24 +274,26 @@ object Ftl {
     });
   private[parser] val term: P[FTerm] = (P.char('-') *> (identifier <* P
     .char('=')
-    .surroundedBy(blank_inline.?)) ~ (pattern ~ attribute.rep0))
+    .surroundedBy(blank_inline.?)) ~ (pattern ~ attribute.backtrack.rep0))
     .map({ case (id: FIdentifier, (value: FPattern, attrs: List[FAttribute])) =>
       new FTerm(id, value, attrs, None)
     });
   private[parser] val entry: P[FEntry] =
-    (message.map(new Message(_)) <* line_end) | (term.map(
+    ((message.map(new Message(_))) | (term.map(
       new Term(_)
-    ) <* line_end) | comment_line;
+    )) | comment_line) <* (line_end | (line_end.backtrack ~ P.end) | P.end);
 
   /* Resource */
-  private[parser] val resource: Parser0[_] = ((entry | blank_block | junk)
-    .repUntil0(junk_eof orElse P.end)
-    .map(_.filter(_.isInstanceOf[FEntry])) ~ (junk_eof
-    .map(new Junk(_))
-    .map(Some(_)) orElse P.end.as(Option.empty)))
-    .map({
-      case (entries: List[FEntry], Some(last: FEntry)) =>
-        new FResource(last :: entries)
-      case (entries: List[FEntry], None) => new FResource(entries)
-    });
+  private[parser] val resource: Parser0[FResource] =
+    ((entry | blank_block | junk)
+      .repUntil0(junk_eof orElse P.end)
+      .map(_.filter(_.isInstanceOf[FEntry])) ~ ((entry.backtrack | junk_eof.map(
+      new Junk(_)
+    ))
+      .map(Some(_)) orElse P.end.as(Option.empty)))
+      .map({
+        case (entries: List[FEntry], Some(last: FEntry)) =>
+          new FResource(entries :+ last)
+        case (entries: List[FEntry], None) => new FResource(entries)
+      });
 }

@@ -5,6 +5,7 @@ import org.scalatest.PrivateMethodTester._
 import cats.parse.{Parser, Parser0}
 import fluent_syntax.parser.Ftl
 import fluent_syntax.ast._
+import cats.implicits._
 import org.scalatest.matchers.should._
 import scala.collection.mutable
 
@@ -760,7 +761,6 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     Ftl.term_reference.parseAll(s"-identifier_t-e-r-m(10.2,gender:\"male\")") match {
         case Left(e) => fail(e.toString)
         case Right(TermReference(id, attribute, arguments)) => assert(id.name === "identifier_t-e-r-m" && attribute.isEmpty && arguments.isDefined)
-        case Right(TermReference(_,_, None)) => fail("parser missed arguments")
     }
   }
 
@@ -879,7 +879,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
 
   it should "parse a block text" in {
      Ftl.pattern_element.parseAll(" \n    as long as each new line is indented") match {
-        case Left(e) => println(e); fail(e.toString)
+        case Left(e) => fail(e.toString)
         case Right(BlockTextElement(ident, Some(value))) => assert(ident === 4 && value === "as long as each new line is indented")
         case Right(pars) => fail(s"not a block text pattern\nparsed: $pars")
     }
@@ -887,7 +887,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
 
   it should "parse a block placeable" in {
      Ftl.pattern_element.parseAll(" \n {$variable}") match {
-        case Left(e) => println(e); fail(e.toString)
+        case Left(e) => fail(e.toString)
         case Right(Placeable(_: Inline)) => succeed
         case Right(pars) => fail(s"not a block placeable\nparsed: $pars")
     }
@@ -895,11 +895,153 @@ class FtlSpec extends AnyFlatSpec with Matchers {
 
   it should "parse an inline placeable" in {
      Ftl.pattern_element.parseAll("{$variable}") match {
-        case Left(e) => println(e); fail(e.toString)
+        case Left(e) => fail(e.toString)
         case Right(Placeable(_: Inline)) => succeed
         case Right(pars) => fail(s"not an inline placeable\nparsed: $pars")
     }
   }
 
+  "attribute parser" should "parse a valid attribute declaration" in {
+    Ftl.attribute.parseAll("\n.attr1 = Attribute One") match {
+        case Left(e) => fail(e.toString)
+        case Right(attr) => assert(attr.id.name === "attr1")
+    }
+    Ftl.attribute.parseAll("\n.native = Project-Fluent ({$variable})") match {
+        case Left(e) => fail(e.toString)
+        case Right(attr) => assert(attr.id.name === "native")
+    }
+  }
+ 
+  "message parser" should "parse a valid message declaration (without attribute)" in {
+    Ftl.message.parseAll("welcome-message = Bienvenue à bord !") match {
+        case Left(e) => fail(e.toString)
+        case Right(msg) => assert(msg.id.name === "welcome-message" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
+    }
+    Ftl.message.parseAll("thank-message = {-brand-name} vous remercie de votre support.") match {
+        case Left(e) => fail(e.toString)
+        case Right(msg) => assert(msg.id.name === "thank-message" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
+    }
+  }
+
+   it should "parse a valid message declaration (with only attributes)" in {
+    Ftl.message.parseAll("status = \n.busy = Occupé\n.available = Disponible\n.offline = Déconnecté") match {
+        case Left(e) => fail(e.toString)
+        case Right(msg) => assert(msg.id.name === "status" && msg.attributes.length === 3 && msg.value.isEmpty && msg.comments.isEmpty)
+    }
+    Ftl.message.parseAll("status=\n.busy = Occupé\n.available = Disponible\n.offline = Déconnecté") match {
+        case Left(e) => fail(e.toString)
+        case Right(msg) => assert(msg.id.name === "status" && msg.attributes.length === 3 && msg.value.isEmpty && msg.comments.isEmpty)
+    }
+  }
+
+  it should "parse a valid message declaration (with both a value & attributes)" in {
+    Ftl.message.parseAll("status = Status de la connexion \n.busy = Occupé\n.available = Disponible\n.offline = Déconnecté") match {
+        case Left(e) => fail(e.toString)
+        case Right(msg) => assert(msg.id.name === "status" && msg.attributes.length === 3 && msg.value.isDefined && msg.comments.isEmpty)
+    }
+    Ftl.message.parseAll("status= Status de la connexion\n.busy = Occupé\n.available = Disponible\n.offline = Déconnecté") match {
+        case Left(e) => fail(e.toString)
+        case Right(msg) => assert(msg.id.name === "status" && msg.attributes.length === 3 && msg.value.isDefined && msg.comments.isEmpty)
+    }
+  }
+
+  "term parser" should "parse a valid term declaration (without attribute)" in {
+    Ftl.term.parseAll("-brand-name = Project Fluent for Scala") match {
+        case Left(e) => fail(e.toString)
+        case Right(term) => assert(term.id.name === "brand-name" && term.attributes.isEmpty && term.comments.isEmpty)
+    }
+    Ftl.term.parseAll("-https = https://{ $host }") match {
+        case Left(e) => fail(e.toString)
+        case Right(term) => assert(term.id.name === "https" && term.attributes.isEmpty && term.comments.isEmpty)
+    }
+  }
+
+  it should "parse a valid term declaration (with attributes)" in {
+    Ftl.term.parseAll("-brand-name = Project Fluent for Scala\n.nightly = Project Fluent (Nightly) for Scala\n.dev = Project Fluent (Developer Edition) for Scala") match {
+        case Left(e) => fail(e.toString)
+        case Right(term) => assert(term.id.name === "brand-name" && term.attributes.length === 2 && term.comments.isEmpty)
+    }
+    Ftl.term.parseAll("-brand-name = Aurora\n.gender = feminine") match {
+        case Left(e) => fail(e.toString)
+        case Right(term) => assert(term.id.name === "brand-name" && term.attributes.length === 1 && term.comments.isEmpty)
+    }
+  }
+
+  "comment_line parser" should "parse resource comment" in {
+    Ftl.comment_line.parseAll("### Res Comment") match {
+      case Left(e) => fail(e.toString)
+      case Right(ResourceComment(com)) => assert(com.content === "Res Comment")
+      case Right(other) => fail(s"not a resource comment but parsed: $other")
+    }
+  }
+  it should "parse group comment" in {
+    Ftl.comment_line.parseAll("## Group Comment") match {
+      case Left(e) => fail(e.toString)
+      case Right(GroupComment(com)) => assert(com.content === "Group Comment")
+      case Right(other) => fail(s"not a group comment but parsed: $other")
+    }
+  }
+  it should "parse simple comment" in {
+    Ftl.comment_line.parseAll("# Simple Comment") match {
+      case Left(e) => fail(e.toString)
+      case Right(Comment(com)) => assert(com.content === "Simple Comment")
+      case Right(other) => fail(s"not a comment but parsed: $other")
+    }
+  }
+
+  "entry parser" should "parse a message" in {
+    Ftl.entry.parseAll("status = Status de la connexion\n.busy = Occupé\n.available = Disponible\n.offline = Déconnecté\n") match {
+        case Left(e) => fail(e.toString)
+        case Right(Message(msg)) => assert(msg.id.name === "status" && msg.attributes.length === 3 && msg.value.isDefined && msg.comments.isEmpty)
+        case Right(other) => fail(s"not a message but parsed: $other")
+    }
+  }
+
+  it should "parse a term" in {
+    Ftl.entry.parseAll("-brand-name = Aurora\n.gender = feminine\r\n") match {
+        case Left(e) => fail(e.toString)
+        case Right(Term(term)) => assert(term.id.name === "brand-name" && term.attributes.length === 1 && term.comments.isEmpty)
+        case Right(other) => fail(s"not a term but parsed: $other")
+    }
+  }
+
+  it should "parse resource comment" in {
+    Ftl.entry.parseAll("### Res Comment\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(ResourceComment(com)) => assert(com.content === "Res Comment")
+      case Right(other) => fail(s"not a resource comment but parsed: $other")
+    }
+  }
+
+  it should "parse group comment" in {
+    Ftl.entry.parseAll("## Group Comment\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(GroupComment(com)) => assert(com.content === "Group Comment")
+      case Right(other) => fail(s"not a group comment but parsed: $other")
+    }
+  }
+
+  it should "parse simple comment" in {
+    Ftl.entry.parseAll("# Simple Comment\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(Comment(com)) => assert(com.content === "Simple Comment")
+      case Right(other) => fail(s"not a simple comment but parsed: $other")
+    }
+  }
+
+  "resource parser" should "parse a well-declared resource file" in {
+    Ftl.resource.parseAll("# Simple Comment\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(res) => println(res.show)
+    }
+    Ftl.resource.parseAll("### ENGLISH Resource (en_UK)\nwelcome = Bienvenue\n-brand-mark = Iron\nmotto = Hardened type constraints for Scala") match {
+      case Left(e) => fail(e.toString)
+      case Right(res) => println(res.show)
+    }
+    Ftl.resource.parseAll("## Closing tabs\n\ntabs-close-button = Close\ntabs-close-warning =\n    You are about to close {$tabCount} tabs.\n    Are you sure you want to continue?\n\n## Syncing\n\n-sync-brand-name = Firefox Account\n\nsync-dialog-title = {-sync-brand-name}\nsync-headline-title =\n    {-sync-brand-name}: The best way to bring\n    your data always with you\nsync-signedout-title =\n    Connect with your {-sync-brand-name}") match {
+      case Left(e) => fail(e.toString)
+      case Right(res) => println(res.show)
+    }
+  }
 }
 
