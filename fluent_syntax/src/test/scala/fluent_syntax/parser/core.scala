@@ -12,7 +12,7 @@ import scala.collection.mutable
 class FtlSpec extends AnyFlatSpec with Matchers {
   val r = util.Random
 
-  "blank_inline parser" should "successfully parse an arbitrary number of whitespace" in {
+  "blank_inline parser" should "not parse an arbitrary number of whitespace" in {
     for {
       n <- 1 to 50
     } assert(Ftl.blank_inline.parseAll(" " * n).isRight)
@@ -31,10 +31,10 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     assert(Ftl.line_end.parseAll("\r").isLeft)
   }
 
-  "blank_block parser" should "support an arbitrary number of whitespace" in {
+  "blank_block parser" should "support an arbitrary number of whitespace without line_end" in {
     for {
       n <- 1 to 50
-    } assert(Ftl.blank_block.parseAll(" " * n).isRight)
+    } assert(Ftl.blank_block.parseAll(" " * n).isLeft)
   }
   it should "support an arbitrary number of newline" in {
     for {
@@ -54,13 +54,13 @@ class FtlSpec extends AnyFlatSpec with Matchers {
       j <- 1 to 50
     } {
       withClue("using (" + i + ") CRLF ending & (" + j + ") spaces") {
-        assert(Ftl.blank_block.parseAll(("\r\n" * i) + (" " * j)).isRight)
+        assert(Ftl.blank_block.parseAll(("\r\n" * i) + (" " * j)+"\r\n").isRight)
       }
       withClue("using (" + i + ") LF ending & (" + j + ") spaces") {
-        assert(Ftl.blank_block.parseAll(("\n" * i) + (" " * j)).isRight)
+        assert(Ftl.blank_block.parseAll(("\n" * i) + (" " * j)+"\n").isRight)
       }
       val r = scala.util.Random
-      withClue("using random of both") {
+      withClue("using random number of both") {
         var str = new mutable.StringBuilder()
         for {
           i <- 1 to 50
@@ -71,7 +71,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
             case 2 => str ++= "\r\n" * (r.nextInt(100) + 1)
           }
         }
-        assert(Ftl.blank_block.parseAll(str.toString).isRight)
+        assert(Ftl.blank_block.parseAll(s"$str\n").isRight)
       }
     }
   }
@@ -539,7 +539,21 @@ class FtlSpec extends AnyFlatSpec with Matchers {
       case Left(e) => fail(e.toString)
       case Right(pars) => succeed
     }
+    Ftl.select_expression.parseAll("$userGender -> \n[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) =>  fail(e.toString)
+      case Right(pars) => succeed
+    }
+  }
+
+  it should "not parse an expression using variants (with more than one default)" in {
     Ftl.select_expression.parseAll("$userGender ->\n*[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) => succeed
+      case Right(pars) => fail(s"shoud not parse but parsed: $pars")
+    }
+  }
+
+  it should "not parse an expression using variants (but malformated)" in {
+    Ftl.select_expression.parseAll("$userGender ->\n*[male] his stream\n[female] her stream\n*[other] their stream\n ") match {
       case Left(e) => succeed
       case Right(pars) => fail(s"shoud not parse but parsed: $pars")
     }
@@ -843,10 +857,15 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Right(PlaceableExpr(_: Select)) => succeed
         case Right(pars) => fail(s"not a select expression, parsed: $pars")
     }
+    Ftl.inline_placeable.parse("{ $userGender -> \n[male] his stream\n[female] her stream\n*[other] their stream\n}") match {
+        case Left(e) => fail(e.toString)
+        case Right(res, PlaceableExpr(_: Select)) => println(res);succeed
+        case Right(res, pars) => println(res);fail(s"not a select expression, parsed: $pars")
+    }
   }
 
   it should "parse an inline expression" in {
-     Ftl.inline_placeable.parseAll("{$variable}") match {
+     Ftl.inline_placeable.parseAll("{$variable\n }") match {
         case Left(e) => fail(e.toString)
         case Right(PlaceableExpr(_: Inline)) => succeed
         case Right(pars) => fail(s"not an inline expression, parsed: $pars")
@@ -854,7 +873,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "block_placeable parser" should "parse a select expression" in {
-     Ftl.block_placeable.parseAll(" \n { $userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream \n}") match {
+     Ftl.block_placeable.parseAll("\n\n\n\n\n\n\n\n\n\n { $userGender -> \n[male] his stream\n[female] her stream\n*[other] their stream\n }") match {
         case Left(e) => fail(e.toString)
         case Right(PlaceableExpr(_: Select)) => succeed
         case Right(pars) => fail(s"not a select expression, parsed: $pars")
@@ -862,7 +881,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "parse an inline expression" in {
-     Ftl.block_placeable.parseAll(" \n {$variable}") match {
+     Ftl.block_placeable.parseAll("\n {$variable}") match {
         case Left(e) => fail(e.toString)
         case Right(PlaceableExpr(_: Inline)) => succeed
         case Right(pars) => fail(s"not an inline expression, parsed: $pars")
@@ -870,10 +889,15 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "pattern_element parser" should "parse an inline text" in {
-     Ftl.pattern_element.parseAll("just some string") match {
+    Ftl.pattern_element.parseAll("just some string") match {
         case Left(e) => fail(e.toString)
         case Right(TextElement(value)) => assert(value === "just some string")
+        
+    Ftl.pattern_element.parseAll(" ") match {
+        case Left(e) => fail(e.toString)
+        case Right(TextElement(value)) => assert(value === " ")
         case Right(pars) => fail(s"not an inline text pattern, parsed: $pars")
+    }case Right(pars) => fail(s"not an inline text pattern, parsed: $pars")
     }
   }
 
@@ -886,7 +910,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "parse a block placeable" in {
-     Ftl.pattern_element.parseAll(" \n {$variable}") match {
+     Ftl.pattern_element.parseAll(" \n\n {$variable\n }") match {
         case Left(e) => fail(e.toString)
         case Right(Placeable(_: Inline)) => succeed
         case Right(pars) => fail(s"not a block placeable\nparsed: $pars")
@@ -898,6 +922,13 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Left(e) => fail(e.toString)
         case Right(Placeable(_: Inline)) => succeed
         case Right(pars) => fail(s"not an inline placeable\nparsed: $pars")
+    }
+  }
+
+  "pattern parser" should "parse test with multiple placeables per line" in {
+    Ftl.pattern.parse("{$photoCount ->\n        [one] added a new photo\n*[other] added {$photoCount} new photos\n } to {$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n}.") match {
+        case Left(e) => fail(e.toString)
+        case Right(rem, pars) => println(s"parsed: ${pars.show}\nremaining: ${rem.show}");succeed
     }
   }
 
@@ -921,6 +952,10 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Left(e) => fail(e.toString)
         case Right(msg) => assert(msg.id.name === "thank-message" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
     }
+    /*Ftl.message.parse("shared-photos =\n    { $username } {$photoCount ->\n           [one] added a new photo\n   *[other] added {$photoCount} new photos\n}") match {
+      case Left(e) => fail(e.toString)
+      case Right(res, msg) => println(res);assert(msg.id.name === "shared-photos" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
+    }*/
   }
 
    it should "parse a valid message declaration (with only attributes)" in {
@@ -1030,6 +1065,10 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "resource parser" should "parse a well-declared resource file" in {
+    Ftl.resource.parse("shared-photos =\n    { $username }           {$photoCount ->\n        [one] added a new photo\n       *[other] added {$photoCount} new photos\n    } to {$userGender ->\n        [male] his stream\n        [female] her stream\n       *[other] their stream\n    }.") match {
+      case Left(e) => fail(e.toString)
+      case Right(rem, res) => println(s"parsed: ${res.show}\nremaining: $rem")
+    }
     Ftl.resource.parseAll("# Simple Comment\n") match {
       case Left(e) => fail(e.toString)
       case Right(res) => println(res.show)

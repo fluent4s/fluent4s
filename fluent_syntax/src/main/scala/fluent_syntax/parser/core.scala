@@ -8,12 +8,13 @@ object Ftl {
   /* whitespaces */
   private[parser] val blank_inline: P[Unit] = P.char('\u0020').rep.void;
   private[parser] val line_end: P[Unit] =
-    (P.string("\u000D\u000A").backtrack orElse (P.char('\u000A'))).void;
+    (P.string("\u000D\u000A")
+      .backtrack orElse (P.char('\u000A').backtrack)).void;
   private[parser] val end_of_file: Parser0[Unit] = P.end;
   private[parser] val blank_block: P[Unit] =
-    (blank_inline.backtrack | line_end).rep.void;
+    (blank_inline.backtrack.?.with1 *> line_end.backtrack).rep.void;
   private[parser] val blank: Parser0[Unit] =
-    (blank_inline.backtrack orElse line_end).rep0.void <* end_of_file.?;
+    P.oneOf(List(line_end.backtrack, blank_inline.backtrack)).rep0.void;
 
   /* digits */
   private[parser] val digit: P[Char] = Numbers.digit;
@@ -86,38 +87,41 @@ object Ftl {
   private[parser] val variant_key: P[FVariantKey] = (number_literal.map(
     new NumberLiteralKey(_)
   ) | identifier.map(new IdentifierKey(_)))
-    .between(P.char('[') <* blank.?, blank.? *> P.char(']'));
+    .between(P.char('[') <* blank, blank *> P.char(']'));
   private[parser] val variant: P[FVariant] =
-    ((line_end *> blank.? *> (variant_key <* blank_inline.?)) ~ P.defer(
-      pattern
-    )).map({ case (key, value) => new FVariant(key, value, false) });
+    ((line_end.backtrack.soft *> blank_inline.? *> (variant_key.backtrack <* blank_inline.backtrack.?)) ~ P
+      .defer(
+        pattern.backtrack
+      )).map({ case (key, value) => new FVariant(key, value, false) });
   private[parser] val default_variant: P[FVariant] =
-    ((line_end *> blank.? *> P.char(
-      '*'
-    ) *> (variant_key <* blank_inline.backtrack.?)) ~ P
-      .defer(pattern)).map({ case (key, value) =>
+    ((line_end.backtrack.soft *> blank_inline.? *> P
+      .char(
+        '*'
+      )
+      .backtrack *> (variant_key.backtrack <* blank_inline.backtrack.?)) ~ P
+      .defer(pattern.backtrack)).map({ case (key, value) =>
       new FVariant(key, value, true)
     });
   private[parser] val variant_list: P[List[FVariant]] =
-    (variant.backtrack.rep0.with1 ~ (default_variant ~ (variant.backtrack.rep0 <* line_end)))
+    (((variant.backtrack.rep0.with1 ~ default_variant.backtrack) ~ (variant.backtrack.rep0).backtrack) <* line_end.backtrack.?)
       .map({
         case (
-              pre: List[FVariant],
-              (default: FVariant, after: List[FVariant])
+              (pre: List[FVariant], default),
+              after: List[FVariant]
             ) =>
           pre ::: (default :: after)
       });
   private[parser] val select_expression: P[Select] =
-    ((P.defer(inline_expression) <* blank.? <* P.string(
+    ((P.defer(inline_expression) <* blank <* P.string(
       "->"
-    ) <* blank_inline.?) ~ variant_list).map(new Select(_, _));
+    ) <* blank_inline.backtrack.?) ~ variant_list).map(new Select(_, _));
 
   /* Inline Expressions */
   private[parser] val attributes_accessor: P[FIdentifier] =
     P.char('.') *> identifier;
   private[parser] val named_argument: P[NamedArgument] = ((identifier <* P
     .char(':')
-    .surroundedBy(blank.?)) ~ (string_literal.map(
+    .surroundedBy(blank)) ~ (string_literal.map(
     new StringLiteral(_)
   ) | number_literal.map(new NumberLiteral(_)))).map(new NamedArgument(_, _));
   private[parser] val argument: P[FArgument] =
@@ -125,10 +129,10 @@ object Ftl {
       .defer(inline_expression)
       .map(new PositionalArgument(_));
   private[parser] val argument_list: Parser0[List[FArgument]] =
-    argument.backtrack.repSep0(P.char(',').surroundedBy(blank.?));
+    argument.backtrack.repSep0(P.char(',').surroundedBy(blank));
   private[parser] val call_argument: P[FCallArguments] =
-    (P.char('(').surroundedBy(blank.?) *> argument_list
-      <* (blank.? ~ P.char(')')))
+    (P.char('(').surroundedBy(blank) *> argument_list
+      <* (blank ~ P.char(')')))
       .map(_.fold((List.empty[NamedArgument], List.empty[FInlineExpression])) {
         case (
               (named: List[NamedArgument], pos: List[FInlineExpression]),
@@ -177,22 +181,26 @@ object Ftl {
       .orElse(message_reference.backtrack)
       .orElse(term_reference.backtrack)
       .orElse(variable_reference.backtrack)
-      .orElse(inline_placeable)
+      .orElse(inline_placeable.backtrack)
 
   /* TextElements & Placeable */
-  private[parser] val inline_placeable: P[PlaceableExpr] =
-    (select_expression.backtrack | P
+  private[parser] def inline_placeable: P[PlaceableExpr] =
+    (select_expression
+      .between(P.char('{') ~ blank, blank.? ~ P.char('}'))
+      .backtrack orElse P
       .defer(inline_expression)
+      .between(P.char('{') ~ blank, blank.? ~ P.char('}'))
+      .backtrack
       .map(new Inline(_)))
-      .between(P.char('{') ~ blank.?, blank.? ~ P.char('}'))
       .map(new PlaceableExpr(_));
   private[parser] val block_placeable: P[PlaceableExpr] =
-    ((blank_inline ~ line_end).backtrack orElse line_end).rep.void *> blank_inline.? *> inline_placeable
+    ((blank_inline.backtrack.soft ~ line_end).backtrack orElse line_end).rep.void *> blank_inline.? *> inline_placeable
   private[parser] val inline_text: P[String] =
-    text_char.rep.backtrack.map(_.toList.mkString(""));
+    text_char.backtrack.rep.map(_.toList.mkString(""));
   private[parser] val block_text: P[BlockTextElement] =
-    ((((blank_inline ~ line_end).backtrack orElse line_end).rep.void *> (P.index ~ (blank_inline *> P.index))
-      .map({ case (a, b) => b - a })) ~ (indented_char ~ inline_text.?)
+    ((((blank_inline.backtrack.soft ~ line_end).backtrack orElse line_end).rep.void *> (P.index ~ (blank_inline *> P.index))
+      .map({ case (a, b) => b - a }
+      )) ~ (indented_char ~ inline_text.?).backtrack
       .map({
         case (a, Some(b)) => s"$a$b"
         case (a, None)    => s"$a"
@@ -201,18 +209,18 @@ object Ftl {
       new BlockTextElement(indent, text)
     })
   private[parser] val pattern_element: P[FPatternElement] =
-    block_placeable.backtrack
+    inline_placeable.backtrack
       .map(new Inline(_))
       .map(new Placeable(_))
       .orElse(
-        block_text.backtrack
-      )
-      .orElse(
-        inline_placeable.backtrack
+        block_placeable.backtrack
           .map(new Inline(_))
           .map(new Placeable(_))
-          .orElse(inline_text.backtrack.map(new TextElement(_)))
       )
+      .orElse(
+        block_text.backtrack
+      )
+      .orElse(inline_text.backtrack.map(new TextElement(_)))
 
   /* Pattern */
   private[parser] val pattern: P[FPattern] =
@@ -222,7 +230,7 @@ object Ftl {
 
   /* Attribute */
   private[parser] val attribute: P[FAttribute] =
-    ((line_end *> blank.? *> P.char(
+    ((line_end *> blank *> P.char(
       '.'
     ) *> identifier <* P.char('=').surroundedBy(blank_inline.?)) ~ pattern)
       .map({ case (id: FIdentifier, pat: FPattern) =>
