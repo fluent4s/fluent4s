@@ -12,7 +12,7 @@ NOTE: Work In Progress / Early Stage
 
 == Modules
 
-- link:./fluent-syntax[`fluent_syntax`] will be the center of fluent4s with its parser, AST and more...
+- link:./parser[`parser`] will be the center of fluent4s with its parser, AST and more...
 
 == Get involved
 
