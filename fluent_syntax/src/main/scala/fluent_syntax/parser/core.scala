@@ -103,7 +103,7 @@ object Ftl {
       new FVariant(key, value, true)
     });
   private[parser] val variant_list: P[List[FVariant]] =
-    (((variant.backtrack.rep0.with1 ~ default_variant) ~ (variant.backtrack.rep0)) <* line_end.backtrack.?)
+    (((variant.backtrack.rep0.with1 ~ default_variant.backtrack) ~ (variant.backtrack.rep0)) <* line_end.backtrack.?)
       .map({
         case (
               (pre: List[FVariant], default),
@@ -224,10 +224,16 @@ object Ftl {
 
   /* Pattern */
   private[parser] val pattern: P[FPattern] =
-    pattern_element.backtrack.rep.map({
-      case elements: NonEmptyList[FPatternElement] =>
+    /* repUntil(block_text *> inline_text)? There is a special case we need to handle, a BlockText
+     * followed by an InlineText is an invalid pattern, it generally mean, we were able to consume
+     * some blank lines but we failed due to an indented char we cannot parse using a BlockText.
+     * Therefore this indented char is then parsed as an InlineText, it should not! Never!
+     */
+    pattern_element.backtrack
+      .repUntil((block_text *> inline_text).backtrack)
+      .map({ case elements: NonEmptyList[FPatternElement] =>
         new FPattern(elements.toList)
-    });
+      });
 
   /* Attribute */
   private[parser] val attribute: P[FAttribute] =

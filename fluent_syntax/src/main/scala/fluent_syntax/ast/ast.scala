@@ -69,7 +69,7 @@ sealed class FVariant(
     val value: FPattern,
     val default: Boolean
 )
-implicit val showFVariant: Show[FVariant] = Show.show(var_ => s"FVariant {\ney: ${var_.key.show},\nvalue: ${var_.value.show},\ndefault: ${var_.default.show}\n}")
+implicit val showFVariant: Show[FVariant] = Show.show(var_ => s"FVariant {\nkey: ${var_.key.show},\nvalue: ${var_.value.show},\ndefault: ${var_.default.show}\n}")
 
 sealed abstract class FVariantKey
 case class IdentifierKey(val value: FIdentifier) extends FVariantKey

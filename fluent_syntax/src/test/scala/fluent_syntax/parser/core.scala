@@ -499,8 +499,15 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
+  it should "not parse part of another variant" in {
+    Ftl.variant.parseAll("\n  [female] her stream\n  *[other] their stream") match {
+      case Left(e) => succeed
+      case Right(pars) => fail("parsed but should not have: "+pars.show)
+    }
+  }
+
   "default_variant parser" should "parse numeral variants" in {
-    for (variant <- List("\n*[0] Zero", "\n*[ 1 ] One", "\n*[ 2] Two", "\n*[3 ] Three", "\n*[4]Four", "\n*[5]    Five", "\n*[6.0] Six", "\n*[-7] Minus Seven", "\n*[-7.0] Minus Seven Dot Zero")) {
+    for (variant <- List("\n*[0] Zero", "\n*[ 1 ] One", "\n*[ 2] Two", "\n*[3 ] Three", "\n*[4]Four", "\n*[5]    Five", "\n*[6.0] Six", "\n*[-7] Minus Seven", "\n*[-7.0] Minus Seven Dot Zero", "\n *[0.0] SpaceZer0")) {
       withClue(s"parsing: $variant") {
         Ftl.default_variant.parseAll(variant) match {
           case Left(e) => fail(e.toString)
@@ -511,7 +518,7 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "parse identifier variants" in {
-    for (variant <- List("\n*[zero] Zero", "\n*[ more ] More", "\n*[ once] Upon a Time", "\n*[male ] Him", "\n*[female]Her", "\n*[null]    None")) {
+    for (variant <- List("\n*[zero] Zero", "\n*[ more ] More", "\n*[ once] Upon a Time", "\n*[male ] Him", "\n*[female]Her", "\n*[null]    None+", "\n    *[indented] Indented")) {
       withClue(s"parsing: $variant") {
         Ftl.default_variant.parseAll(variant) match {
           case Left(e) => fail(e.toString)
@@ -521,8 +528,14 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     }
   }
 
+
   "variant_list parser" should "parse a list of variants (with one and only one default variant)" in {
     Ftl.variant_list.parseAll("\n[male] his stream\n[female] her stream\n*[other] their stream\n") match {
+      case Left(e) => fail(e.toString)
+      case Right(pars) => succeed
+    }
+
+    Ftl.variant_list.parseAll("\n  [male] his stream\n  [female] her stream\n  *[other] their stream\n") match {
       case Left(e) => fail(e.toString)
       case Right(pars) => succeed
     }
@@ -857,10 +870,10 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Right(PlaceableExpr(_: Select)) => succeed
         case Right(pars) => fail(s"not a select expression, parsed: $pars")
     }
-    Ftl.inline_placeable.parse("{ $userGender -> \n[male] his stream\n[female] her stream\n *[other] their stream\n}") match {
+    Ftl.inline_placeable.parseAll("{ $userGender -> \n[male] his stream\n[female] her stream\n *[other] their stream\n}") match {
         case Left(e) => fail(e.toString)
-        case Right(res, PlaceableExpr(_: Select)) => println(res);succeed
-        case Right(res, pars) => println(res);fail(s"not a select expression, parsed: $pars")
+        case Right(PlaceableExpr(_: Select)) => succeed
+        case Right(pars) => fail(s"not a select expression, parsed: $pars")
     }
   }
 
@@ -892,12 +905,13 @@ class FtlSpec extends AnyFlatSpec with Matchers {
     Ftl.pattern_element.parseAll("just some string") match {
         case Left(e) => fail(e.toString)
         case Right(TextElement(value)) => assert(value === "just some string")
+        case Right(pars) => fail(s"not an inline text pattern, parsed: $pars")
+    }
         
     Ftl.pattern_element.parseAll(" ") match {
         case Left(e) => fail(e.toString)
         case Right(TextElement(value)) => assert(value === " ")
         case Right(pars) => fail(s"not an inline text pattern, parsed: $pars")
-    }case Right(pars) => fail(s"not an inline text pattern, parsed: $pars")
     }
   }
 
@@ -926,9 +940,9 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "pattern parser" should "parse test with multiple placeables per line" in {
-    Ftl.pattern.parse("{$photoCount ->\n        [one] added a new photo\n*[other] added {$photoCount} new photos\n } to {$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n}.") match {
+    Ftl.pattern.parseAll("{$photoCount ->\n        [one] added a new photo\n*[other] added {$photoCount} new photos\n } to {$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n}.") match {
         case Left(e) => fail(e.toString)
-        case Right(rem, pars) => println(s"parsed: ${pars.show}\nremaining: ${rem.show}");succeed
+        case Right(pars) => println(s"parsed: ${pars.show}");succeed
     }
   }
 
@@ -952,9 +966,9 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Left(e) => fail(e.toString)
         case Right(msg) => assert(msg.id.name === "thank-message" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
     }
-    Ftl.message.parse("shared-photos =\n    { $username } {$photoCount ->\n           [one] added a new photo\n   *[other] added {$photoCount} new photos\n}") match {
+    Ftl.message.parseAll("shared-photos =\n    { $username } {$photoCount ->\n           [one] added a new photo\n   *[other] added {$photoCount} new photos\n}") match {
       case Left(e) => fail(e.toString)
-      case Right(res, msg) => println(res);assert(msg.id.name === "shared-photos" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
+      case Right(msg) => assert(msg.id.name === "shared-photos" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
     }
   }
 
@@ -1065,9 +1079,9 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "resource parser" should "parse a well-declared resource file" in {
-    Ftl.resource.parse("shared-photos =\n    { $username }           {$photoCount ->\n        [one] added a new photo\n       *[other] added {$photoCount} new photos\n    } to {$userGender ->\n        [male] his stream\n        [female] her stream\n       *[other] their stream\n    }.") match {
+    Ftl.resource.parseAll("shared-photos =\n    { $username }           {$photoCount ->\n        [one] added a new photo\n       *[other] added {$photoCount} new photos\n    } to {$userGender ->\n        [male] his stream\n        [female] her stream\n       *[other] their stream\n    }.") match {
       case Left(e) => fail(e.toString)
-      case Right(rem, res) => println(s"parsed: ${res.show}\nremaining: $rem")
+      case Right(res) => println(s"parsed: ${res.show}")
     }
     Ftl.resource.parseAll("# Simple Comment\n") match {
       case Left(e) => fail(e.toString)
