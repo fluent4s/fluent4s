@@ -32,7 +32,7 @@ trait Fluent4sModule extends ScalaModule with ScalafmtModule with PublishModule 
   )
 }
 
-trait ScalaTest extends TestModule with ScalafmtModule {
+trait ScalaTest extends TestModule {
 
   def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.2.9")
 
