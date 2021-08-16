@@ -15,13 +15,14 @@ object fluent_syntax extends SbtModule with ScalafmtModule {
   def artifactName = "fluent_syntax"
 
   def pomSettings = PomSettings(
-    description = "fluent_syntax, part of fluent-scala, a collection of Scala modules implementing Project Fluent, is the host of the AST & Parser for FTL files.",
-    organization = "io.github.fusetim",
-    url = "https://github.com/fusetim/fluent-scala",
+    description = "fluent_syntax, part of fluent4s, a collection of Scala modules implementing Project Fluent, is the host of the AST & Parser for FTL files.",
+    organization = "io.github.fluent4s",
+    url = "https://github.com/fluent4s/fluent4s",
     licenses = Seq(License.`Apache-2.0`, License.MIT),
     versionControl = VersionControl.github("fusetim", "fluent-scala"),
     developers = Seq(
-      Developer("fusetim", "Timothée B.", "https://github.com/fusetim")
+      Developer("fusetim", "Timothée B.", "https://github.com/fusetim"),
+      Developer("Iltotore", "Raphaël FROMENTIN", "https://github.com/Iltotore")
     )
   )
 

@@ -30,12 +30,8 @@ object Ftl {
   /* WARNING:
    *
    * Limitation of Java and thus of Scala, a Char can only be represented on 4 bytes, it is impossible to
-   * represent a part of the Unicode table directly in the FTL files using parser lib (U+00FFFF to U+10FFFF)
-   * contrary to the specification of Project Fluent.
-   * It is thus necessary to escape all the Unicode characters of parser portion which could not be treated
-   * by fluent-scala.
-   *
-   * See: https://github.com/projectfluent/fluent/blob/master/spec/fluent.ebnf#L87-L96
+   * represent a part of the Unicode table directly using Char, so it split the character in multiple Char object.
+   * It should be compatible with all UTF-8 characters already supported by the Fluent Project.
    */
   private[parser] val any_char: P[Char] = P.charIn('\u0000' to '\uFFFF')
 
@@ -84,26 +80,30 @@ object Ftl {
       .map((head, tail) => new FIdentifier((head :: tail).mkString("")));
 
   /* Block Expressions */
-  private[parser] val variant_key: P[FVariantKey] = (number_literal.map(
-    new NumberLiteralKey(_)
-  ) | identifier.map(new IdentifierKey(_)))
-    .between(P.char('[') <* blank, blank *> P.char(']'));
+  private[parser] val variant_key: P[FVariantKey] =
+    P.char('[').backtrack.soft *> blank *> (number_literal.map(
+      new NumberLiteralKey(_)
+    ) | identifier.map(new IdentifierKey(_))) <* (blank <* P.char(']'))
   private[parser] val variant: P[FVariant] =
-    ((line_end.backtrack.soft *> blank_inline.? *> (variant_key.backtrack <* blank_inline.backtrack.?)) ~ P
+    ((line_end.backtrack.soft *> blank_inline.? *> P.not(
+      P.char('*')
+    ) *> (variant_key.backtrack <* blank_inline.backtrack.?)) ~ P
       .defer(
         pattern.backtrack
-      )).map({ case (key, value) => new FVariant(key, value, false) });
+      )
+      .backtrack).map({ case (key, value) => new FVariant(key, value, false) });
   private[parser] val default_variant: P[FVariant] =
     ((line_end.backtrack.soft *> blank_inline.? *> P
       .char(
         '*'
       )
       .backtrack *> (variant_key.backtrack <* blank_inline.backtrack.?)) ~ P
-      .defer(pattern.backtrack)).map({ case (key, value) =>
+      .defer(pattern.backtrack)
+      .backtrack).map({ case (key, value) =>
       new FVariant(key, value, true)
     });
   private[parser] val variant_list: P[List[FVariant]] =
-    (((variant.backtrack.rep0.with1 ~ default_variant.backtrack) ~ (variant.backtrack.rep0).backtrack) <* line_end.backtrack.?)
+    (((variant.backtrack.rep0.with1 ~ default_variant) ~ (variant.backtrack.rep0)) <* line_end.backtrack.?)
       .map({
         case (
               (pre: List[FVariant], default),
@@ -194,13 +194,13 @@ object Ftl {
       .map(new Inline(_)))
       .map(new PlaceableExpr(_));
   private[parser] val block_placeable: P[PlaceableExpr] =
-    ((blank_inline.backtrack.soft ~ line_end).backtrack orElse line_end).rep.void *> blank_inline.? *> inline_placeable
+    ((blank_inline.backtrack.soft ~ line_end).backtrack orElse line_end).rep.void *> blank_inline.? *> inline_placeable.backtrack
   private[parser] val inline_text: P[String] =
     text_char.backtrack.rep.map(_.toList.mkString(""));
   private[parser] val block_text: P[BlockTextElement] =
     ((((blank_inline.backtrack.soft ~ line_end).backtrack orElse line_end).rep.void *> (P.index ~ (blank_inline *> P.index))
       .map({ case (a, b) => b - a }
-      )) ~ (indented_char ~ inline_text.?).backtrack
+      )) ~ (indented_char.backtrack ~ inline_text.?).backtrack
       .map({
         case (a, Some(b)) => s"$a$b"
         case (a, None)    => s"$a"
@@ -224,8 +224,9 @@ object Ftl {
 
   /* Pattern */
   private[parser] val pattern: P[FPattern] =
-    pattern_element.rep.map({ case elements: NonEmptyList[FPatternElement] =>
-      new FPattern(elements.toList)
+    pattern_element.backtrack.rep.map({
+      case elements: NonEmptyList[FPatternElement] =>
+        new FPattern(elements.toList)
     });
 
   /* Attribute */
@@ -295,13 +296,18 @@ object Ftl {
   private[parser] val resource: Parser0[FResource] =
     ((entry | blank_block | junk)
       .repUntil0(junk_eof orElse P.end)
-      .map(_.filter(_.isInstanceOf[FEntry])) ~ ((entry.backtrack | junk_eof.map(
+      .map(
+        _.filter(_.isInstanceOf[FEntry]).map(_.asInstanceOf[FEntry])
+      ) ~ ((entry.backtrack | junk_eof.map(
       new Junk(_)
     ))
       .map(Some(_)) orElse P.end.as(Option.empty)))
       .map({
-        case (entries: List[FEntry], Some(last: FEntry)) =>
+        case (entries, Some(last: FEntry)) =>
           new FResource(entries :+ last)
-        case (entries: List[FEntry], None) => new FResource(entries)
+        case (entries, None) => new FResource(entries)
       });
+
+  def parse(ftl: String): Either[P.Error, FResource] = resource.parseAll(ftl);
+
 }

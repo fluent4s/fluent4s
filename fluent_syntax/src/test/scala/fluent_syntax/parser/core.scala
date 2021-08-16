@@ -852,12 +852,12 @@ class FtlSpec extends AnyFlatSpec with Matchers {
   }
 
   "inline_placeable parser" should "parse a select expression" in {
-     Ftl.inline_placeable.parseAll("{$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n}") match {
+    Ftl.inline_placeable.parseAll("{$userGender ->\n[male] his stream\n[female] her stream\n*[other] their stream\n}") match {
         case Left(e) => fail(e.toString)
         case Right(PlaceableExpr(_: Select)) => succeed
         case Right(pars) => fail(s"not a select expression, parsed: $pars")
     }
-    Ftl.inline_placeable.parse("{ $userGender -> \n[male] his stream\n[female] her stream\n*[other] their stream\n}") match {
+    Ftl.inline_placeable.parse("{ $userGender -> \n[male] his stream\n[female] her stream\n *[other] their stream\n}") match {
         case Left(e) => fail(e.toString)
         case Right(res, PlaceableExpr(_: Select)) => println(res);succeed
         case Right(res, pars) => println(res);fail(s"not a select expression, parsed: $pars")
@@ -952,10 +952,10 @@ class FtlSpec extends AnyFlatSpec with Matchers {
         case Left(e) => fail(e.toString)
         case Right(msg) => assert(msg.id.name === "thank-message" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
     }
-    /*Ftl.message.parse("shared-photos =\n    { $username } {$photoCount ->\n           [one] added a new photo\n   *[other] added {$photoCount} new photos\n}") match {
+    Ftl.message.parse("shared-photos =\n    { $username } {$photoCount ->\n           [one] added a new photo\n   *[other] added {$photoCount} new photos\n}") match {
       case Left(e) => fail(e.toString)
       case Right(res, msg) => println(res);assert(msg.id.name === "shared-photos" && msg.attributes.isEmpty && msg.value.isDefined && msg.comments.isEmpty)
-    }*/
+    }
   }
 
    it should "parse a valid message declaration (with only attributes)" in {
