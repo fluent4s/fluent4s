@@ -2,3 +2,5 @@
 /.metals/
 /.vscode/
 /out/
+*.iml
+/.idea/
