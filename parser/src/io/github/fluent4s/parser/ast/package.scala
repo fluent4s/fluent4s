@@ -5,11 +5,61 @@ import cats.implicits._
 
 package object ast {
 
+  /**
+   * Root node of a Fluent Translation list .
+   *
+   * A [[FResource]] contain a body with a list of [[FEntry]] nodes.
+   *
+   * @param body: List of [[FEntry]].
+   */
   sealed class FResource(val body: List[FEntry]);
 
+  /**
+   * Attributes are part of a [[FMessage]] or a [[FTerm]].
+   *
+   * Attributes expressed list of keyedd [[FPattern]] on a [[FEntry]].
+   *
+   * @param id Unique [[FIdentifier]] within a [[FResource]].
+   * @param value [[Pattern]] as a translation with this attribute.
+   */
   sealed class FAttribute(val id: FIdentifier, val value: FPattern)
 
+  /**
+   * Identifier is part of nodes such as [[FMessage]], [[FTerm]] and [[FAttribute]].
+   *
+   * It associate a unique key with a [[FTerm]], a [[FMessage]] or a [[FAttribute]]
+   * to be used in [[FExpression]] as a way to refer to another [[FEntry]].
+   *
+   * @param name A unique identifier (it should respect the form [A-Za-z][A-Za-z0-9-_]*)
+   */
   sealed class FIdentifier(val name: String)
+
+  /**
+   * An expression that is either a select expression or an inline expression.
+   *
+   * See [[Select]] and [[Inline]].
+   */
+  sealed abstract class FExpression
+
+  /**
+   * A select expression based upon the evaluation of a [[FInlineExpression]].
+   *
+   * Upon the evaluation of a selector (a [[FInlineExpression]]), it selects a
+   * variant (a [[FVariant]]) to express.
+   *
+   * @param selector An [[FInlineExpression]], usually a [[VariableReference]] to
+   * be used as a selector.
+   * @param variants List of possible [[FVariant]] to express
+   */
+  case class Select(val selector: FInlineExpression, val variants: List[FVariant])
+      extends FExpression
+
+  /**
+   * A [[FInlineExpression]] part of a [[FExpression]].
+   *
+   * @param body The corresponding [[FInlineExpression]].
+   */
+  case class Inline(val body: FInlineExpression) extends FExpression
 
   /* Show implicits */
   implicit val showFResource: Show[FResource] =
