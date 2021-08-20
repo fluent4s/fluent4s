@@ -39,11 +39,24 @@ trait ScalaTest extends TestModule {
   def testFramework = "org.scalatest.tools.Framework"
 }
 
+object core extends Fluent4sModule {
+
+  def moduleName = "core"
+
+  def moduleVersion = "0"
+
+  def ivyDeps = Agg(
+    ivy"org.typelevel::cats-core::2.3.0"
+  )
+}
+
 object parser extends Fluent4sModule {
 
   def moduleName = "parser"
 
   def moduleVersion = "0"
+
+  def moduleDeps = Seq(core)
 
   def ivyDeps = Agg(
     ivy"org.typelevel::cats-parse::0.3.4",

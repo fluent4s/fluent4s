@@ -1,8 +1,9 @@
+
 package io.github.fluent4s.parser.ftl
 
-import io.github.fluent4s.parser.{UnitSpec, Ftl};
 import cats.implicits.toShow
-import io.github.fluent4s.parser.ast._
+import io.github.fluent4s.ast._
+import io.github.fluent4s.parser.{UnitSpec, Ftl}
 import org.scalatest.matchers.should._
 import scala.collection.mutable
 

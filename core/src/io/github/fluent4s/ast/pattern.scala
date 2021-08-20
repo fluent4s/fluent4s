@@ -1,4 +1,4 @@
-package io.github.fluent4s.parser.ast
+package io.github.fluent4s.ast
 
 /**
  * Fluent pattern contains the value of a [[FMessage]], a [[FTerm]] or a [[FAttribute]].

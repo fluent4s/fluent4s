@@ -1,6 +1,6 @@
 package io.github.fluent4s.parser
 
-import ast._
+import io.github.fluent4s.ast._
 import cats.data.NonEmptyList
 import cats.parse.{Accumulator, Numbers, Parser => P, Parser0, Rfc5234}
 

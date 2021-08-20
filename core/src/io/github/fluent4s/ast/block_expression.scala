@@ -1,4 +1,4 @@
-package io.github.fluent4s.parser.ast
+package io.github.fluent4s.ast
 
 /**
  * A single branch of a [[Select]] expression.

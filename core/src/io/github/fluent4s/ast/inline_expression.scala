@@ -1,4 +1,4 @@
-package io.github.fluent4s.parser.ast
+package io.github.fluent4s.ast
 
 /**
  * A subset of expressions which can be used as [[Placeable]],

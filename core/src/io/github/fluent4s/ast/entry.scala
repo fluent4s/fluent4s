@@ -1,4 +1,4 @@
-package io.github.fluent4s.parser.ast
+package io.github.fluent4s.ast
 
 /**
  * A top-level node representing an entry of a [[FResource]].

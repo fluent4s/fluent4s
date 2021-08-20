@@ -1,4 +1,4 @@
-package io.github.fluent4s.parser
+package io.github.fluent4s
 
 import cats.Show
 import cats.implicits._
@@ -10,7 +10,7 @@ package object ast {
    *
    * A [[FResource]] contain a body with a list of [[FEntry]] nodes.
    *
-   * @param body: List of [[FEntry]].
+   * @param body : List of [[FEntry]].
    */
   sealed class FResource(val body: List[FEntry]);
 
@@ -19,7 +19,7 @@ package object ast {
    *
    * Attributes expressed list of keyedd [[FPattern]] on a [[FEntry]].
    *
-   * @param id Unique [[FIdentifier]] within a [[FResource]].
+   * @param id    Unique [[FIdentifier]] within a [[FResource]].
    * @param value [[Pattern]] as a translation with this attribute.
    */
   sealed class FAttribute(val id: FIdentifier, val value: FPattern)
@@ -48,11 +48,11 @@ package object ast {
    * variant (a [[FVariant]]) to express.
    *
    * @param selector An [[FInlineExpression]], usually a [[VariableReference]] to
-   * be used as a selector.
+   *                 be used as a selector.
    * @param variants List of possible [[FVariant]] to express
    */
   case class Select(val selector: FInlineExpression, val variants: List[FVariant])
-      extends FExpression
+    extends FExpression
 
   /**
    * A [[FInlineExpression]] part of a [[FExpression]].
