@@ -48,6 +48,10 @@ object core extends Fluent4sModule {
   def ivyDeps = Agg(
     ivy"org.typelevel::cats-core::2.3.0"
   )
+
+  def compileIvyDeps = Agg(
+    ivy"net.xyzsd.plurals:cldr-plural-rules:3.0"
+  )
 }
 
 object parser extends Fluent4sModule {
@@ -59,8 +63,8 @@ object parser extends Fluent4sModule {
   def moduleDeps = Seq(core)
 
   def ivyDeps = Agg(
-    ivy"org.typelevel::cats-parse::0.3.4",
-    ivy"org.typelevel::cats-core::2.3.0"
+    ivy"org.typelevel::cats-core::2.3.0",
+    ivy"org.typelevel::cats-parse::0.3.4"
   )
 
   object test extends Tests with ScalaTest
