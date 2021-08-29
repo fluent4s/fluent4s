@@ -1,6 +1,5 @@
 package io.github.fluent4s.rst
 
-import cats.data.ValidatedNel
 import cats.implicits._
 import io.github.fluent4s.ast._
 import io.github.fluent4s.error.ResolutionError
@@ -20,6 +19,8 @@ trait ResolvedInlineExpression {
   case class RTermReference(resolved: RTerm, arguments: Option[RCallArguments]) extends RInlineExpression
 
   case class RVariableReference(id: String) extends RInlineExpression
+
+  case class RPlaceableExpr(expression: RExpression) extends RInlineExpression
 
   case class RCallArguments(positional: List[RInlineExpression], named: Map[String, RInlineExpression])
 
@@ -68,6 +69,8 @@ trait ResolvedInlineExpression {
 
         case _ => ResolutionError.NotFound(s"attribute ${id.name}").invalidNel
       }
+
+      case PlaceableExpr(expression) => expression.resolve(context).map(RPlaceableExpr.apply)
 
       case _ => ResolutionError.Impossible.invalidNel
     }
