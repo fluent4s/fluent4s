@@ -1,5 +1,10 @@
 package io.github.fluent4s.rst
 
+import cats.data.ValidatedNel
+import cats.implicits._
+import io.github.fluent4s.ast._
+import io.github.fluent4s.error.ResolutionError
+
 trait ResolvedInlineExpression {
 
   sealed class RInlineExpression
@@ -18,4 +23,69 @@ trait ResolvedInlineExpression {
 
   case class RCallArguments(positional: List[RInlineExpression], named: Map[String, RInlineExpression])
 
+  implicit object InlineResolver extends Resolver[FInlineExpression, RInlineExpression] {
+
+    override def resolve(input: FInlineExpression)(context: Context): Resolution[RInlineExpression] = input match {
+
+      case StringLiteral(value) => RStringLiteral(value).validNel
+
+      case NumberLiteral(value) =>
+        value
+          .toDoubleOption
+          .toValidNel(ResolutionError(s"Number expected, got $value"))
+          .map(RNumberLiteral.apply)
+
+      case FunctionReference(id, arguments) => ResolutionError("Not implemented").invalidNel //TODO Resolve FunctionReference
+
+      case MessageReference(id, attribute) => (context.getReference(id.name), attribute) match {
+
+        case (Some(resolved: RMessage), None) => RMessageReference(resolved).validNel
+
+        case (Some(resolved: RMessage), Some(attrId)) =>
+          resolved
+            .attributes
+            .get(attrId.name)
+            .map(RAttributeReference.apply)
+            .toValidNel(ResolutionError.NotFound(s"attribute ${attrId.name}"))
+
+        case _ => ResolutionError.NotFound(s"message ${id.name}").invalidNel
+      }
+
+      case TermReference(id, attribute, arguments) => (context.getReference(id.name), attribute) match {
+
+        case (Some(resolved: RTerm), None) =>
+          arguments
+            .map(CallArgumentsResolver.resolve(_)(context))
+            .sequence
+            .map(RTermReference(resolved, _))
+
+        case (Some(resolved: RTerm), Some(attrId)) =>
+          resolved
+            .attributes
+            .get(attrId.name)
+            .map(RAttributeReference.apply)
+            .toValidNel(ResolutionError.NotFound(s"attribute ${attrId.name}"))
+
+        case _ => ResolutionError.NotFound(s"attribute ${id.name}").invalidNel
+      }
+
+      case _ => ResolutionError.Impossible.invalidNel
+    }
+  }
+
+  implicit object CallArgumentsResolver extends Resolver[FCallArguments, RCallArguments] {
+
+    override def resolve(input: FCallArguments)(context: Context): Resolution[RCallArguments] = (
+      input
+        .positional
+        .map(_.resolve(context))
+        .sequence,
+      input
+        .named
+        .map(arg => arg.value.resolve(context).map((arg.name.name, _)))
+        .sequence
+        .map(_.toMap)
+      ).mapN(RCallArguments.apply)
+
+  }
 }
