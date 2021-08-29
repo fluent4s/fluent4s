@@ -8,7 +8,23 @@ trait Entry {
    * to recover from errors by identifying the beggining of a new entry.
    * See [[Junk]] entries, which keep invalid FTL content.
    */
-  sealed abstract class FEntry
+  sealed trait FEntry
+
+  sealed trait EntryBody {
+
+    val id: FIdentifier
+  }
+
+  sealed trait ReferenceEntry extends FEntry {
+
+    val body: EntryBody
+
+  }
+
+  object ReferenceEntry {
+
+    def unapply(value: ReferenceEntry): Option[EntryBody] = Some(value.body)
+  }
 
   /**
    * [[Junk]] entry preserves invalid FTL content if FTL source contains
@@ -26,14 +42,14 @@ trait Entry {
    *
    * @param body An actual [[FMessage]].
    */
-  case class Message(body: FMessage) extends FEntry
+  case class Message(body: FMessage) extends ReferenceEntry
 
   /**
    * [[Term]] entry is a [[FTerm]] entry.
    *
    * @param body An actual [[FTerm]].
    */
-  case class Term(body: FTerm) extends FEntry
+  case class Term(body: FTerm) extends ReferenceEntry
 
   /**
    * [[Comment]] entry is a simple comment entry.
@@ -95,12 +111,12 @@ trait Entry {
    * @param attributes [[FAttribute]] associated translations for a given [[FMessage]].
    * @param comments   Comment entries preceding this [[FMessage]].
    */
-  sealed class FMessage(
-                         val id: FIdentifier,
-                         val value: Option[FPattern],
-                         val attributes: List[FAttribute],
-                         val comments: Option[FComment]
-                       )
+  case class FMessage(
+                         id: FIdentifier,
+                         value: Option[FPattern],
+                         attributes: List[FAttribute],
+                         comments: Option[FComment]
+                       ) extends EntryBody
 
   /**
    * A Fluent Term, similar to [[FMessage]].
@@ -113,12 +129,12 @@ trait Entry {
    * @param attributes [[FAttribute]] associated translations for a given [[FTerm]].
    * @param comments   Comment entries preceding this [[FTerm]].
    */
-  sealed class FTerm(
-                      val id: FIdentifier,
-                      val value: FPattern,
-                      val attributes: List[FAttribute],
-                      val comments: Option[FComment]
-                    )
+  case class FTerm(
+                      id: FIdentifier,
+                      value: FPattern,
+                      attributes: List[FAttribute],
+                      comments: Option[FComment]
+                    ) extends EntryBody
 
   /**
    * Fluent comment.
