@@ -70,6 +70,8 @@ trait ResolvedInlineExpression {
         case _ => ResolutionError.NotFound(s"attribute ${id.name}").invalidNel
       }
 
+      case VariableReference(id) => RVariableReference(id.name).validNel
+
       case PlaceableExpr(expression) => expression.resolve(context).map(RPlaceableExpr.apply)
 
       case _ => ResolutionError.Impossible.invalidNel
