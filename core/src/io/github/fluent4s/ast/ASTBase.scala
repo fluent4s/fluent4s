@@ -23,7 +23,7 @@ trait ASTBase {
    * @param id    Unique [[FIdentifier]] within a [[FResource]].
    * @param value [[Pattern]] as a translation with this attribute.
    */
-  sealed class FAttribute(val id: FIdentifier, val value: FPattern)
+  case class FAttribute(id: FIdentifier, value: FPattern)
 
   /**
    * Identifier is part of nodes such as [[FMessage]], [[FTerm]] and [[FAttribute]].
@@ -33,7 +33,7 @@ trait ASTBase {
    *
    * @param name A unique identifier (it should respect the form [A-Za-z][A-Za-z0-9-_]*)
    */
-  sealed class FIdentifier(val name: String)
+  case class FIdentifier(name: String)
 
   /**
    * An expression that is either a select expression or an inline expression.
