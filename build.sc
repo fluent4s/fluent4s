@@ -1,8 +1,4 @@
-import mill._
-import parser.ivy
-import scalalib._
-import scalafmt._
-import publish._
+import mill._, scalalib._, scalafmt._, publish._
 
 val projectName = "fluent4s"
 val majorVersion = "0.1"
@@ -32,11 +28,11 @@ trait Fluent4sModule extends ScalaModule with ScalafmtModule with PublishModule 
   )
 }
 
-trait ScalaTest extends TestModule {
+trait TestFramework extends TestModule {
 
-  def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.2.9")
+  def ivyDeps = Agg(ivy"com.lihaoyi::utest:0.7.10")
 
-  def testFramework = "org.scalatest.tools.Framework"
+  def testFramework = "utest.runner.Framework"
 }
 
 object core extends Fluent4sModule {
@@ -50,8 +46,14 @@ object core extends Fluent4sModule {
   )
 
   def compileIvyDeps = Agg(
-    ivy"net.xyzsd.plurals:cldr-plural-rules:3.0"
+    ivy"com.ibm.icu:icu4j:69.1"
   )
+
+  object test extends Tests with TestFramework {
+
+    def ivyDeps = super.ivyDeps() ++ core.compileIvyDeps()
+
+  }
 }
 
 object parser extends Fluent4sModule {
@@ -67,5 +69,10 @@ object parser extends Fluent4sModule {
     ivy"org.typelevel::cats-parse::0.3.4"
   )
 
-  object test extends Tests with ScalaTest
+  object test extends Tests with TestFramework { //TODO Migrate to UTest
+
+    def ivyDeps = super.ivyDeps() ++ Agg(ivy"org.scalatest::scalatest:3.2.9")
+
+    def testFramework = "org.scalatest.tools.Framework"
+  }
 }

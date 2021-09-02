@@ -1,12 +1,9 @@
 package io.github.fluent4s.rst
 
-import cats.data.ValidatedNel
+import cats.data.Validated
 import cats.implicits._
 import io.github.fluent4s.ast._
 import io.github.fluent4s.error.ResolutionError
-import net.xyzsd.plurals.PluralCategory
-
-import scala.jdk.OptionConverters.RichOptional
 
 trait ResolvedBlockExpression {
 
@@ -14,7 +11,7 @@ trait ResolvedBlockExpression {
 
   sealed class RVariantKey
 
-  case class RIdentifierKey(value: PluralCategory) extends RVariantKey
+  case class RIdentifierKey(value: String) extends RVariantKey
 
   case class RNumberLiteralKey(value: Double) extends RVariantKey
 
@@ -31,15 +28,17 @@ trait ResolvedBlockExpression {
 
     override def resolve(input: FVariantKey)(context: Context): Resolution[RVariantKey] = input match {
 
-      case IdentifierKey(value) =>
-        PluralCategory.ifPresentIgnoreCase(value.name)
-          .toScala
-          .toValidNel(ResolutionError.Mismatch("PluralCategory", value.name))
-          .map(RIdentifierKey.apply)
+      case IdentifierKey(FIdentifier(name)) =>
+        Validated.condNel(
+          context.pluralRules.getKeywords.contains(name),
+          name,
+          ResolutionError.Mismatch("Selector", name)
+        ).map(RIdentifierKey.apply)
+
       case NumberLiteralKey(value) =>
         value
         .toDoubleOption
-        .toValidNel(ResolutionError(s"Number expected, got $value"))
+        .toValidNel(ResolutionError.Mismatch("Number", value))
         .map(RNumberLiteralKey.apply)
     }
   }
