@@ -1,6 +1,12 @@
 package io.github.fluent4s.rst
 
-case class Context(references: Map[String, REntry]) {
+import com.ibm.icu.text.PluralRules
+
+import java.util.Locale
+
+case class Context(locale: Locale, references: Map[String, REntry]) {
+
+  lazy val pluralRules: PluralRules = PluralRules.forLocale(locale)
 
   def getReference(id: String): Option[REntry] = references.get(id)
 
@@ -10,6 +16,8 @@ case class Context(references: Map[String, REntry]) {
 }
 
 object Context {
+
+  def fromValues(values: (String, REntry)*): Context = Context(Map(values: _*))
 
   val Empty: Context = Context(Map.empty)
 }
