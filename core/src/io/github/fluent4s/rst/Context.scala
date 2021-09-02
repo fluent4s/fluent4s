@@ -10,14 +10,14 @@ case class Context(locale: Locale, references: Map[String, REntry]) {
 
   def getReference(id: String): Option[REntry] = references.get(id)
 
-  def withReference(id: String, value: REntry): Context = this.copy(this.references.updated(id, value))
+  def withReference(id: String, value: REntry): Context = this.copy(references = this.references.updated(id, value))
 
   def toResource: RResource = RResource(references)
 }
 
 object Context {
 
-  def fromValues(values: (String, REntry)*): Context = Context(Map(values: _*))
+  def fromValues(locale: Locale)(values: (String, REntry)*): Context = Context(locale, Map(values: _*))
 
-  val Empty: Context = Context(Map.empty)
+  val Empty: Context = Context(Locale.ENGLISH, Map.empty)
 }
