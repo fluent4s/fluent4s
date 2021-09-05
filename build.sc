@@ -69,11 +69,12 @@ object parser extends Fluent4sModule {
     ivy"org.typelevel::cats-parse::0.3.4"
   )
 
-  object test extends Tests with TestFramework { //TODO Migrate to UTest
+  object test extends Tests with TestFramework { 
 
-    def ivyDeps = super.ivyDeps() ++ Agg(ivy"org.scalatest::scalatest:3.2.9")
+    def ivyDeps = super.ivyDeps() ++ 
+      core.compileIvyDeps() ++ 
+      json.compileIvyDeps()
 
-    def testFramework = "org.scalatest.tools.Framework"
   }
 }
 
