@@ -1,6 +1,6 @@
 package io.github.fluent4s.parser
 
-import ast._
+import io.github.fluent4s.ast._
 import cats.data.NonEmptyList
 import cats.parse.{Accumulator, Numbers, Parser => P, Parser0, Rfc5234}
 
@@ -48,7 +48,7 @@ object Ftl {
     ))))
       .map(_.toList.mkString(""))
       .map(Integer.parseInt(_, 16))
-      .map(UTF8.fromCodePoint(_));
+      .map(Character.toChars(_).mkString(""));
   private[parser] val quoted_char: P[String] = ((P
     .not(special_quoted_char | P.end)
     .with1 *> any_char).backtrack | special_escape.backtrack)
