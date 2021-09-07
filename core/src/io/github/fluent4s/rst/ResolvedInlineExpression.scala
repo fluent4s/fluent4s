@@ -26,7 +26,7 @@ trait ResolvedInlineExpression {
 
   implicit object InlineResolver extends Resolver[FInlineExpression, RInlineExpression] {
 
-    override def resolve(input: FInlineExpression)(context: Context): Resolution[RInlineExpression] = input match {
+    override def resolve(input: FInlineExpression)(implicit context: Context): Resolution[RInlineExpression] = input match {
 
       case StringLiteral(value) => RStringLiteral(value).validNel
 
@@ -56,7 +56,7 @@ trait ResolvedInlineExpression {
 
         case (Some(resolved: RTerm), None) =>
           arguments
-            .map(CallArgumentsResolver.resolve(_)(context))
+            .map(CallArgumentsResolver.resolve(_))
             .sequence
             .map(RTermReference(resolved, _))
 
@@ -72,7 +72,7 @@ trait ResolvedInlineExpression {
 
       case VariableReference(id) => RVariableReference(id.name).validNel
 
-      case PlaceableExpr(expression) => expression.resolve(context).map(RPlaceableExpr.apply)
+      case PlaceableExpr(expression) => expression.resolve.map(RPlaceableExpr.apply)
 
       case _ => ResolutionError.Impossible.invalidNel
     }
@@ -80,14 +80,14 @@ trait ResolvedInlineExpression {
 
   implicit object CallArgumentsResolver extends Resolver[FCallArguments, RCallArguments] {
 
-    override def resolve(input: FCallArguments)(context: Context): Resolution[RCallArguments] = (
+    override def resolve(input: FCallArguments)(implicit context: Context): Resolution[RCallArguments] = (
       input
         .positional
-        .map(_.resolve(context))
+        .map(_.resolve)
         .sequence,
       input
         .named
-        .map(arg => arg.value.resolve(context).map((arg.name.name, _)))
+        .map(arg => arg.value.resolve.map((arg.name.name, _)))
         .sequence
         .map(_.toMap)
       ).mapN(RCallArguments.apply)

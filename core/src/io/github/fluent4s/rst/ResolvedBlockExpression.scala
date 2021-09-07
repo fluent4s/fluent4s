@@ -17,16 +17,16 @@ trait ResolvedBlockExpression {
 
   implicit object VariantResolver extends Resolver[FVariant, RVariant] {
 
-    override def resolve(input: FVariant)(context: Context): Resolution[RVariant] = (
-      VariantKeyResolver.resolve(input.key)(context),
-      PatternResolver.resolve(input.value)(context),
+    override def resolve(input: FVariant)(implicit context: Context): Resolution[RVariant] = (
+      VariantKeyResolver.resolve(input.key),
+      PatternResolver.resolve(input.value),
       input.default.validNel
     ).mapN(RVariant.apply)
   }
 
   implicit object VariantKeyResolver extends Resolver[FVariantKey, RVariantKey] {
 
-    override def resolve(input: FVariantKey)(context: Context): Resolution[RVariantKey] = input match {
+    override def resolve(input: FVariantKey)(implicit context: Context): Resolution[RVariantKey] = input match {
 
       case IdentifierKey(FIdentifier(name)) =>
         Validated.condNel(

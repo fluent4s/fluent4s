@@ -13,6 +13,6 @@ package object rst extends ResolvedBase
 
   implicit class Resolvable[A, B](input: A)(implicit resolver: Resolver[A, B]) {
 
-    def resolve(context: Context): Resolution[B] = resolver.resolve(input)(context)
+    def resolve(implicit context: Context): Resolution[B] = resolver.resolve(input)
   }
 }
