@@ -1,7 +1,7 @@
 package io.github.fluent4s
 
 import cats.data.ValidatedNel
-import io.github.fluent4s.error.ResolutionError
+import io.github.fluent4s.api.ResolutionError
 
 package object rst extends ResolvedBase
   with ResolvedBlockExpression

@@ -1,8 +1,8 @@
 package io.github.fluent4s.rst
 
 import cats.implicits._
+import io.github.fluent4s.api.ResolutionError
 import io.github.fluent4s.ast._
-import io.github.fluent4s.error.ResolutionError
 
 trait ResolvedInlineExpression {
 

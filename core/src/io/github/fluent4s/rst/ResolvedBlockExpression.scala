@@ -2,8 +2,8 @@ package io.github.fluent4s.rst
 
 import cats.data.Validated
 import cats.implicits._
+import io.github.fluent4s.api.ResolutionError
 import io.github.fluent4s.ast._
-import io.github.fluent4s.error.ResolutionError
 
 trait ResolvedBlockExpression {
 
@@ -11,7 +11,9 @@ trait ResolvedBlockExpression {
 
   sealed class RVariantKey
 
-  case class RIdentifierKey(value: String) extends RVariantKey
+  case class RWordKey(value: String) extends RVariantKey
+
+  case class RPluralKey(value: String) extends RVariantKey
 
   case class RNumberLiteralKey(value: Double) extends RVariantKey
 
@@ -21,7 +23,7 @@ trait ResolvedBlockExpression {
       VariantKeyResolver.resolve(input.key),
       PatternResolver.resolve(input.value),
       input.default.validNel
-    ).mapN(RVariant.apply)
+      ).mapN(RVariant.apply)
   }
 
   implicit object VariantKeyResolver extends Resolver[FVariantKey, RVariantKey] {
@@ -29,17 +31,14 @@ trait ResolvedBlockExpression {
     override def resolve(input: FVariantKey)(implicit context: Context): Resolution[RVariantKey] = input match {
 
       case IdentifierKey(FIdentifier(name)) =>
-        Validated.condNel(
-          context.pluralRules.getKeywords.contains(name),
-          name,
-          ResolutionError.Mismatch("Selector", name)
-        ).map(RIdentifierKey.apply)
+        if (context.pluralRules.getKeywords.contains(name)) RPluralKey(name).validNel
+        else RWordKey(name).validNel
 
       case NumberLiteralKey(value) =>
         value
-        .toDoubleOption
-        .toValidNel(ResolutionError.Mismatch("Number", value))
-        .map(RNumberLiteralKey.apply)
+          .toDoubleOption
+          .toValidNel(ResolutionError.Mismatch("Number", value))
+          .map(RNumberLiteralKey.apply)
     }
   }
 }
