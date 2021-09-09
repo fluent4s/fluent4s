@@ -13,7 +13,7 @@ trait ASTBase {
    *
    * @param body : List of [[FEntry]].
    */
-  sealed trait FResource(val body: List[FEntry]);
+  case class FResource(body: List[FEntry])
 
   /**
    * Attributes are part of a [[FMessage]] or a [[FTerm]].
@@ -52,7 +52,7 @@ trait ASTBase {
    *                 be used as a selector.
    * @param variants List of possible [[FVariant]] to express
    */
-  case class Select(val selector: FInlineExpression, val variants: List[FVariant])
+  case class Select(selector: FInlineExpression, variants: List[FVariant])
     extends FExpression
 
   /**

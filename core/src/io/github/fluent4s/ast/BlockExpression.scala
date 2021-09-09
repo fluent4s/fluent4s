@@ -13,11 +13,7 @@ trait BlockExpression {
    * @param value the associated [[FPattern]].
    * @param default If true, define itself as the default variant.
    */
-  sealed class FVariant(
-                         val key: FVariantKey,
-                         val value: FPattern,
-                         val default: Boolean
-                       )
+  case class FVariant(key: FVariantKey, value: FPattern, default: Boolean)
 
   /**
    * A key of a [[FVariant]].
@@ -25,7 +21,7 @@ trait BlockExpression {
    * Can either be an identifier (not a unique one) or a number.
    * See [[IdentifierKey]] and [[NumberLiteralKey]].
    */
-  sealed abstract class FVariantKey
+  sealed trait FVariantKey
 
   /**
    * A identifier key of a [[FVariant]].
@@ -36,7 +32,7 @@ trait BlockExpression {
    *
    * @param value the inner [[FIdentifier]] to use as a key.
    */
-  case class IdentifierKey(val value: FIdentifier) extends FVariantKey
+  case class IdentifierKey(value: FIdentifier) extends FVariantKey
 
   /**
    * A number key of a [[FVariant]].
@@ -45,6 +41,6 @@ trait BlockExpression {
    *
    * @param value the inner number to use as a key.
    */
-  case class NumberLiteralKey(val value: String) extends FVariantKey
+  case class NumberLiteralKey(value: String) extends FVariantKey
 
 }
