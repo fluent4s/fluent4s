@@ -11,7 +11,7 @@ trait ResolvedBase {
 
   type RAttribute = (String, RPattern)
 
-  sealed class RExpression
+  sealed trait RExpression
 
   case class RSelect(selector: RInlineExpression, variants: List[RVariant]) extends RExpression
 

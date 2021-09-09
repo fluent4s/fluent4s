@@ -13,7 +13,7 @@ trait ASTBase {
    *
    * @param body : List of [[FEntry]].
    */
-  sealed class FResource(val body: List[FEntry]);
+  sealed trait FResource(val body: List[FEntry]);
 
   /**
    * Attributes are part of a [[FMessage]] or a [[FTerm]].
