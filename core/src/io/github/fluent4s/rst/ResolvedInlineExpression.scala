@@ -6,7 +6,7 @@ import io.github.fluent4s.ast._
 
 trait ResolvedInlineExpression {
 
-  sealed class RInlineExpression
+  sealed trait RInlineExpression
 
   case class RStringLiteral(value: String) extends RInlineExpression
 

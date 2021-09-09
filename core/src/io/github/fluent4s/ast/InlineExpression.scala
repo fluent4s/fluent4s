@@ -6,7 +6,7 @@ trait InlineExpression {
    * A subset of expressions which can be used as [[Placeable]],
    * [[FExpression]], or in [[FCallArguments]].
    */
-  sealed abstract class FInlineExpression
+  sealed trait FInlineExpression
 
   /**
    * A string literal.

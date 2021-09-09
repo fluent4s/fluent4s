@@ -6,7 +6,7 @@ import io.github.fluent4s.ast._
 
 trait ResolvedEntry {
 
-  sealed class REntry
+  sealed trait REntry
 
   case class RMessage(
                        value: Option[RPattern],

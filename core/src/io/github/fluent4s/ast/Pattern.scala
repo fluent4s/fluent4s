@@ -15,7 +15,7 @@ trait Pattern {
    *
    * @param elements List of [[FPatternElement]].
    */
-  sealed class FPattern(val elements: List[FPatternElement])
+  sealed trait FPattern(val elements: List[FPatternElement])
 
   /**
    * [[FPatternElement]] is an element of [[FPattern]]

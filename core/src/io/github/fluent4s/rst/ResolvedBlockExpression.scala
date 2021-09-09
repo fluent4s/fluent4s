@@ -1,6 +1,5 @@
 package io.github.fluent4s.rst
 
-import cats.data.Validated
 import cats.implicits._
 import io.github.fluent4s.api.ResolutionError
 import io.github.fluent4s.ast._
@@ -9,7 +8,7 @@ trait ResolvedBlockExpression {
 
   case class RVariant(key: RVariantKey, value: RPattern, default: Boolean)
 
-  sealed class RVariantKey
+  sealed trait RVariantKey
 
   case class RWordKey(value: String) extends RVariantKey
 

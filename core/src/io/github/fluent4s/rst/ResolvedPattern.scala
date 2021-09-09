@@ -9,7 +9,7 @@ trait ResolvedPattern {
 
   type RPattern = List[RPatternElement]
 
-  sealed class RPatternElement
+  sealed trait RPatternElement
 
   case class RTextElement(value: String) extends RPatternElement
 
