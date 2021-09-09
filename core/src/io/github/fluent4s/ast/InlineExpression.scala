@@ -13,14 +13,14 @@ trait InlineExpression {
    *
    * @param value The inner content as a String.
    */
-  case class StringLiteral(val value: String) extends FInlineExpression
+  case class StringLiteral(value: String) extends FInlineExpression
 
   /**
    * A number literal.
    *
    * @param value The inner value as a String.
    */
-  case class NumberLiteral(val value: String) extends FInlineExpression
+  case class NumberLiteral(value: String) extends FInlineExpression
 
   /**
    * A reference to a function.

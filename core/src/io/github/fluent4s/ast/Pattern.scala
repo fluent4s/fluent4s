@@ -15,7 +15,7 @@ trait Pattern {
    *
    * @param elements List of [[FPatternElement]].
    */
-  sealed trait FPattern(val elements: List[FPatternElement])
+  case class FPattern(elements: List[FPatternElement])
 
   /**
    * [[FPatternElement]] is an element of [[FPattern]]
@@ -27,7 +27,7 @@ trait Pattern {
    * See [[BlockTextElement]] for block text literals.
    * See [[Placeable]] for Inline Expression and Select Expression.
    */
-  sealed abstract class FPatternElement
+  sealed trait FPatternElement
 
   /**
    * [[TextElement]] represents an inline textual value.

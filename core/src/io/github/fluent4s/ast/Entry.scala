@@ -149,5 +149,5 @@ trait Entry {
    *
    * @param content Comment content
    */
-  sealed class FComment(val content: String)
+  case class FComment(content: String)
 }
