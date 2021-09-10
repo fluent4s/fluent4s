@@ -1,4 +1,4 @@
-package io.github.fluent4s.rst
+package io.github.fluent4s.ir
 
 import com.ibm.icu.text.PluralRules
 

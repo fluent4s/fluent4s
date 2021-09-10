@@ -3,7 +3,7 @@ package io.github.fluent4s
 import cats.data.ValidatedNel
 import io.github.fluent4s.api.ResolutionError
 
-package object rst extends ResolvedBase
+package object ir extends ResolvedBase
   with ResolvedBlockExpression
   with ResolvedEntry
   with ResolvedInlineExpression

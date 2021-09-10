@@ -1,4 +1,4 @@
-package io.github.fluent4s.rst
+package io.github.fluent4s.ir
 
 import cats.implicits._
 import io.github.fluent4s.api.ResolutionError
