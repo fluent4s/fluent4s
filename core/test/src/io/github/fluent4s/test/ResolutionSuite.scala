@@ -48,7 +48,7 @@ object ResolutionSuite extends TestSuite {
       }
     }
 
-    test("referenceResolution"){
+    test("referenceResolution") {
       test("messageReference") {
         assertMatch(MessageReference(FIdentifier("msg"), None).resolve(context)) { case Valid(RMessageReference(_)) => }
         assertMatch(MessageReference(FIdentifier("msgWithAttr"), None).resolve(context)) { case Valid(RMessageReference(_)) => }
