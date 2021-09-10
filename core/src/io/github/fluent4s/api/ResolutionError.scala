@@ -1,4 +1,4 @@
-package io.github.fluent4s.error
+package io.github.fluent4s.api
 
 case class ResolutionError(message: String) extends Error
 
