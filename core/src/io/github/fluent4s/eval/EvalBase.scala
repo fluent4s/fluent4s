@@ -6,7 +6,7 @@ import com.ibm.icu.text.PluralRules
 import com.ibm.icu.text.PluralRules.FixedDecimal
 import io.github.fluent4s.api.FluentValue.Number
 import io.github.fluent4s.api.{FluentValue, TranslationError}
-import io.github.fluent4s.rst._
+import io.github.fluent4s.ir._
 
 
 trait EvalBase {

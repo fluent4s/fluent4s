@@ -4,7 +4,7 @@ import cats.data.ValidatedNel
 import cats.implicits._
 import io.github.fluent4s.api.FluentValue.{Number, Text}
 import io.github.fluent4s.api._
-import io.github.fluent4s.rst._
+import io.github.fluent4s.ir._
 
 trait EvalInlineExpression {
 

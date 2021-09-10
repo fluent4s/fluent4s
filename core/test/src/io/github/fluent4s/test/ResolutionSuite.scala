@@ -3,11 +3,11 @@ package io.github.fluent4s.test
 import cats.data.Validated._
 import cats.implicits._
 
-import io.github.fluent4s.rst.Context
+import io.github.fluent4s.ir.Context
 
 import java.util.Locale
 import io.github.fluent4s.ast._
-import io.github.fluent4s.rst._
+import io.github.fluent4s.ir._
 
 import utest._
 

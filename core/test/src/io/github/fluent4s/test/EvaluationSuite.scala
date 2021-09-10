@@ -3,7 +3,7 @@ package io.github.fluent4s.test
 import cats.implicits._
 import io.github.fluent4s.api.FluentValue.{Number, Text}
 import io.github.fluent4s.eval._
-import io.github.fluent4s.rst._
+import io.github.fluent4s.ir._
 import utest.{TestSuite, Tests, assert, test}
 
 import java.util.Locale

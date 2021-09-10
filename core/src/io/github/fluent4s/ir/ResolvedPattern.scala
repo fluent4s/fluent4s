@@ -1,4 +1,4 @@
-package io.github.fluent4s.rst
+package io.github.fluent4s.ir
 
 import cats.data.ValidatedNel
 import cats.implicits._
