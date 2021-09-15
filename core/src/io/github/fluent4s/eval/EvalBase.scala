@@ -4,8 +4,8 @@ import cats.data.ValidatedNel
 import cats.implicits._
 import com.ibm.icu.text.PluralRules
 import com.ibm.icu.text.PluralRules.FixedDecimal
-import io.github.fluent4s.api.FluentValue.Number
 import io.github.fluent4s.api.{FluentValue, TranslationError}
+import FluentValue._
 import io.github.fluent4s.ir._
 
 
@@ -24,7 +24,8 @@ trait EvalBase {
           else (selectorInput, variant.key) match {
             case (_, RWordKey(value)) => value.equals(selectorInput.asString)
             case (Number(n), RPluralKey(value)) => rules.matches(new FixedDecimal(n), value)
-            case (Number(n), RNumberLiteralKey(value)) => value == n
+            case (Number.Integer(n), RIntegerLiteralKey(value)) => value == n
+            case (Number.Decimal(n), RDecimalLiteralKey(value)) => value == n
             case _ => false
           }
         }
