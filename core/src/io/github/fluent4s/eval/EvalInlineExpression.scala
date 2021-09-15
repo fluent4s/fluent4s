@@ -11,7 +11,8 @@ trait EvalInlineExpression {
   implicit object InlineExpressionEvaluator extends Evaluator[RInlineExpression] {
     override def evaluate(input: RInlineExpression, key: String)(implicit context: EvalContext): ValidatedNel[TranslationError, FluentValue] = input match {
       case RStringLiteral(value) => Text(value).validNel
-      case RNumberLiteral(value) => Number(value).validNel
+      case RIntegerLiteral(value) => Number(value).validNel
+      case RDecimalLiteral(value) => Number(value).validNel
       case RMessageReference(resolved) =>
         resolved
           .value
