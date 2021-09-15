@@ -9,12 +9,32 @@ sealed trait FluentValue {
 
 object FluentValue {
 
-  case class Text(value: String) extends FluentValue {
-    override def asString: String = value
+  case class Text(asString: String) extends FluentValue
+
+  sealed trait Number extends FluentValue {
+
+    def asDouble: Double
   }
 
-  case class Number(value: Double) extends FluentValue {
-    override def asString: String = value.toString
+  object Number {
+
+    def apply(value: Long): Number = Integer(value)
+
+    def apply(value: Double): Number = Decimal(value)
+
+    case class Integer(value: Long) extends Number {
+      override def asDouble: Double = value.toDouble
+
+      override def asString: String = value.toString
+    }
+
+    case class Decimal(value: Double) extends Number {
+      override def asDouble: Double = value
+
+      override def asString: String = value.toString
+    }
+
+    def unapply(arg: Number): Option[Double] = Some(arg.asDouble)
   }
 
   case object Empty extends FluentValue {

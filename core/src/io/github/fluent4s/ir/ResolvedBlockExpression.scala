@@ -14,7 +14,9 @@ trait ResolvedBlockExpression {
 
   case class RPluralKey(value: String) extends RVariantKey
 
-  case class RNumberLiteralKey(value: Double) extends RVariantKey
+  case class RIntegerLiteralKey(value: Long) extends RVariantKey
+
+  case class RDecimalLiteralKey(value: Double) extends RVariantKey
 
   implicit object VariantResolver extends Resolver[FVariant, RVariant] {
 
@@ -33,11 +35,9 @@ trait ResolvedBlockExpression {
         if (context.pluralRules.getKeywords.contains(name)) RPluralKey(name).validNel
         else RWordKey(name).validNel
 
-      case NumberLiteralKey(value) =>
-        value
-          .toDoubleOption
-          .toValidNel(ResolutionError.Mismatch("Number", value))
-          .map(RNumberLiteralKey.apply)
+      case IntegerLiteralKey(value) => RIntegerLiteralKey(value).validNel
+
+      case DecimalLiteralKey(value) => RDecimalLiteralKey(value).validNel
     }
   }
 }

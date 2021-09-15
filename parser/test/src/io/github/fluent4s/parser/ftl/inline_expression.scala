@@ -275,8 +275,8 @@ class FtlInlineExpressionSpec extends UnitSpec {
   it should "parse a number literal" in {
     Ftl.inline_expression.parseAll("-10.0") match {
       case Left(e) => fail(e.toString)
-      case Right(NumberLiteral(str)) => assert(str === "-10.0")
-      case Right(pars) => fail(s"not a number literal, parsed: $pars")
+      case Right(DecimalLiteral(value)) => assert(value === -10.0)
+      case Right(pars) => fail(s"not a decimal literal, parsed: $pars")
     }
   }
 

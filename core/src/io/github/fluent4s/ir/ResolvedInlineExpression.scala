@@ -10,7 +10,9 @@ trait ResolvedInlineExpression {
 
   case class RStringLiteral(value: String) extends RInlineExpression
 
-  case class RNumberLiteral(value: Double) extends RInlineExpression
+  case class RIntegerLiteral(value: Long) extends RInlineExpression
+
+  case class RDecimalLiteral(value: Double) extends RInlineExpression
 
   case class RMessageReference(resolved: RMessage) extends RInlineExpression
 
@@ -30,11 +32,9 @@ trait ResolvedInlineExpression {
 
       case StringLiteral(value) => RStringLiteral(value).validNel
 
-      case NumberLiteral(value) =>
-        value
-          .toDoubleOption
-          .toValidNel(ResolutionError(s"Number expected, got $value"))
-          .map(RNumberLiteral.apply)
+      case IntegerLiteral(value) => RIntegerLiteral(value).validNel
+
+      case DecimalLiteral(value) => RDecimalLiteral(value).validNel
 
       case FunctionReference(id, arguments) => ResolutionError("Not implemented").invalidNel //TODO Resolve FunctionReference
 
