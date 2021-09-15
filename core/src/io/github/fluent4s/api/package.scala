@@ -8,7 +8,11 @@ package object api {
     override def asFluent(value: String): FluentValue = Text(value)
   }
 
-  implicit object DoubleArgument extends FluentArgument[Double] {
+  implicit object IntegerArgument extends FluentArgument[Long] {
+    override def asFluent(value: Long): FluentValue = Number(value)
+  }
+
+  implicit object DecimalArgument extends FluentArgument[Double] {
     override def asFluent(value: Double): FluentValue = Number(value)
   }
 }

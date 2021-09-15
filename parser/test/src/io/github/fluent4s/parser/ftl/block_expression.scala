@@ -81,28 +81,32 @@ class FtlBlockExpressionSpec extends UnitSpec {
           Ftl.variant_key.parseAll(s"[$value]") match {
             case Left(e) => fail(e.toString)
             case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-            case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+            case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+            case Right(IntegerLiteralKey(key)) => assert(value === key)
           }
         }
         withClue(s"parsing: [ $value]") {
           Ftl.variant_key.parseAll(s"[ $value]") match {
             case Left(e) => fail(e.toString)
             case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-            case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+            case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+            case Right(IntegerLiteralKey(key)) => assert(value === key)
           }
         }
         withClue(s"parsing: [ $value ]") {
           Ftl.variant_key.parseAll(s"[ $value ]") match {
             case Left(e) => fail(e.toString)
             case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-            case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+            case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+            case Right(IntegerLiteralKey(key)) => assert(value === key)
           }
         }
         withClue(s"parsing: [$value ]") {
           Ftl.variant_key.parseAll(s"[$value ]") match {
             case Left(e) => fail(e.toString)
             case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-            case Right(NumberLiteralKey(key)) => assert(s"$value" === key)
+            case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+            case Right(IntegerLiteralKey(key)) => assert(value === key)
           }
         }
       }
@@ -115,28 +119,32 @@ class FtlBlockExpressionSpec extends UnitSpec {
         Ftl.variant_key.parseAll(s"[$sign$a$b]") match {
           case Left(e) => fail(e.toString)
           case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-          case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+          case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+          case Right(IntegerLiteralKey(key)) => assert(s"$sign$a$b".toLong === key)
         }
       }
       withClue(s"parsing: [ $sign$a$b]") {
         Ftl.variant_key.parseAll(s"[ $sign$a$b]") match {
           case Left(e) => fail(e.toString)
           case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-          case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+          case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+          case Right(IntegerLiteralKey(key)) => assert(s"$sign$a$b".toLong === key)
         }
       }
       withClue(s"parsing: [ $sign$a$b ]") {
         Ftl.variant_key.parseAll(s"[ $sign$a$b ]") match {
           case Left(e) => fail(e.toString)
           case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-          case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+          case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+          case Right(IntegerLiteralKey(key)) => assert(s"$sign$a$b".toLong === key)
         }
       }
       withClue(s"parsing: [$sign$a$b ]") {
         Ftl.variant_key.parseAll(s"[$sign$a$b ]") match {
           case Left(e) => fail(e.toString)
           case Right(IdentifierKey(id)) => fail(s"identifier parsed: ${id.name}")
-          case Right(NumberLiteralKey(key)) => assert(s"$sign$a$b" === key)
+          case Right(DecimalLiteralKey(id)) => fail(s"decimal passed parsed: $id")
+          case Right(IntegerLiteralKey(key)) => assert(s"$sign$a$b".toLong === key)
         }
       }
     }
@@ -149,7 +157,8 @@ class FtlBlockExpressionSpec extends UnitSpec {
         Ftl.variant_key.parseAll(s"[ $i$random_tail]") match {
           case Left(e) => fail(e.toString)
           case Right(IdentifierKey(id)) => assert(id.name === s"$i$random_tail")
-          case Right(NumberLiteralKey(key)) => fail(s"number literal parsed: ${key}")
+          case Right(IntegerLiteralKey(key)) => fail(s"integer literal parsed: ${key}")
+          case Right(DecimalLiteralKey(key)) => fail(s"decimal literal parsed: ${key}")
         }
       }
     }
@@ -159,7 +168,8 @@ class FtlBlockExpressionSpec extends UnitSpec {
         Ftl.variant_key.parseAll(s"[$i$random_tail ]") match {
           case Left(e) => fail(e.toString)
           case Right(IdentifierKey(id)) => assert(id.name === s"$i$random_tail")
-          case Right(NumberLiteralKey(key)) => fail(s"number literal parsed: ${key}")
+          case Right(IntegerLiteralKey(key)) => fail(s"integer literal parsed: ${key}")
+          case Right(DecimalLiteralKey(key)) => fail(s"decimal literal parsed: ${key}")
         }
       }
     }
@@ -176,17 +186,14 @@ class FtlBlockExpressionSpec extends UnitSpec {
         "\n[ 2] Two",
         "\n[3 ] Three",
         "\n[4]Four",
-        "\n[5]    Five",
-        "\n[6.0] Six",
-        "\n[-7] Minus Seven",
-        "\n[-7.0] Minus Seven Dot Zero"
+        "\n[5]    Five"
       )
     ) {
       withClue(s"parsing: $variant") {
         Ftl.variant.parseAll(variant) match {
           case Left(e) => fail(e.toString)
           case Right(pars) =>
-            assert(pars.default == false && pars.key.isInstanceOf[NumberLiteralKey])
+            assert(pars.default == false && pars.key.isInstanceOf[IntegerLiteralKey])
         }
       }
     }
@@ -228,17 +235,14 @@ class FtlBlockExpressionSpec extends UnitSpec {
         "\n*[3 ] Three",
         "\n*[4]Four",
         "\n*[5]    Five",
-        "\n*[6.0] Six",
         "\n*[-7] Minus Seven",
-        "\n*[-7.0] Minus Seven Dot Zero",
-        "\n *[0.0] SpaceZer0"
       )
     ) {
       withClue(s"parsing: $variant") {
         Ftl.default_variant.parseAll(variant) match {
           case Left(e) => fail(e.toString)
           case Right(pars) =>
-            assert(pars.default == true && pars.key.isInstanceOf[NumberLiteralKey])
+            assert(pars.default == true && pars.key.isInstanceOf[IntegerLiteralKey])
         }
       }
     }

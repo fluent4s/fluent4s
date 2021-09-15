@@ -64,15 +64,15 @@ object Ftl {
   /* Literals */
   private[parser] val string_literal: P[String] =
     (P.char('"') *> quoted_char.rep0 <* P.char('"')).map(_.mkString(""));
-  private[parser] val number_literal: P[String] =
+  private[parser] val number_literal: P[Either[Double, Long]] =
     (P.char('-').string.?.with1 ~ (digits.string ~ (P
       .char('.')
       .string ~ digits.string).?)).map({
       case (Some(a: String), (b: String, Some((c: String, d: String)))) =>
-        a + b + c + d
-      case (_, (b: String, Some((c: String, d: String)))) => b + c + d
-      case (Some(a: String), (b: String, _)) => a + b
-      case (_, (b: String, _)) => b
+        Left((a + b + c + d).toDouble)
+      case (_, (b: String, Some((c: String, d: String)))) => Left((b + c + d).toDouble)
+      case (Some(a: String), (b: String, _)) => Right((a + b).toLong)
+      case (_, (b: String, _)) => Right(b.toLong)
     })
 
   /* Identifier */
@@ -83,7 +83,7 @@ object Ftl {
   /* Block Expressions */
   private[parser] val variant_key: P[FVariantKey] =
     P.char('[').backtrack.soft *> blank *> (number_literal.map(
-      new NumberLiteralKey(_)
+      _.fold(DecimalLiteralKey.apply, IntegerLiteralKey.apply)
     ) | identifier.map(new IdentifierKey(_))) <* (blank <* P.char(']'))
   private[parser] val variant: P[FVariant] =
     ((line_end.backtrack.soft *> blank_inline.? *> P.not(
@@ -124,7 +124,7 @@ object Ftl {
     .char(':')
     .surroundedBy(blank)) ~ (string_literal.map(
     new StringLiteral(_)
-  ) | number_literal.map(new NumberLiteral(_)))).map { case (a, b) => new NamedArgument(a, b) };
+  ) | number_literal.map(_.fold(DecimalLiteral.apply, IntegerLiteral.apply)))).map { case (a, b) => new NamedArgument(a, b) };
   private[parser] val argument: P[FArgument] =
     named_argument.backtrack | P
       .defer(inline_expression)
@@ -177,7 +177,7 @@ object Ftl {
   private[parser] def inline_expression: P[FInlineExpression] =
     string_literal.backtrack
       .map(new StringLiteral(_))
-      .orElse(number_literal.backtrack.map(new NumberLiteral(_)))
+      .orElse(number_literal.backtrack.map(_.fold(DecimalLiteral.apply, IntegerLiteral.apply)))
       .orElse(function_reference.backtrack)
       .orElse(message_reference.backtrack)
       .orElse(term_reference.backtrack)

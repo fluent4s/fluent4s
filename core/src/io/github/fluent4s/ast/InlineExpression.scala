@@ -16,11 +16,19 @@ trait InlineExpression {
   case class StringLiteral(value: String) extends FInlineExpression
 
   /**
-   * A number literal.
+   * An integer literal.
    *
-   * @param value The inner value as a String.
+   * @param value The inner value as a Long.
    */
-  case class NumberLiteral(value: String) extends FInlineExpression
+  case class IntegerLiteral(value: Long) extends FInlineExpression
+
+
+  /**
+   * A decimal number literal.
+   *
+   * @param value The inner value as a Double.
+   */
+  case class DecimalLiteral(value: Double) extends FInlineExpression
 
   /**
    * A reference to a function.

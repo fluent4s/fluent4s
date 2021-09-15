@@ -39,8 +39,17 @@ trait BlockExpression {
    *
    * See [[FVariantKey]].
    *
-   * @param value the inner number to use as a key.
+   * @param value the inner integer to use as a key.
    */
-  case class NumberLiteralKey(value: String) extends FVariantKey
+  case class IntegerLiteralKey(value: Long) extends FVariantKey
+
+  /**
+   * A number key of a [[FVariant]].
+   *
+   * See [[FVariantKey]].
+   *
+   * @param value the inner decimal number to use as a key.
+   */
+  case class DecimalLiteralKey(value: Double) extends FVariantKey
 
 }

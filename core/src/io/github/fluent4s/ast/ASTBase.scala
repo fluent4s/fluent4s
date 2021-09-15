@@ -98,7 +98,8 @@ trait ASTBase {
   })
   implicit val showFInlineExpression: Show[FInlineExpression] = Show.show({
     case StringLiteral(value) => s"StringLiteral(value: $value)"
-    case NumberLiteral(value) => s"NumberLiteral(value: $value)"
+    case IntegerLiteral(value) => s"IntegerLiteral(value: $value)"
+    case DecimalLiteral(value) => s"DecimalLiteral(value: $value)"
     case FunctionReference(id, args) =>
       s"FunctionReference(identifier: ${id.show}, arguments: ${args.show})"
     case MessageReference(id, attribute) =>
@@ -118,7 +119,8 @@ trait ASTBase {
   )
   implicit val showFVariantKey: Show[FVariantKey] = Show.show({
     case IdentifierKey(value) => s"IdentifierKey(value: ${value.show})"
-    case NumberLiteralKey(value) => s"NumberLiteralKey(value: $value)"
+    case IntegerLiteralKey(value) => s"IntegerLiteralKey(value: $value)"
+    case DecimalLiteralKey(value) => s"DecimalLiteralKey(value: $value)"
   })
   implicit val showFCallArguments: Show[FCallArguments] = Show.show(args =>
     s"FCallArguments {\npositional: [\n" + args.positional.map(_.show).mkString(

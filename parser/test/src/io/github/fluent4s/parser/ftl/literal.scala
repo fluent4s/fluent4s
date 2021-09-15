@@ -184,20 +184,20 @@ class FtlLiteralSpec extends UnitSpec {
   "number_literal parser" should "parse signed and unsigned integers" in {
     withClue("parsing unsigned number") {
       for (i <- 0 to 10) {
-        val digits = r.nextInt(Int.MaxValue).toString
+        val digits = r.nextInt(Int.MaxValue)
         withClue(s"parsing $digits") {
           assert(
-            Ftl.number_literal.parseAll(s"$digits") == Right(digits)
+            Ftl.number_literal.parseAll(digits.toString) == Right(Right(digits))
           )
         }
       }
     }
     withClue("parsing signed number") {
       for (i <- 0 to 10) {
-        val digits = r.nextInt(Int.MaxValue).toString
+        val digits = r.nextInt(Int.MaxValue)
         withClue(s"parsing -$digits") {
           assert(
-            Ftl.number_literal.parseAll(s"-$digits") == Right(s"-$digits")
+            Ftl.number_literal.parseAll(s"-$digits") === Right(Right(-digits))
           )
         }
       }
@@ -207,20 +207,20 @@ class FtlLiteralSpec extends UnitSpec {
   it should "parse signed and unsigned float" in {
     withClue("parsing unsigned number") {
       for (i <- 0 to 10) {
-        val digits = r.nextFloat.toString
+        val digits = r.nextDouble
         withClue(s"parsing $digits") {
           assert(
-            Ftl.number_literal.parseAll(s"$digits") == Right(digits)
+            Ftl.number_literal.parseAll(digits.toString) === Right(Left(digits))
           )
         }
       }
     }
     withClue("parsing signed number") {
       for (i <- 0 to 10) {
-        val digits = r.nextFloat.toString
+        val digits = r.nextDouble
         withClue(s"parsing -$digits") {
           assert(
-            Ftl.number_literal.parseAll(s"-$digits") == Right(s"-$digits")
+            Ftl.number_literal.parseAll(s"-$digits") == Right(Left(-digits))
           )
         }
       }
