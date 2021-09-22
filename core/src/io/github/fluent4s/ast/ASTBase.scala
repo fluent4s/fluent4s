@@ -1,10 +1,10 @@
 package io.github.fluent4s.ast
 
+import cats.Eq
 import cats.Show
 import cats.implicits._
 
 trait ASTBase {
-
 
   /**
    * Root node of a Fluent Translation list .
@@ -53,7 +53,7 @@ trait ASTBase {
    * @param variants List of possible [[FVariant]] to express
    */
   case class Select(val selector: FInlineExpression, val variants: List[FVariant])
-    extends FExpression
+      extends FExpression
 
   /**
    * A [[FInlineExpression]] part of a [[FExpression]].
@@ -132,4 +132,74 @@ trait ASTBase {
   })
   implicit val showNamedArgument: Show[NamedArgument] =
     Show.show(arg => s"NamedArgument{\nname: ${arg.name.show},\nvalue: ${arg.value.show}\n}")
+
+  // Eq implicits
+  implicit val eqFResource: Eq[FResource] =
+    Eq.instance(_.body === _.body)
+  implicit val eqFAttribute: Eq[FAttribute] =
+    Eq.instance((x1, x2) => Eq.eqv(x1.id, x2.id) && (Eq.eqv(x1.value, x2.value)))
+
+  implicit val eqFIdentifier: Eq[FIdentifier] = Eq.instance(_.name === _.name)
+  implicit val eqFEntry: Eq[FEntry] = Eq.instance({
+    case (Junk(c1), Junk(c2)) => c1 === c2
+    case (Message(b1), Message(b2)) => b1 === b2
+    case (Term(b1), Term(b2)) => b1 === b2
+    case (Comment(b1), Comment(b2)) => b1 === b2
+    case (GroupComment(b1), GroupComment(b2)) => b1 === b2
+    case (ResourceComment(b1), ResourceComment(b2)) => b1 === b2
+    case _ => false
+  })
+  implicit val eqFMessage: Eq[FMessage] = Eq.instance((m1, m2) =>
+    m1.id === m2.id && m1.attributes == m2.attributes && m1.value == m2.value
+  )
+  implicit val eqFTerm: Eq[FTerm] =
+    Eq.instance((m1, m2) =>
+      m1.id === m2.id && m1.attributes == m2.attributes && m1.value == m2.value
+    )
+  implicit val eqFComment: Eq[FComment] = Eq.instance((c1, c2) => c1.content === c2.content)
+  implicit val eqFPattern: Eq[FPattern] =
+    Eq.instance((p1, p2) => p1.elements === p2.elements)
+  implicit val eqFPatternElement: Eq[FPatternElement] = Eq.instance({
+    case (TextElement(v1), TextElement(v2)) => v1 === v2
+    case (BlockTextElement(id1, v1), BlockTextElement(id2, v2)) => id1 === id2 && v1 === v2
+    case (Placeable(exp1), Placeable(exp2)) => exp1 === exp2
+    case _ => false
+  })
+  implicit val eqFInlineExpression: Eq[FInlineExpression] = Eq.instance({
+    case (StringLiteral(v1), StringLiteral(v2)) => v1 === v2
+    case (NumberLiteral(v1), NumberLiteral(v2)) => v1 === v2
+    case (FunctionReference(id1, args1), FunctionReference(id2, args2)) =>
+      id1 === id2 && args1 === args2
+    case (MessageReference(id1, attribute1), MessageReference(id2, attribute2)) =>
+      id1 === id2 && attribute1 === attribute2
+    case (TermReference(id1, attribute1, args1), TermReference(id2, attribute2, args2)) =>
+      id1 === id2 && args1 === args2 && attribute1 === attribute2
+    case (VariableReference(id1), VariableReference(id2)) => id1 === id2
+    case (PlaceableExpr(exp1), PlaceableExpr(exp2)) => exp1 === exp2
+    case _ => false
+  })
+  implicit val eqFExpression: Eq[FExpression] = Eq.instance({
+    case (Select(selector1, variants1), Select(selector2, variants2)) =>
+      selector1 === selector2 && variants1 === variants2
+    case (Inline(b1), Inline(b2)) => b1 === b2
+    case _ => false
+  })
+  implicit val eqFVariant: Eq[FVariant] =
+    Eq.instance((var1, var2) => var1.key === var2.key && var1.value === var2.value)
+  implicit val eqFVariantKey: Eq[FVariantKey] = Eq.instance({
+    case (IdentifierKey(v1), IdentifierKey(v2)) => v1 === v2
+    case (NumberLiteralKey(v1), NumberLiteralKey(v2)) => v1 === v2
+    case _ => false
+  })
+  implicit val eqFCallArguments: Eq[FCallArguments] = Eq.instance((args1, args2) =>
+    args1.named === args2.named && args1.positional === args2.positional
+  )
+  implicit val eqFArgument: Eq[FArgument] = Eq.instance({
+    case (PositionalArgument(v1), PositionalArgument(v2)) => v1 === v2
+    case (NamedArgument(n1, v1), NamedArgument(n2, v2)) =>
+      n1 === n2 && v1 === v2
+    case _ => false
+  })
+  implicit val eqNamedArgument: Eq[NamedArgument] =
+    Eq.instance((arg1, arg2) => arg1 === arg2)
 }

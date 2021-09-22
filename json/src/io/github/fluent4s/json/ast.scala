@@ -1,7 +1,7 @@
 package io.github.fluent4s.json
 
 import io.circe._, io.circe.generic.semiauto._
-import io.github.fluent4s.ast._;
+import io.github.fluent4s.ast._
 
 object decoder {
 

@@ -70,10 +70,17 @@ object parser extends Fluent4sModule {
   )
 
   object test extends Tests with TestFramework { 
+   
+    def moduleDeps = super.moduleDeps ++ Seq(json)
 
     def ivyDeps = super.ivyDeps() ++ 
       core.compileIvyDeps() ++ 
-      json.compileIvyDeps()
+      json.compileIvyDeps() ++
+      Agg( 
+        ivy"io.circe::circe-core::0.14.1",
+        ivy"io.circe::circe-parser::0.14.1",
+        ivy"io.circe::circe-generic::0.14.1" 
+      )
 
   }
 }
