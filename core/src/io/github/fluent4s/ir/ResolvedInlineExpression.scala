@@ -18,6 +18,11 @@ trait ResolvedInlineExpression {
 
   case class RAttributeReference(resolved: RPattern) extends RInlineExpression
 
+  /**
+   * Represent a resolved term reference.
+   * @param resolved the RTerm retrieved by id
+   * @param arguments the arguments to pass to the local context
+   */
   case class RTermReference(resolved: RTerm, arguments: Option[RCallArguments]) extends RInlineExpression
 
   case class RVariableReference(id: String) extends RInlineExpression
@@ -28,7 +33,7 @@ trait ResolvedInlineExpression {
 
   implicit object InlineResolver extends Resolver[FInlineExpression, RInlineExpression] {
 
-    override def resolve(input: FInlineExpression)(implicit context: Context): Resolution[RInlineExpression] = input match {
+    override def resolve(input: FInlineExpression)(implicit context: ResolutionContext): Resolution[RInlineExpression] = input match {
 
       case StringLiteral(value) => RStringLiteral(value).validNel
 
@@ -80,7 +85,7 @@ trait ResolvedInlineExpression {
 
   implicit object CallArgumentsResolver extends Resolver[FCallArguments, RCallArguments] {
 
-    override def resolve(input: FCallArguments)(implicit context: Context): Resolution[RCallArguments] = (
+    override def resolve(input: FCallArguments)(implicit context: ResolutionContext): Resolution[RCallArguments] = (
       input
         .positional
         .map(_.resolve)

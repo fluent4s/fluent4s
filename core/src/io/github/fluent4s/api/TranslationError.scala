@@ -1,6 +1,10 @@
 package io.github.fluent4s.api
 
-class TranslationError(message: String) extends Error(message)
+/**
+ * Represent an error related to the evaluation process (unknown message, missing argument...).
+ * @param message the description of this error
+ */
+case class TranslationError(message: String) extends Error(message)
 
 object TranslationError {
 

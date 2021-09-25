@@ -1,5 +1,9 @@
 package io.github.fluent4s.api
 
+/**
+ * Represent an error occurred during the resolution process.
+ * @param message the description of this error
+ */
 case class ResolutionError(message: String) extends Error
 
 object ResolutionError {

@@ -17,7 +17,7 @@ trait ResolvedPattern {
 
   implicit object PatternResolver extends Resolver[FPattern, RPattern] {
 
-    override def resolve(input: FPattern)(implicit context: Context): Resolution[RPattern] =
+    override def resolve(input: FPattern)(implicit context: ResolutionContext): Resolution[RPattern] =
       input
         .elements
         .map(_.resolve(context))
@@ -26,7 +26,7 @@ trait ResolvedPattern {
 
   implicit object PatternElementResolver extends Resolver[FPatternElement, RPatternElement] {
 
-    override def resolve(input: FPatternElement)(implicit context: Context): Resolution[RPatternElement] = input match {
+    override def resolve(input: FPatternElement)(implicit context: ResolutionContext): Resolution[RPatternElement] = input match {
 
       case TextElement(value) => RTextElement(value).validNel
 

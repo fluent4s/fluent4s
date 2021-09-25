@@ -2,6 +2,9 @@ package io.github.fluent4s.api
 
 import cats.Monoid
 
+/**
+ * Represent a valid ProjectFluent value. Can be either text or number.
+ */
 sealed trait FluentValue {
 
   def asString: String
@@ -11,6 +14,9 @@ object FluentValue {
 
   case class Text(asString: String) extends FluentValue
 
+  /**
+   * Represent a valid numerical ProjectFluent value.
+   */
   sealed trait Number extends FluentValue {
 
     def asDouble: Double

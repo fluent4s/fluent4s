@@ -7,6 +7,10 @@ import io.github.fluent4s.util._
 
 trait ResolvedBase {
 
+  /**
+   * Represent the root of the Intermediate Representation
+   * @param body a Map representing the pair id -> resolved node
+   */
   case class RResource(body: Map[String, REntry])
 
   type RAttribute = (String, RPattern)
@@ -19,11 +23,11 @@ trait ResolvedBase {
 
   implicit object ResourceResolver extends Resolver[FResource, RResource] {
 
-    override def resolve(input: FResource)(implicit context: Context): Resolution[RResource] = {
+    override def resolve(input: FResource)(implicit context: ResolutionContext): Resolution[RResource] = {
       input
         .body
         .filterType[ReferenceEntry]
-        .foldLeft(context.validNel[ResolutionError])((ctxResolution: Resolution[Context], entry: ReferenceEntry) => (
+        .foldLeft(context.validNel[ResolutionError])((ctxResolution: Resolution[ResolutionContext], entry: ReferenceEntry) => (
             ctxResolution,
             ctxResolution.andThen(entry.resolve(_))
             ).mapN(_.withReference(entry.body.id.name, _))
@@ -34,13 +38,13 @@ trait ResolvedBase {
 
   implicit object AttributeResolver extends Resolver[FAttribute, RAttribute] {
 
-    override def resolve(input: FAttribute)(implicit context: Context): Resolution[(String, RPattern)] =
+    override def resolve(input: FAttribute)(implicit context: ResolutionContext): Resolution[(String, RPattern)] =
       input.value.resolve.map((input.id.name, _))
   }
 
   implicit object ExpressionResolver extends Resolver[FExpression, RExpression] {
 
-    override def resolve(input: FExpression)(implicit context: Context): Resolution[RExpression] = input match {
+    override def resolve(input: FExpression)(implicit context: ResolutionContext): Resolution[RExpression] = input match {
 
       case Select(selector, variants) => (
         selector.resolve(context),

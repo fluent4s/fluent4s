@@ -7,7 +7,7 @@ trait ASTBase {
 
 
   /**
-   * Root node of a Fluent Translation list .
+   * Root node of a Fluent AST.
    *
    * A [[FResource]] contain a body with a list of [[FEntry]] nodes.
    *
