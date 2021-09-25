@@ -3,7 +3,7 @@ package io.github.fluent4s.test
 import cats.data.Validated._
 import cats.implicits._
 
-import io.github.fluent4s.ir.Context
+import io.github.fluent4s.ir.ResolutionContext
 
 import java.util.Locale
 import io.github.fluent4s.ast._
@@ -15,7 +15,7 @@ object ResolutionSuite extends TestSuite {
 
   val tests: Tests = Tests {
 
-    val context = Context.fromValues(Locale.ENGLISH)(
+    val context = ResolutionContext.fromValues(Locale.ENGLISH)(
       "msg" -> RMessage(None, Map.empty),
       "msgWithAttr" -> RMessage(None, Map(
         "attr" -> List.empty
@@ -49,7 +49,7 @@ object ResolutionSuite extends TestSuite {
     }
 
     test("variableReference") {
-      assert(VariableReference(FIdentifier("foo")).resolve(Context.Empty) == RVariableReference("foo").validNel)
+      assert(VariableReference(FIdentifier("foo")).resolve(ResolutionContext.Empty) == RVariableReference("foo").validNel)
     }
   }
 }

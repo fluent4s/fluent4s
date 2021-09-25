@@ -24,8 +24,8 @@ trait EvalBase {
           else (selectorInput, variant.key) match {
             case (_, RWordKey(value)) => value.equals(selectorInput.asString)
             case (Number(n), RPluralKey(value)) => rules.matches(new FixedDecimal(n), value)
-            case (Number.Integer(n), RIntegerLiteralKey(value)) => value == n
-            case (Number.Decimal(n), RDecimalLiteralKey(value)) => value == n
+            case (Number(n), RIntegerLiteralKey(value)) => value == n
+            case (Number(n), RDecimalLiteralKey(value)) => value == n
             case _ => false
           }
         }
