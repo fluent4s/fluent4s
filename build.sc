@@ -82,4 +82,6 @@ object integrationTest extends ScalaModule with TestFramework {
   def scalaVersion = "2.13.6"
 
   def moduleDeps = Seq(core, parser)
+
+  def ivyDeps = super.ivyDeps() ++ core.compileIvyDeps()
 }
