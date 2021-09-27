@@ -1,7 +1,8 @@
 package io.github.fluent4s.parser.ftl
 
 import cats.implicits.toShow
-import io.github.fluent4s.parser.{Ftl, UnitSpec}
+import io.github.fluent4s.parser.UnitSpec
+import io.github.fluent4s.parser.Ftl.{Parser => Ftl}
 import io.github.fluent4s.ast._
 import org.scalatest.matchers.should._
 
