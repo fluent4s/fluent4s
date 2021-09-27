@@ -76,3 +76,10 @@ object parser extends Fluent4sModule {
     def testFramework = "org.scalatest.tools.Framework"
   }
 }
+
+object integrationTest extends ScalaModule with TestFramework {
+
+  def scalaVersion = "2.13.6"
+
+  def moduleDeps = Seq(core, parser)
+}
