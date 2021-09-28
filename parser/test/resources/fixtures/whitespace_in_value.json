@@ -1,0 +1,44 @@
+{
+  "body" : [
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Caution, lines 6 and 7 contain white-space-only lines"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 2,
+                  "value" : "first line"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 2,
+                  "value" : "last line"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,559 @@
+{
+  "body" : [
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "A multiline value"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "continued on the next line"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "and also down here."
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "A multiline value starting"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "on a new line."
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key03"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "A multiline attribute value"
+                    }
+                  },
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 8,
+                      "value" : "continued on the next line"
+                    }
+                  },
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 8,
+                      "value" : "and also down here."
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key04"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 8,
+                      "value" : "A multiline attribute value"
+                    }
+                  },
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 8,
+                      "value" : "staring on a new line"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key05"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 1,
+                  "value" : "A multiline value with non-standard"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 5,
+                  "value" : "indentation."
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key06"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "A multiline value with "
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "placeables"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "at"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "TextElement" : {
+                  "value" : " the beginning and the end"
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "of lines"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key07"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "A multiline value"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "TextElement" : {
+                  "value" : " starting and ending "
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "with a placeable"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key08"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Leading and trailing whitespace.     "
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key09"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "zero"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 5,
+                  "value" : "three"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "two"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 3,
+                  "value" : "one"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 2,
+                  "value" : "zero"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key10"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 6,
+                  "value" : "two"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "zero"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 8,
+                  "value" : "four"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key11"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 6,
+                  "value" : "two"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "zero"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key12"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "four"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key13"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "four"
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
+      }
+    }
+  ]
+}
