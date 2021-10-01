@@ -6,6 +6,11 @@ import io.github.fluent4s.ir.RResource
 
 import java.util.Locale
 
+/**
+ * Represent a loaded fluent resource.
+ * @param locale the locale of this resource, used for plural rules.
+ * @param ir the intermediate representation of this resource.
+ */
 class FluentResource(val locale: Locale, ir: RResource) {
 
   /**

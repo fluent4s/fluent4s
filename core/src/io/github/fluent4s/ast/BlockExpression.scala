@@ -19,7 +19,7 @@ trait BlockExpression {
    * A key of a [[FVariant]].
    *
    * Can either be an identifier (not a unique one) or a number.
-   * See [[IdentifierKey]] and [[NumberLiteralKey]].
+   * See [[IdentifierKey]], [[IntegerLiteralKey]] and [[DecimalLiteralKey]].
    */
   sealed trait FVariantKey
 
