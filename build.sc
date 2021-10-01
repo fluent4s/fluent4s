@@ -62,7 +62,7 @@ object parser extends Fluent4sModule {
 
   def moduleVersion = "0"
 
-  def moduleDeps = Seq(core)
+  def compileModuleDeps = Seq(core)
 
   def ivyDeps = Agg(
     ivy"org.typelevel::cats-core::2.3.0",
