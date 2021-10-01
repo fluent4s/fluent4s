@@ -50,7 +50,7 @@ import io.github.iltotore.fluent4s.parser.Ftl.Parser
 
 You firstly need to use the `decode` method to parse and resolve your fluent text:
 ```scala
-    val ftl =
+val ftl =
   """# Simple things are simple.
     |hello-user = Hello, {$userName}!
     |
