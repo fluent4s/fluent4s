@@ -1,4 +1,5 @@
 # Fluent4s
+[![Build & Test](https://github.com/fluent4s/fluent4s/actions/workflows/main.yaml/badge.svg)](https://github.com/fluent4s/fluent4s/actions/workflows/main.yaml)
 
 Fluent4s is a Scala implementation of [The Project Fluent](https://projectfluent.org/),
 a new spec for translation files.
