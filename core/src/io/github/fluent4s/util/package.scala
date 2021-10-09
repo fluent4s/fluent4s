@@ -3,11 +3,14 @@ package io.github.fluent4s
 import cats.Semigroup
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import io.github.fluent4s.api.Evaluation
 
 import scala.collection.IterableOnceOps
 import scala.reflect.ClassTag
 
 package object util {
+
+  type DateStyle = DateStyle.Value
 
   implicit class ValidatedOps[E, A](value: Validated[E, A]) {
 
@@ -20,5 +23,10 @@ package object util {
     def filterType[B](implicit tag: ClassTag[B]): CC[B] = value
       .filter(tag.runtimeClass.isInstance)
       .asInstanceOf[CC[B]]
+  }
+
+  implicit class InfixAsString[A](value: A)(implicit asStringInst: AsString[A]) {
+
+    def asString: Evaluation[String] = asStringInst.asString(value)
   }
 }
