@@ -12,5 +12,5 @@ trait Evaluator[-A] {
    * @param context data required by the evaluation process (for example, user arguments)
    * @return the evaluated FluentValue or evaluation errors
    */
-  def evaluate(input: A, key: String)(implicit context: EvalContext): ValidatedNel[TranslationError, FluentValue]
+  def evaluate(input: A, key: String)(implicit context: EvalContext): Translation
 }

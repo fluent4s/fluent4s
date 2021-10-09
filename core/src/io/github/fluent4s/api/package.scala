@@ -9,6 +9,9 @@ import java.util.Locale
 
 package object api {
 
+  type Evaluation[T] = ValidatedNel[TranslationError, T]
+  type Translation = Evaluation[FluentValue]
+
   /**
    * Parse the given text into an intermediate representation.
    * @param text the fluent code to be parsed
@@ -16,10 +19,10 @@ package object api {
    * @param parser the parser used to generate the AST
    * @return a ValidatedNel containing the parsed resource or a list of parsing/resolution errors
    */
-  def decode(text: String, locale: Locale)(implicit parser: FluentParser): ValidatedNel[Error, FluentResource] =
+  def decode(text: String, locale: Locale, functions: Map[String, FluentFunction] = Map.empty)(implicit parser: FluentParser): ValidatedNel[Error, FluentResource] =
     parser
       .parse(text)
       .toValidatedNel
-      .andThen(_.resolve(ResolutionContext(locale, Map.empty)))
+      .andThen(_.resolve(ResolutionContext(locale, Map.empty, FluentFunction.BuiltIn ++ functions)))
       .map(new FluentResource(locale, _))
 }

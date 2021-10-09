@@ -1,7 +1,7 @@
 package io.github.fluent4s.ir
 
 import cats.implicits._
-import io.github.fluent4s.api.ResolutionError
+import io.github.fluent4s.api.{FluentFunction, ResolutionError}
 import io.github.fluent4s.ast._
 
 trait ResolvedInlineExpression {
@@ -13,6 +13,8 @@ trait ResolvedInlineExpression {
   case class RIntegerLiteral(value: Long) extends RInlineExpression
 
   case class RDecimalLiteral(value: Double) extends RInlineExpression
+
+  case class RFunctionReference(resolved: FluentFunction, args: RCallArguments) extends RInlineExpression
 
   case class RMessageReference(resolved: RMessage) extends RInlineExpression
 
@@ -41,7 +43,11 @@ trait ResolvedInlineExpression {
 
       case DecimalLiteral(value) => RDecimalLiteral(value).validNel
 
-      case FunctionReference(id, arguments) => ResolutionError("Not implemented").invalidNel //TODO Resolve FunctionReference
+      case FunctionReference(id, arguments) =>
+        (
+          arguments.resolve,
+          context.getFunction(id.name).toValidNel(ResolutionError.NotFound(id.name))
+          ).mapN((args, resolved) => RFunctionReference(resolved, args))
 
       case MessageReference(id, attribute) => (context.getReference(id.name), attribute) match {
 

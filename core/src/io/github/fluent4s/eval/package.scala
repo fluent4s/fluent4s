@@ -7,9 +7,11 @@ package object eval extends EvalBase
   with EvalEntry
   with EvalInlineExpression
   with EvalPattern {
+  
+  type Translation = api.Translation
 
   implicit class InfixEvaluator[A](value: A)(implicit evaluator: Evaluator[A]) {
 
-    def evaluate(key: String)(implicit context: EvalContext): ValidatedNel[TranslationError, FluentValue] = evaluator.evaluate(value, key)
+    def evaluate(key: String)(implicit context: EvalContext): Translation = evaluator.evaluate(value, key)
   }
 }

@@ -8,7 +8,7 @@ import io.github.fluent4s.ir._
 trait EvalEntry {
 
   implicit object EntryResolver extends Evaluator[REntry] {
-    override def evaluate(input: REntry, key: String)(implicit context: EvalContext): ValidatedNel[TranslationError, FluentValue] = input match {
+    override def evaluate(input: REntry, key: String)(implicit context: EvalContext): Translation = input match {
 
       case RMessage(value, attributes) =>
         value

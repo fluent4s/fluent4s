@@ -15,7 +15,7 @@ trait EvalBase {
   //noinspection ScalaDeprecation
   @SuppressWarnings(Array("deprecation")) //ICU4J's internal API is required to check plural case
   implicit object ExpressionEvaluator extends Evaluator[RExpression] {
-    override def evaluate(input: RExpression, key: String)(implicit context: EvalContext): ValidatedNel[TranslationError, FluentValue] = input match {
+    override def evaluate(input: RExpression, key: String)(implicit context: EvalContext): Translation = input match {
 
       case RSelect(selector, variants) => selector.evaluate(key).andThen { selectorInput =>
         val rules = PluralRules.forLocale(context.locale)
@@ -39,7 +39,7 @@ trait EvalBase {
 
   implicit object ResourceEvaluator extends Evaluator[RResource] {
 
-    override def evaluate(input: RResource, key: String)(implicit context: EvalContext): ValidatedNel[TranslationError, FluentValue] =
+    override def evaluate(input: RResource, key: String)(implicit context: EvalContext): Translation =
       input
         .body
         .get(key)

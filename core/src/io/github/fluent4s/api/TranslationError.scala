@@ -8,7 +8,9 @@ case class TranslationError(message: String) extends Error(message)
 
 object TranslationError {
 
-  def NaN(value: String): TranslationError = new TranslationError(s"Not a number: $value")
+  def NaN(value: String): TranslationError = TranslationError(s"Not a number: $value")
 
-  def MissingArgument(key: String): TranslationError = new TranslationError(s"Missing argument: $key")
+  def NotFound(value: String): TranslationError = TranslationError(s"Not found: $value")
+
+  def MissingArgument(key: String): TranslationError = TranslationError(s"Missing argument: $key")
 }
