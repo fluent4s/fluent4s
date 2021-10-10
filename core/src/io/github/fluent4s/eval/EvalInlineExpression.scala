@@ -30,7 +30,13 @@ trait EvalInlineExpression {
           .map(_.evaluate(key))
           .getOrElse(FluentValue.Empty.validNel)
       case RAttributeReference(resolved) => resolved.evaluate(key)
-      case RTermReference(resolved, arguments) => ??? //TODO Term ref
+      case RTermReference(resolved, arguments) =>
+        arguments
+          .map(tpl => evaluate(tpl._2, key).tupleLeft(tpl._1))
+          .toList
+          .sequence
+          .map(_.toMap)
+          .andThen(args => resolved.evaluate(key)(context.copy(args = context.args ++ args)))
       case RVariableReference(id) =>
         context.get(id)
           .toValidNel(TranslationError.MissingArgument(id))

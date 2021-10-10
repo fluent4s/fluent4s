@@ -25,7 +25,7 @@ trait ResolvedInlineExpression {
    * @param resolved the RTerm retrieved by id
    * @param arguments the arguments to pass to the local context
    */
-  case class RTermReference(resolved: RTerm, arguments: Option[RCallArguments]) extends RInlineExpression
+  case class RTermReference(resolved: RTerm, arguments: Map[String, RInlineExpression]) extends RInlineExpression
 
   case class RVariableReference(id: String) extends RInlineExpression
 
@@ -69,7 +69,7 @@ trait ResolvedInlineExpression {
           arguments
             .map(CallArgumentsResolver.resolve(_))
             .sequence
-            .map(RTermReference(resolved, _))
+            .map(args => RTermReference(resolved, args.map(_.named).getOrElse(Map.empty)))
 
         case (Some(resolved: RTerm), Some(attrId)) =>
           resolved
