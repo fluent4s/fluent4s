@@ -25,10 +25,13 @@ term-attr-callee-selector = {-term.attr() ->
 }
 
 # ERROR Messages cannot be parameterized.
+
 message-callee-selector = {message() ->
    *[key] Value
 }
+
 # ERROR Equivalent to a MessageReference callee.
+
 mixed-case-callee-selector = {Function() ->
    *[key] Value
 }

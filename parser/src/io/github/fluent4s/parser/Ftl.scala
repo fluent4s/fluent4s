@@ -77,7 +77,7 @@ object Ftl {
 
   /* Identifier */
   private[parser] val identifier: P[FIdentifier] =
-    (Rfc5234.alpha ~ (Rfc5234.alpha | digit | P.charIn(List('-', '_'))).rep0)
+    (Rfc5234.alpha ~ (Rfc5234.alpha | digit | P.charIn(List('-', '_'))).rep0).backtrack
       .map { case (head, tail) => new FIdentifier((head :: tail).mkString("")) };
 
   /* Block Expressions */
@@ -113,7 +113,7 @@ object Ftl {
           pre ::: (default :: after)
       });
   private[parser] val select_expression: P[Select] =
-    ((P.defer(inline_expression) <* blank <* P.string(
+    ((P.defer(inline_expression).backtrack.soft <* blank <* P.string(
       "->"
     ) <* blank_inline.backtrack.?) ~ variant_list).map { case (a, b) => new Select(a, b) };
 
@@ -246,22 +246,22 @@ object Ftl {
 
   /* Junk */
   private[parser] val junk_line: P[String] =
-    (P.until0(P.char('\n')).with1 <* P.char('\u000A'));
+    (P.until0(P.char('\n')).with1 <* P.char('\n'));
   private[parser] val junk_eof: Parser0[String] =
-    (P.until0(P.char('\n')) <* P.end);
+    (P.until0(P.end) <* P.end);
   private[parser] val junk: P[Junk] =
-    (junk_line.repUntil(
-      P.charIn(List('#', '-')) | Rfc5234.alpha | P.end
-    ) ~ junk_eof.?).map(_ match {
-      case (t1, Some(t2)) => new Junk(t1.toList.mkString("") + t2)
-      case (t1, _) => new Junk(t1.toList.mkString(""))
+    (junk_line.backtrack.repUntil(
+      P.charIn('A' to 'Z') | P.charIn('a' to 'z') | P.charIn('#', '-')
+    ) /*~ junk_eof.?*/).map(_ match {
+      case (t1/*, Some(t2)) => new Junk(t1.toList.mkString("") + t2)
+      case (t1, _*/) => new Junk(t1.toList.mkString(""))
     });
 
   /* Comments */
   private[parser] val comment_char: P[Char] =
     P.not(P.char('\n')).with1 *> any_char;
   private[parser] val comment_line: P[FEntry] =
-    (P.char('#').rep(1, 3).string ~ (P.char('\u0020') *> comment_char.rep0.map(
+    (P.char('#').rep(1, 3).string ~ (P.char(' ') *> comment_char.rep0.map(
       _.toList.mkString("")
     )).?).map({
       case (prefix, comment) => {
@@ -279,7 +279,7 @@ object Ftl {
     .char('=')
     .surroundedBy(
       blank_inline.?
-    )) ~ (pattern ~ attribute.backtrack.rep0 | attribute.backtrack.rep
+    )).backtrack ~ (pattern ~ attribute.backtrack.rep0 | attribute.backtrack.rep
     .map(_.toList)))
     .map({
       case (id: FIdentifier, (value: FPattern, attrs: List[FAttribute])) =>
@@ -294,25 +294,35 @@ object Ftl {
       new FTerm(id, value, attrs, None)
     });
   private[parser] val entry: P[FEntry] =
-    ((message.map(new Message(_))) | (term.map(
+    ((message.map(new Message(_))) orElse (term.map(
       new Term(_)
-    )) | comment_line) <* (line_end | (line_end.backtrack ~ P.end) | P.end);
+    )) orElse comment_line).backtrack <* (line_end | (line_end.backtrack ~ P.end) | P.end);
 
   /* Resource */
   private[parser] val resource: Parser0[FResource] =
-    ((entry | blank_block | junk)
-      .repUntil0(junk_eof orElse P.end)
+    ((entry.backtrack orElse blank_block.backtrack orElse (junk.backtrack))
+      .backtrack.rep0
       .map(
         _.filter(_.isInstanceOf[FEntry]).map(_.asInstanceOf[FEntry])
-      ) ~ ((entry.backtrack | junk_eof.map(
+      ) ~ junk_eof.map( //last entry???
       new Junk(_)
-    ))
+    )).map({
+      case (entries, last) => new FResource(entries :+ last)
+    });
+ /* private[parser] val resource: Parser0[FResource] =
+    ((entry.backtrack orElse (blank_block.backtrack orElse (junk.backtrack)))
+      .backtrack.repUntil0(junk_eof.backtrack orElse P.end.backtrack)
+      .map(
+        _.filter(_.isInstanceOf[FEntry]).map(_.asInstanceOf[FEntry])
+      ) ~ ((entry.backtrack orElse (junk_eof.backtrack.map( //last entry???
+      new Junk(_)
+    )))
       .map(Some(_)) orElse P.end.as(Option.empty)))
       .map({
         case (entries, Some(last: FEntry)) =>
           new FResource(entries :+ last)
         case (entries, None) => new FResource(entries)
-      });
+      });*/
 
   def parse(ftl: String): Either[P.Error, FResource] = resource.parseAll(ftl);
 

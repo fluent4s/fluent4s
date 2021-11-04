@@ -1,0 +1,133 @@
+{
+  "body" : [
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key03"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Value"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Continued"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Over multiple"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Lines"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key05"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key06 = { 1 ->\n\n\n         [one] One\n\n\n\n\n        *[two] Two\n\n\n\n    }"
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "body" : [
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "term"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "arg"
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Value"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key01 = { -term }\nkey02 = { -term () }\nkey03 = { -term(arg: 1) }\nkey04 = { -term(\"positional\", narg1: 1, narg2: 2) }"
+      }
+    }
+  ]
+}

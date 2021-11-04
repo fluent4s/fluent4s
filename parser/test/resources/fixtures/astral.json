@@ -1,0 +1,232 @@
+{
+  "body" : [
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "face-with-tears-of-joy"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "😂"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "tetragram-for-centre"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "𝌆"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "surrogates-in-text"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "\\uD83D\\uDE02"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "surrogates-in-string"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "😂"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "surrogates-in-adjacent-strings"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "?"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "?"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "emoji-in-text"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "A face 😂 with tears of joy."
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "emoji-in-string"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "A face 😂 with tears of joy."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Invalid identifier"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err-😂 = Value\n\n# ERROR Invalid expression\nerr-invalid-expression = { 😂 }\n\n# ERROR Invalid variant key\nerr-invalid-variant-key = { $sel ->\n    *[😂] Value\n}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "body" : [
+    {
+      "ResourceComment" : {
+        "body" : {
+          "content" : "The syntax in this file has been discontinued. It is no longer part of the"
+        }
+      }
+    },
+    {
+      "ResourceComment" : {
+        "body" : {
+          "content" : "Fluent specification and should not be implemented nor used. We're keeping"
+        }
+      }
+    },
+    {
+      "ResourceComment" : {
+        "body" : {
+          "content" : "these fixtures around to protect against accidental syntax reuse."
+        }
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Variant lists."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "message-variant-list =\n    {\n       *[key] Value\n    }\n\n-term-variant-list =\n    {\n       *[key] Value\n    }\n\n\n## Variant expressions.\n\nmessage-variant-expression-placeable = {msg[case]}\nmessage-variant-expression-selector = {msg[case] ->\n   *[key] Value\n}\n\nterm-variant-expression-placeable = {-term[case]}\nterm-variant-expression-selector = {-term[case] ->\n   *[key] Value\n}"
+      }
+    }
+  ]
+}

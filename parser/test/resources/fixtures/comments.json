@@ -1,0 +1,128 @@
+{
+  "body" : [
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Standalone Comment"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Message Comment"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "foo"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Foo"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Term Comment"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "with a blank last line."
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : ""
+        }
+      }
+    },
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "term"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Term"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Another standalone"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : ""
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "     with indent"
+        }
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Group Comment"
+        }
+      }
+    },
+    {
+      "ResourceComment" : {
+        "body" : {
+          "content" : "Resource Comment"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Errors"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "#error\n##error\n###error"
+      }
+    }
+  ]
+}

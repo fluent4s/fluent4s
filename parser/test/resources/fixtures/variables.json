@@ -4,7 +4,7 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "string-expression"
+            "name" : "key01"
           },
           "value" : {
             "elements" : [
@@ -17,8 +17,10 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "StringLiteral" : {
-                                  "value" : "abc"
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "var"
+                                  }
                                 }
                               }
                             }
@@ -41,7 +43,7 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "number-expression"
+            "name" : "key02"
           },
           "value" : {
             "elements" : [
@@ -54,8 +56,10 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "NumberLiteral" : {
-                                  "value" : "123"
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "var"
+                                  }
                                 }
                               }
                             }
@@ -78,7 +82,7 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "number-expression"
+            "name" : "key03"
           },
           "value" : {
             "elements" : [
@@ -91,8 +95,10 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "NumberLiteral" : {
-                                  "value" : "-3.14"
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "var"
+                                  }
                                 }
                               }
                             }
@@ -108,12 +114,65 @@
           "attributes" : [
           ],
           "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key04"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "var"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Errors"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Missing variable identifier"
         }
       }
     },
     {
       "Junk" : {
-        "content" : ""
+        "content" : "err01 = {$}\n# ERROR Double $$\nerr02 = {$$var}\n# ERROR Invalid first char of the identifier\nerr03 = {$-var}"
       }
     }
   ]

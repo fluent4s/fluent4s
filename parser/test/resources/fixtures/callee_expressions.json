@@ -1,0 +1,218 @@
+{
+  "body" : [
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Callees in placeables."
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "function-callee-placeable"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "FUNCTION"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "term-callee-placeable"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : null,
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Messages cannot be parameterized."
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "message-callee-placeable"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "message"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Equivalent to a MessageReference callee."
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "mixed-case-callee-placeable"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "Function"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Message attributes cannot be parameterized."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "message-attr-callee-placeable = {message.attr()}\n# ERROR Term attributes may not be used in Placeables.\nterm-attr-callee-placeable = {-term.attr()}\n# ERROR Variables cannot be parameterized.\nvariable-callee-placeable = {$variable()}\n\n\n## Callees in selectors.\n\nfunction-callee-selector = {FUNCTION() ->\n   *[key] Value\n}\nterm-attr-callee-selector = {-term.attr() ->\n   *[key] Value\n}\n\n# ERROR Messages cannot be parameterized.\n\nmessage-callee-selector = {message() ->\n   *[key] Value\n}\n\n# ERROR Equivalent to a MessageReference callee.\n\nmixed-case-callee-selector = {Function() ->\n   *[key] Value\n}\n# ERROR Message attributes cannot be parameterized.\nmessage-attr-callee-selector = {message.attr() ->\n   *[key] Value\n}\n# ERROR Term values may not be used as selectors.\nterm-callee-selector = {-term() ->\n   *[key] Value\n}\n# ERROR Variables cannot be parameterized.\nvariable-callee-selector = {$variable() ->\n   *[key] Value\n}"
+      }
+    }
+  ]
+}

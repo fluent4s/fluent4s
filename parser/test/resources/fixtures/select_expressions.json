@@ -1,0 +1,119 @@
+{
+  "body" : [
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "new-messages"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "BUILTIN"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "NumberLiteralKey" : {
+                                      "value" : "0"
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Zero"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : false
+                                },
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "other"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "Placeable" : {
+                                          "expression" : {
+                                            "Inline" : {
+                                              "body" : {
+                                                "PlaceableExpr" : {
+                                                  "expression" : {
+                                                    "Inline" : {
+                                                      "body" : {
+                                                        "StringLiteral" : {
+                                                          "value" : ""
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Other"
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "valid-selector-term-attribute =\n    { -term.case ->\n       *[key] value\n    }\n\n# ERROR Term values are not valid selectors\ninvalid-selector-term-value =\n    { -term ->\n       *[key] value\n    }\n\n# ERROR CallExpressions on Terms are similar to TermReferences\ninvalid-selector-term-variant =\n    { -term(case: \"nominative\") ->\n       *[key] value\n    }\n\n# ERROR Nested expressions are not valid selectors\ninvalid-selector-nested-expression =\n    { { 3 } ->\n        *[key] default\n    }\n\n# ERROR Select expressions are not valid selectors\ninvalid-selector-select-expression =\n    { { $sel ->\n        *[key] value\n        } ->\n        *[key] default\n    }\n\nempty-variant =\n    { $sel ->\n       *[key] {\"\"}\n    }\n\nreduced-whitespace =\n    {FOO()->\n       *[key] {\"\"}\n    }\n\nnested-select =\n    { $sel ->\n       *[one] { $sel ->\n          *[two] Value\n       }\n    }\n\n# ERROR Missing selector\nmissing-selector =\n    {\n       *[key] Value\n    }\n\n# ERROR Missing line end after variant list\nmissing-line-end =\n    { $sel ->\n        *[key] Value}"
+      }
+    }
+  ]
+}

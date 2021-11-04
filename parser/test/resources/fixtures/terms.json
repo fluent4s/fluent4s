@@ -1,0 +1,88 @@
+{
+  "body" : [
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "term01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "term02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : ""
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing value"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "-term03 =\n    .attr = Attribute\n\n# JUNK Missing value\n#        <  whitespace  >\n-term04 =                \n    .attr1 = Attribute 1\n\n# JUNK Missing value\n-term05 =\n\n# JUNK Missing value\n#        <  whitespace  >\n-term06 =                \n\n# JUNK Missing =\n-term07\n\n-term08=Value\n    .attr=Attribute\n\n-term09   =  Value\n    .attr  =   Attribute"
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "body" : [
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 01"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Value 02"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Continued"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "title"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Title"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Unclosed StringLiteral"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err03 = { \"str\n\n# ERROR Missing newline after ->.\nerr04 = { $sel -> }"
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "body" : [
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "OK (tab after = is part of the value)"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "\tValue 01"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Error (tab before =)"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key02\t= Value 02\n\n# Error (tab is not a valid indent)\nkey03 =\n\tThis line isn't properly indented.\n\n# Partial Error (tab is not a valid indent)\nkey04 =\n    This line is indented by 4 spaces,\n\twhereas this line by 1 tab."
+      }
+    }
+  ]
+}

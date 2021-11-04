@@ -150,11 +150,11 @@ trait ASTBase {
     case _ => false
   })
   implicit val eqFMessage: Eq[FMessage] = Eq.instance((m1, m2) =>
-    m1.id === m2.id && m1.attributes == m2.attributes && m1.value == m2.value
+    m1.id === m2.id && m1.attributes === m2.attributes && m1.value === m2.value
   )
   implicit val eqFTerm: Eq[FTerm] =
     Eq.instance((m1, m2) =>
-      m1.id === m2.id && m1.attributes == m2.attributes && m1.value == m2.value
+      m1.id === m2.id && m1.attributes === m2.attributes && m1.value === m2.value
     )
   implicit val eqFComment: Eq[FComment] = Eq.instance((c1, c2) => c1.content === c2.content)
   implicit val eqFPattern: Eq[FPattern] =

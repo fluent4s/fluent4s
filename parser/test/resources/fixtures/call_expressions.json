@@ -1,0 +1,158 @@
+{
+  "body" : [
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Function names"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "valid-func-name-01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "FUN1"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "valid-func-name-02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "FUN_FUN"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "valid-func-name-03"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "FUN-FUN"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK 0 is not a valid Identifier start"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "invalid-func-name-01 = {0FUN()}\n# JUNK Function names may not be lowercase\ninvalid-func-name-02 = {fun()}\n# JUNK Function names may not contain lowercase character\ninvalid-func-name-03 = {Fun()}\n# JUNK ? is not a valid Identifier character\ninvalid-func-name-04 = {FUN?()}\n\n## Arguments\n\npositional-args = {FUN(1, \"a\", msg)}\nnamed-args = {FUN(x: 1, y: \"Y\")}\ndense-named-args = {FUN(x:1, y:\"Y\")}\nmixed-args = {FUN(1, \"a\", msg, x: 1, y: \"Y\")}\n\n# ERROR Positional arg must not follow keyword args\nshuffled-args = {FUN(1, x: 1, \"a\", y: \"Y\", msg)}\n\n# ERROR Named arguments must be unique\nduplicate-named-args = {FUN(x: 1, x: \"X\")}\n\n\n## Whitespace around arguments\n\nsparse-inline-call = {FUN     (  \"a\"  , msg,   x: 1   )}\nempty-inline-call = {FUN(  )}\nmultiline-call = {FUN(\n        \"a\",\n        msg,\n        x: 1\n    )}\nsparse-multiline-call = {FUN\n    (\n\n        \"a\"    ,\n        msg\n        , x: 1\n    )}\nempty-multiline-call = {FUN(\n\n    )}\n\n\nunindented-arg-number = {FUN(\n1)}\n\nunindented-arg-string = {FUN(\n\"a\")}\n\nunindented-arg-msg-ref = {FUN(\nmsg)}\n\nunindented-arg-term-ref = {FUN(\n-msg)}\n\nunindented-arg-var-ref = {FUN(\n$var)}\n\nunindented-arg-call = {FUN(\nOTHER())}\n\nunindented-named-arg = {FUN(\nx:1)}\n\nunindented-closing-paren = {FUN(\n    x\n)}\n\n\n\n## Optional trailing comma\n\none-argument = {FUN(1,)}\nmany-arguments = {FUN(1, 2, 3,)}\ninline-sparse-args = {FUN(  1,  2,  3,  )}\nmulitline-args = {FUN(\n        1,\n        2,\n    )}\nmulitline-sparse-args = {FUN(\n\n        1\n        ,\n        2   \n        ,\n    )}\n\n\n## Syntax errors for trailing comma\n\none-argument = {FUN(1,,)}\nmissing-arg = {FUN(,)}\nmissing-sparse-arg = {FUN(   ,   )}\n\n\n## Whitespace in named arguments\n\nsparse-named-arg = {FUN(\n        x   :   1,\n        y   :   2,\n        z\n        :\n        3\n    )}\n\n\nunindented-colon = {FUN(\n        x\n:1)}\n\nunindented-value = {FUN(\n        x:\n1)}"
+      }
+    }
+  ]
+}

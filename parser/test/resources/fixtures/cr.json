@@ -1,9 +1,9 @@
 {
   "body" : [
     {
-      "Comment" : {
+      "ResourceComment" : {
         "body" : {
-          "content" : "            ↓ BEL, U+0007"
+          "content" : "This entire file uses CR as EOL."
         }
       }
     },
@@ -11,13 +11,13 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "control0"
+            "name" : "err01"
           },
           "value" : {
             "elements" : [
               {
                 "TextElement" : {
-                  "value" : "abc\u0007def"
+                  "value" : "Value 01"
                 }
               }
             ]
@@ -29,23 +29,16 @@
       }
     },
     {
-      "Comment" : {
-        "body" : {
-          "content" : "          ↓ DEL, U+007F"
-        }
-      }
-    },
-    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "delete"
+            "name" : "err02"
           },
           "value" : {
             "elements" : [
               {
                 "TextElement" : {
-                  "value" : "abc\u007fdef"
+                  "value" : "Value 02"
                 }
               }
             ]
@@ -57,28 +50,42 @@
       }
     },
     {
-      "Comment" : {
-        "body" : {
-          "content" : "            ↓ BPM, U+0082"
-        }
-      }
-    },
-    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "control1"
+            "name" : "err03"
           },
           "value" : {
             "elements" : [
               {
-                "TextElement" : {
-                  "value" : "abc\u0082def"
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Value 03"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Continued"
                 }
               }
             ]
           },
           "attributes" : [
+            {
+              "id" : {
+                "name" : "title"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Title"
+                    }
+                  }
+                ]
+              }
+            }
           ],
           "comments" : null
         }
@@ -86,7 +93,7 @@
     },
     {
       "Junk" : {
-        "content" : ""
+        "content" : "err04 = { \"str\n\nerr05 = { $sel -> }"
       }
     }
   ]

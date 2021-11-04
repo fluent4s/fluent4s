@@ -1,0 +1,330 @@
+{
+  "body" : [
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key01"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr1"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 1"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id" : {
+                "name" : "attr2"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 2"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key03"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key04"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr1"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 1"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id" : {
+                "name" : "attr2"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 2"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "     <  whitespace  >"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key05"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr1"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 1"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "no-whitespace"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr1"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 1"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "extra-whitespace"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr1"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute 1"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key06"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : ""
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing value"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key07 =\n\n# JUNK Missing =\nkey08\n\nKEY09 = Value 09\n\nkey-10 = Value 10\nkey_11 = Value 11\nkey-12- = Value 12\nkey_13_ = Value 13\n\n# JUNK Invalid id\n0err-14 = Value 14\n\n# JUNK Invalid id\nerr-15? = Value 15\n\n# JUNK Invalid id\nerr-ąę-16 = Value 16"
+      }
+    }
+  ]
+}

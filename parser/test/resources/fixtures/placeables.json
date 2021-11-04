@@ -4,7 +4,7 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "string-expression"
+            "name" : "nested-placeable"
           },
           "value" : {
             "elements" : [
@@ -17,8 +17,24 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "StringLiteral" : {
-                                  "value" : "abc"
+                                "PlaceableExpr" : {
+                                  "expression" : {
+                                    "Inline" : {
+                                      "body" : {
+                                        "PlaceableExpr" : {
+                                          "expression" : {
+                                            "Inline" : {
+                                              "body" : {
+                                                "NumberLiteral" : {
+                                                  "value" : "1"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
                                 }
                               }
                             }
@@ -41,7 +57,7 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "number-expression"
+            "name" : "padded-placeable"
           },
           "value" : {
             "elements" : [
@@ -55,7 +71,7 @@
                             "Inline" : {
                               "body" : {
                                 "NumberLiteral" : {
-                                  "value" : "123"
+                                  "value" : "1"
                                 }
                               }
                             }
@@ -78,7 +94,7 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "number-expression"
+            "name" : "sparse-placeable"
           },
           "value" : {
             "elements" : [
@@ -91,8 +107,16 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "NumberLiteral" : {
-                                  "value" : "-3.14"
+                                "PlaceableExpr" : {
+                                  "expression" : {
+                                    "Inline" : {
+                                      "body" : {
+                                        "NumberLiteral" : {
+                                          "value" : "1"
+                                        }
+                                      }
+                                    }
+                                  }
                                 }
                               }
                             }
@@ -108,12 +132,19 @@
           "attributes" : [
           ],
           "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Unmatched opening brace"
         }
       }
     },
     {
       "Junk" : {
-        "content" : ""
+        "content" : "unmatched-open1 = { 1\n\n# ERROR Unmatched opening brace\nunmatched-open2 = {{ 1 }\n\n# ERROR Unmatched closing brace\nunmatched-close1 = 1 }\n\n# ERROR Unmatched closing brace\nunmatched-close2 = { 1 }}"
       }
     }
   ]

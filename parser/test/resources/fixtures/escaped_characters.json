@@ -1,0 +1,233 @@
+{
+  "body" : [
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Literal text"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "text-backslash-one"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value with \\ a backslash"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "text-backslash-two"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value with \\\\ two backslashes"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "text-backslash-brace"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value with \\"
+                }
+              },
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "MessageReference" : {
+                                  "id" : {
+                                    "name" : "placeable"
+                                  },
+                                  "attribute" : null
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "text-backslash-u"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "\\u0041"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "text-backslash-backslash-u"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "\\\\u0041"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "String literals"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "quote-in-string"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "\""
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "backslash-in-string"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "\\"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Mismatched quote"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "mismatched-quote = {\"\\\\\"\"}\n# ERROR Unknown escape\nunknown-escape = {\"\\x\"}\n# ERROR Multiline literal\ninvalid-multiline-literal = {\"\n \"}\n\n## Unicode escapes\nstring-unicode-4digits = {\"\\u0041\"}\nescape-unicode-4digits = {\"\\\\u0041\"}\nstring-unicode-6digits = {\"\\U01F602\"}\nescape-unicode-6digits = {\"\\\\U01F602\"}\n\n# OK The trailing \"00\" is part of the literal value.\nstring-too-many-4digits = {\"\\u004100\"}\n# OK The trailing \"00\" is part of the literal value.\nstring-too-many-6digits = {\"\\U01F60200\"}\n\n# ERROR Too few hex digits after \\u.\nstring-too-few-4digits = {\"\\u41\"}\n# ERROR Too few hex digits after \\U.\nstring-too-few-6digits = {\"\\U1F602\"}\n\n## Literal braces\nbrace-open = An opening {\"{\"} brace.\nbrace-close = A closing {\"}\"} brace."
+      }
+    }
+  ]
+}

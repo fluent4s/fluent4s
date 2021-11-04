@@ -1,0 +1,172 @@
+{
+  "body" : [
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "License Comment"
+        }
+      }
+    },
+    {
+      "ResourceComment" : {
+        "body" : {
+          "content" : "Resource Comment"
+        }
+      }
+    },
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "brand-name"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Aurora"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Group Comment"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key01"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "ą=Invalid identifierć=Another one"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Message Comment"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Standalone Comment"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "    .attr = Dangling attribute"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "There are 5 spaces on the line between key03 and key04."
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key03"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 03"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key04"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 04"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
+      }
+    }
+  ]
+}

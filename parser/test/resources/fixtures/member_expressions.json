@@ -1,10 +1,24 @@
 {
   "body" : [
     {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Member expressions in placeables."
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "OK Message attributes may be interpolated in values."
+        }
+      }
+    },
+    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "string-expression"
+            "name" : "message-attribute-expression-placeable"
           },
           "value" : {
             "elements" : [
@@ -17,8 +31,13 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "StringLiteral" : {
-                                  "value" : "abc"
+                                "MessageReference" : {
+                                  "id" : {
+                                    "name" : "msg"
+                                  },
+                                  "attribute" : {
+                                    "name" : "attr"
+                                  }
                                 }
                               }
                             }
@@ -38,10 +57,17 @@
       }
     },
     {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Term attributes may not be used for interpolation."
+        }
+      }
+    },
+    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "number-expression"
+            "name" : "term-attribute-expression-placeable"
           },
           "value" : {
             "elements" : [
@@ -54,8 +80,14 @@
                           "expression" : {
                             "Inline" : {
                               "body" : {
-                                "NumberLiteral" : {
-                                  "value" : "123"
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : {
+                                    "name" : "attr"
+                                  },
+                                  "arguments" : null
                                 }
                               }
                             }
@@ -75,45 +107,22 @@
       }
     },
     {
-      "Message" : {
+      "GroupComment" : {
         "body" : {
-          "id" : {
-            "name" : "number-expression"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "NumberLiteral" : {
-                                  "value" : "-3.14"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
+          "content" : "Member expressions in selectors."
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "OK Term attributes may be used as selectors."
         }
       }
     },
     {
       "Junk" : {
-        "content" : ""
+        "content" : "term-attribute-expression-selector = {-term.attr ->\n   *[key] Value\n}\n# ERROR Message attributes may not be used as selectors.\nmessage-attribute-expression-selector = {msg.attr ->\n   *[key] Value\n}"
       }
     }
   ]

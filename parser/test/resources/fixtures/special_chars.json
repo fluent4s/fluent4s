@@ -1,9 +1,9 @@
 {
   "body" : [
     {
-      "Comment" : {
+      "GroupComment" : {
         "body" : {
-          "content" : "            ↓ BEL, U+0007"
+          "content" : "OK"
         }
       }
     },
@@ -11,13 +11,13 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "control0"
+            "name" : "bracket-inline"
           },
           "value" : {
             "elements" : [
               {
                 "TextElement" : {
-                  "value" : "abc\u0007def"
+                  "value" : "[Value]"
                 }
               }
             ]
@@ -29,23 +29,16 @@
       }
     },
     {
-      "Comment" : {
-        "body" : {
-          "content" : "          ↓ DEL, U+007F"
-        }
-      }
-    },
-    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "delete"
+            "name" : "dot-inline"
           },
           "value" : {
             "elements" : [
               {
                 "TextElement" : {
-                  "value" : "abc\u007fdef"
+                  "value" : ".Value"
                 }
               }
             ]
@@ -57,23 +50,16 @@
       }
     },
     {
-      "Comment" : {
-        "body" : {
-          "content" : "            ↓ BPM, U+0082"
-        }
-      }
-    },
-    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "control1"
+            "name" : "star-inline"
           },
           "value" : {
             "elements" : [
               {
                 "TextElement" : {
-                  "value" : "abc\u0082def"
+                  "value" : "*Value"
                 }
               }
             ]
@@ -81,12 +67,19 @@
           "attributes" : [
           ],
           "comments" : null
+        }
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "ERRORS"
         }
       }
     },
     {
       "Junk" : {
-        "content" : ""
+        "content" : "bracket-newline =\n    [Value]\ndot-newline =\n    .Value\nstar-newline =\n    *Value"
       }
     }
   ]
