@@ -188,71 +188,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-selector-term-value"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Select" : {
-                              "selector" : {
-                                "TermReference" : {
-                                  "id" : {
-                                    "name" : "term"
-                                  },
-                                  "attribute" : null,
-                                  "arguments" : null
-                                }
-                              },
-                              "variants" : [
-                                {
-                                  "key" : {
-                                    "IdentifierKey" : {
-                                      "value" : {
-                                        "name" : "key"
-                                      }
-                                    }
-                                  },
-                                  "value" : {
-                                    "elements" : [
-                                      {
-                                        "TextElement" : {
-                                          "value" : "value"
-                                        }
-                                      },
-                                      {
-                                        "BlockTextElement" : {
-                                          "indent" : 4,
-                                          "value" : null
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "default" : true
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-selector-term-value =    { -term ->       *[key] value    }"
       }
     },
     {
@@ -263,86 +200,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-selector-term-variant"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Select" : {
-                              "selector" : {
-                                "TermReference" : {
-                                  "id" : {
-                                    "name" : "term"
-                                  },
-                                  "attribute" : null,
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                      {
-                                        "name" : {
-                                          "name" : "case"
-                                        },
-                                        "value" : {
-                                          "StringLiteral" : {
-                                            "value" : "nominative"
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              },
-                              "variants" : [
-                                {
-                                  "key" : {
-                                    "IdentifierKey" : {
-                                      "value" : {
-                                        "name" : "key"
-                                      }
-                                    }
-                                  },
-                                  "value" : {
-                                    "elements" : [
-                                      {
-                                        "TextElement" : {
-                                          "value" : "value"
-                                        }
-                                      },
-                                      {
-                                        "BlockTextElement" : {
-                                          "indent" : 4,
-                                          "value" : null
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "default" : true
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-selector-term-variant =    { -term(case: \"nominative\") ->       *[key] value    }"
       }
     },
     {
@@ -353,75 +212,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-selector-nested-expression"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Select" : {
-                              "selector" : {
-                                "PlaceableExpr" : {
-                                  "expression" : {
-                                    "Inline" : {
-                                      "body" : {
-                                        "NumberLiteral" : {
-                                          "value" : "3"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              },
-                              "variants" : [
-                                {
-                                  "key" : {
-                                    "IdentifierKey" : {
-                                      "value" : {
-                                        "name" : "key"
-                                      }
-                                    }
-                                  },
-                                  "value" : {
-                                    "elements" : [
-                                      {
-                                        "TextElement" : {
-                                          "value" : "default"
-                                        }
-                                      },
-                                      {
-                                        "BlockTextElement" : {
-                                          "indent" : 4,
-                                          "value" : null
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "default" : true
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-selector-nested-expression =    { { 3 } ->        *[key] default    }"
       }
     },
     {
@@ -432,104 +224,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-selector-select-expression"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Select" : {
-                              "selector" : {
-                                "PlaceableExpr" : {
-                                  "expression" : {
-                                    "Select" : {
-                                      "selector" : {
-                                        "VariableReference" : {
-                                          "id" : {
-                                            "name" : "sel"
-                                          }
-                                        }
-                                      },
-                                      "variants" : [
-                                        {
-                                          "key" : {
-                                            "IdentifierKey" : {
-                                              "value" : {
-                                                "name" : "key"
-                                              }
-                                            }
-                                          },
-                                          "value" : {
-                                            "elements" : [
-                                              {
-                                                "TextElement" : {
-                                                  "value" : "value"
-                                                }
-                                              },
-                                              {
-                                                "BlockTextElement" : {
-                                                  "indent" : 8,
-                                                  "value" : null
-                                                }
-                                              }
-                                            ]
-                                          },
-                                          "default" : true
-                                        }
-                                      ]
-                                    }
-                                  }
-                                }
-                              },
-                              "variants" : [
-                                {
-                                  "key" : {
-                                    "IdentifierKey" : {
-                                      "value" : {
-                                        "name" : "key"
-                                      }
-                                    }
-                                  },
-                                  "value" : {
-                                    "elements" : [
-                                      {
-                                        "TextElement" : {
-                                          "value" : "default"
-                                        }
-                                      },
-                                      {
-                                        "BlockTextElement" : {
-                                          "indent" : 4,
-                                          "value" : null
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "default" : true
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-selector-select-expression =    { { $sel ->        *[key] value        } ->        *[key] default    }"
       }
     },
     {

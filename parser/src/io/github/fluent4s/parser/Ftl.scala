@@ -113,8 +113,17 @@ object Ftl {
           pre ::: (default :: after)
       });
   private[parser] val select_expression: P[Select] =
-    ((P.defer(inline_expression).backtrack.soft <* blank <* P.string(
-      "->"
+    ((P.defer(
+      inline_expression
+      .withContext("Message value, Message attribute, Term value and nested expression (select/inline) are not valid selector.")
+      .mapFilter({
+        case MessageReference(_,_) => None
+        case TermReference(_, None, _) => None
+        case PlaceableExpr(_) => None
+        case other => Some(other)
+      })
+    ).backtrack.soft <* blank <* P.string(
+        "->"
     ) <* blank_inline.backtrack.?) ~ variant_list).map { case (a, b) => new Select(a, b) };
 
   /* Inline Expressions */
