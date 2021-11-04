@@ -30,13 +30,15 @@ object ParserFixture extends TestSuite {
         println(ftl);
         val left = ftl.right.get;
       
-        val file = new File(s"/mnt/veracrypt1/Documents/Dev/fluent4s/parser/test/resources/fixtures/$name.json")
+        val file = new File(s"./parser/test/resources/fixtures/$name.json")
         val bw = new BufferedWriter(new FileWriter(file))
         bw.write(left.asJson.toString)
         bw.close()
         /*val right = decode[FResource](loadJson(name).get).right.get;
         assert(left===right);*/
       }
+
+      //'testing - check("testing")
 
       'any_char - check("any_char")
       'astral - check("astral")
@@ -74,6 +76,7 @@ object ParserFixture extends TestSuite {
       'variant_keys - check("variant_keys")
       'whitespace_in_value - check("whitespace_in_value")
       'zero_length - check("zero_length")
+
     }
   }
 

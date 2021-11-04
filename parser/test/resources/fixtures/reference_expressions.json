@@ -325,7 +325,87 @@
     },
     {
       "Junk" : {
-        "content" : "term-reference-selector = {-term ->\n   *[key] Value\n}\n# ERROR Function references are invalid outside of call expressions, and this\n# parses as a MessageReference which isn't a valid selector.\nfunction-expression-selector = {FUN ->\n   *[key] Value\n}"
+        "content" : "term-reference-selector = {-term ->   *[key] Value}"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Function references are invalid outside of call expressions, and this"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "Function references are invalid outside of call expressions, and this parses as a MessageReference which isn't a valid selector."
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "function-expression-selector"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "MessageReference" : {
+                                  "id" : {
+                                    "name" : "FUN"
+                                  },
+                                  "attribute" : null
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Value"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
       }
     }
   ]

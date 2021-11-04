@@ -250,12 +250,10 @@ object Ftl {
   private[parser] val junk_eof: Parser0[String] =
     (P.until0(P.end) <* P.end);
   private[parser] val junk: P[Junk] =
-    (junk_line.backtrack.repUntil(
-      P.charIn('A' to 'Z') | P.charIn('a' to 'z') | P.charIn('#', '-')
-    ) /*~ junk_eof.?*/).map(_ match {
-      case (t1/*, Some(t2)) => new Junk(t1.toList.mkString("") + t2)
-      case (t1, _*/) => new Junk(t1.toList.mkString(""))
-    });
+    (junk_line ~ junk_line.repUntil0(P.oneOf(List(Rfc5234.alpha, P.charIn('-', '#')))))
+      .map({
+        case (junk1, junk2) => new Junk(junk1 + junk2.toList.mkString(""))
+      })
 
   /* Comments */
   private[parser] val comment_char: P[Char] =
@@ -301,28 +299,15 @@ object Ftl {
   /* Resource */
   private[parser] val resource: Parser0[FResource] =
     ((entry.backtrack orElse blank_block.backtrack orElse (junk.backtrack))
-      .backtrack.rep0
+      .rep0
       .map(
         _.filter(_.isInstanceOf[FEntry]).map(_.asInstanceOf[FEntry])
-      ) ~ junk_eof.map( //last entry???
+      ) ~ junk_eof.map( 
       new Junk(_)
-    )).map({
-      case (entries, last) => new FResource(entries :+ last)
+    ).?).map({
+      case (entries, Some(last)) => new FResource(entries :+ last)
+      case (entries, None) => new FResource(entries)
     });
- /* private[parser] val resource: Parser0[FResource] =
-    ((entry.backtrack orElse (blank_block.backtrack orElse (junk.backtrack)))
-      .backtrack.repUntil0(junk_eof.backtrack orElse P.end.backtrack)
-      .map(
-        _.filter(_.isInstanceOf[FEntry]).map(_.asInstanceOf[FEntry])
-      ) ~ ((entry.backtrack orElse (junk_eof.backtrack.map( //last entry???
-      new Junk(_)
-    )))
-      .map(Some(_)) orElse P.end.as(Option.empty)))
-      .map({
-        case (entries, Some(last: FEntry)) =>
-          new FResource(entries :+ last)
-        case (entries, None) => new FResource(entries)
-      });*/
 
   def parse(ftl: String): Either[P.Error, FResource] = resource.parseAll(ftl);
 

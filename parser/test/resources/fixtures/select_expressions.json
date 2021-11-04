@@ -112,7 +112,661 @@
     },
     {
       "Junk" : {
-        "content" : "valid-selector-term-attribute =\n    { -term.case ->\n       *[key] value\n    }\n\n# ERROR Term values are not valid selectors\ninvalid-selector-term-value =\n    { -term ->\n       *[key] value\n    }\n\n# ERROR CallExpressions on Terms are similar to TermReferences\ninvalid-selector-term-variant =\n    { -term(case: \"nominative\") ->\n       *[key] value\n    }\n\n# ERROR Nested expressions are not valid selectors\ninvalid-selector-nested-expression =\n    { { 3 } ->\n        *[key] default\n    }\n\n# ERROR Select expressions are not valid selectors\ninvalid-selector-select-expression =\n    { { $sel ->\n        *[key] value\n        } ->\n        *[key] default\n    }\n\nempty-variant =\n    { $sel ->\n       *[key] {\"\"}\n    }\n\nreduced-whitespace =\n    {FOO()->\n       *[key] {\"\"}\n    }\n\nnested-select =\n    { $sel ->\n       *[one] { $sel ->\n          *[two] Value\n       }\n    }\n\n# ERROR Missing selector\nmissing-selector =\n    {\n       *[key] Value\n    }\n\n# ERROR Missing line end after variant list\nmissing-line-end =\n    { $sel ->\n        *[key] Value}"
+        "content" : "valid-selector-term-attribute =    { -term.case ->       *[key] value    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Term values are not valid selectors"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "invalid-selector-term-value =    { -term ->       *[key] value    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR CallExpressions on Terms are similar to TermReferences"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "invalid-selector-term-variant"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : null,
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                      {
+                                        "name" : {
+                                          "name" : "case"
+                                        },
+                                        "value" : {
+                                          "StringLiteral" : {
+                                            "value" : "nominative"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "value"
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Nested expressions are not valid selectors"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "invalid-selector-nested-expression"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "PlaceableExpr" : {
+                                  "expression" : {
+                                    "Inline" : {
+                                      "body" : {
+                                        "NumberLiteral" : {
+                                          "value" : "3"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "default"
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Select expressions are not valid selectors"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "invalid-selector-select-expression"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "PlaceableExpr" : {
+                                  "expression" : {
+                                    "Select" : {
+                                      "selector" : {
+                                        "VariableReference" : {
+                                          "id" : {
+                                            "name" : "sel"
+                                          }
+                                        }
+                                      },
+                                      "variants" : [
+                                        {
+                                          "key" : {
+                                            "IdentifierKey" : {
+                                              "value" : {
+                                                "name" : "key"
+                                              }
+                                            }
+                                          },
+                                          "value" : {
+                                            "elements" : [
+                                              {
+                                                "TextElement" : {
+                                                  "value" : "value"
+                                                }
+                                              },
+                                              {
+                                                "BlockTextElement" : {
+                                                  "indent" : 8,
+                                                  "value" : null
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          "default" : true
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "default"
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "empty-variant"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "sel"
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "Placeable" : {
+                                          "expression" : {
+                                            "Inline" : {
+                                              "body" : {
+                                                "PlaceableExpr" : {
+                                                  "expression" : {
+                                                    "Inline" : {
+                                                      "body" : {
+                                                        "StringLiteral" : {
+                                                          "value" : ""
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "reduced-whitespace"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "FunctionReference" : {
+                                  "id" : {
+                                    "name" : "FOO"
+                                  },
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "Placeable" : {
+                                          "expression" : {
+                                            "Inline" : {
+                                              "body" : {
+                                                "PlaceableExpr" : {
+                                                  "expression" : {
+                                                    "Inline" : {
+                                                      "body" : {
+                                                        "StringLiteral" : {
+                                                          "value" : ""
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "nested-select"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "sel"
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "one"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "Placeable" : {
+                                          "expression" : {
+                                            "Inline" : {
+                                              "body" : {
+                                                "PlaceableExpr" : {
+                                                  "expression" : {
+                                                    "Select" : {
+                                                      "selector" : {
+                                                        "VariableReference" : {
+                                                          "id" : {
+                                                            "name" : "sel"
+                                                          }
+                                                        }
+                                                      },
+                                                      "variants" : [
+                                                        {
+                                                          "key" : {
+                                                            "IdentifierKey" : {
+                                                              "value" : {
+                                                                "name" : "two"
+                                                              }
+                                                            }
+                                                          },
+                                                          "value" : {
+                                                            "elements" : [
+                                                              {
+                                                                "TextElement" : {
+                                                                  "value" : "Value"
+                                                                }
+                                                              },
+                                                              {
+                                                                "BlockTextElement" : {
+                                                                  "indent" : 7,
+                                                                  "value" : null
+                                                                }
+                                                              }
+                                                            ]
+                                                          },
+                                                          "default" : true
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Missing selector"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "missing-selector =    {       *[key] Value    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Missing line end after variant list"
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "missing-line-end"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "VariableReference" : {
+                                  "id" : {
+                                    "name" : "sel"
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Value"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
       }
     }
   ]

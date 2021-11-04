@@ -79,7 +79,17 @@
     },
     {
       "Junk" : {
-        "content" : "bracket-newline =\n    [Value]\ndot-newline =\n    .Value\nstar-newline =\n    *Value"
+        "content" : "bracket-newline =    [Value]"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "dot-newline =    .Value"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "star-newline =\n    *Value"
       }
     }
   ]

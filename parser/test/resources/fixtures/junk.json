@@ -9,7 +9,86 @@
     },
     {
       "Junk" : {
-        "content" : "err01 = {1x}\nerr02 = {2x}\n\n# A single Junk.\nerr03 = {1x\n2\n\n# A single Junk.\ną=Invalid identifier\nć=Another one\n\n# The COMMENT ends this junk.\nerr04 = {\n# COMMENT\n\n# The COMMENT ends this junk.\n# The closing brace is a separate Junk.\nerr04 = {\n# COMMENT\n}"
+        "content" : "err01 = {1x}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err02 = {2x}"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "A single Junk."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err03 = {1x2"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "A single Junk."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "ą=Invalid identifierć=Another one"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "The COMMENT ends this junk."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err04 = {"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "COMMENT"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "The COMMENT ends this junk."
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "The closing brace is a separate Junk."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err04 = {"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "COMMENT"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "}"
       }
     }
   ]

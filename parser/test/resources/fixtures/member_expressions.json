@@ -122,7 +122,82 @@
     },
     {
       "Junk" : {
-        "content" : "term-attribute-expression-selector = {-term.attr ->\n   *[key] Value\n}\n# ERROR Message attributes may not be used as selectors.\nmessage-attribute-expression-selector = {msg.attr ->\n   *[key] Value\n}"
+        "content" : "term-attribute-expression-selector = {-term.attr ->   *[key] Value}"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Message attributes may not be used as selectors."
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "message-attribute-expression-selector"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "MessageReference" : {
+                                  "id" : {
+                                    "name" : "msg"
+                                  },
+                                  "attribute" : {
+                                    "name" : "attr"
+                                  }
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Value"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
       }
     }
   ]

@@ -72,7 +72,19 @@
     },
     {
       "Junk" : {
-        "content" : "err03 = { \"str\n\n# ERROR Missing newline after ->.\nerr04 = { $sel -> }"
+        "content" : "err03 = { \"str"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Missing newline after ->."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err04 = { $sel -> }"
       }
     }
   ]

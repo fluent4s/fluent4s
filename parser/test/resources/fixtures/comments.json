@@ -121,7 +121,17 @@
     },
     {
       "Junk" : {
-        "content" : "#error\n##error\n###error"
+        "content" : "#error"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "##error"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "###error"
       }
     }
   ]

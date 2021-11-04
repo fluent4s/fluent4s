@@ -225,7 +225,31 @@
     },
     {
       "Junk" : {
-        "content" : "err-😂 = Value\n\n# ERROR Invalid expression\nerr-invalid-expression = { 😂 }\n\n# ERROR Invalid variant key\nerr-invalid-variant-key = { $sel ->\n    *[😂] Value\n}"
+        "content" : "err-😂 = Value"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Invalid expression"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err-invalid-expression = { 😂 }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Invalid variant key"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err-invalid-variant-key = { $sel ->\n    *[😂] Value\n}"
       }
     }
   ]

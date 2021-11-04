@@ -823,7 +823,37 @@
     },
     {
       "Junk" : {
-        "content" : "err01 = {1.}\nerr02 = {.02}\nerr03 = {1.02.03}\nerr04 = {1. 02}\nerr05 = {1 .02}\nerr06 = {- 1}\nerr07 = {1,02}"
+        "content" : "err01 = {1.}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err02 = {.02}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err03 = {1.02.03}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err04 = {1. 02}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err05 = {1 .02}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err06 = {- 1}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err07 = {1,02}"
       }
     }
   ]

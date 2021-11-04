@@ -172,7 +172,31 @@
     },
     {
       "Junk" : {
-        "content" : "err01 = {$}\n# ERROR Double $$\nerr02 = {$$var}\n# ERROR Invalid first char of the identifier\nerr03 = {$-var}"
+        "content" : "err01 = {$}"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Double $$"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err02 = {$$var}"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Invalid first char of the identifier"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err03 = {$-var}"
       }
     }
   ]

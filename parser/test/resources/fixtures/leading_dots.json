@@ -269,7 +269,423 @@
     },
     {
       "Junk" : {
-        "content" : "key08 =\n    .Value\n\n# JUNK (attr .Value must have a value)\nkey09 =\n    .Value\n    Continued\n\nkey10 =\n    .Value = which is an attribute\n    Continued\n\nkey11 =\n    {\".\"}Value = which looks like an attribute\n    Continued\n\nkey12 =\n    .accesskey =\n    A\n\nkey13 =\n    .attribute = .Value\n\nkey14 =\n    .attribute =\n         {\".\"}Value\n\nkey15 =\n    { 1 ->\n        [one] .Value\n       *[other]\n            {\".\"}Value\n    }\n\n# JUNK (variant must have a value)\nkey16 =\n    { 1 ->\n       *[one]\n           .Value\n    }\n\n# JUNK (unclosed placeable)\nkey17 =\n    { 1 ->\n       *[one] Value\n           .Continued\n    }\n\n# JUNK (attr .Value must have a value)\nkey18 =\n.Value\n\nkey19 =\n.attribute = Value\n    Continued\n\nkey20 =\n{\".\"}Value"
+        "content" : "key08 =    .Value"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK (attr .Value must have a value)"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key09 =    .Value    Continued"
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key10"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "Value"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "which is an attribute"
+                    }
+                  },
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 4,
+                      "value" : "Continued"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key11"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "TextElement" : {
+                  "value" : "Value = which looks like an attribute"
+                }
+              },
+              {
+                "BlockTextElement" : {
+                  "indent" : 4,
+                  "value" : "Continued"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key12"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "accesskey"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 4,
+                      "value" : "A"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key13"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attribute"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : ".Value"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key14"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attribute"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "Placeable" : {
+                      "expression" : {
+                        "Inline" : {
+                          "body" : {
+                            "PlaceableExpr" : {
+                              "expression" : {
+                                "Inline" : {
+                                  "body" : {
+                                    "StringLiteral" : {
+                                      "value" : "."
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "TextElement" : {
+                      "value" : "Value"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key15"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "NumberLiteral" : {
+                                  "value" : "1"
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "one"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : ".Value"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : false
+                                },
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "other"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "Placeable" : {
+                                          "expression" : {
+                                            "Inline" : {
+                                              "body" : {
+                                                "PlaceableExpr" : {
+                                                  "expression" : {
+                                                    "Inline" : {
+                                                      "body" : {
+                                                        "StringLiteral" : {
+                                                          "value" : "."
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Value"
+                                        }
+                                      },
+                                      {
+                                        "BlockTextElement" : {
+                                          "indent" : 4,
+                                          "value" : null
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK (variant must have a value)"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key16 =    { 1 ->       *[one]           .Value    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK (unclosed placeable)"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key17 =    { 1 ->       *[one] Value           .Continued    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK (attr .Value must have a value)"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key18 =.Value"
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key19"
+          },
+          "value" : null,
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attribute"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Value"
+                    }
+                  },
+                  {
+                    "BlockTextElement" : {
+                      "indent" : 4,
+                      "value" : "Continued"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key20"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "StringLiteral" : {
+                                  "value" : "."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
       }
     }
   ]

@@ -1,23 +1,16 @@
 {
   "body" : [
     {
-      "Comment" : {
-        "body" : {
-          "content" : "OK (tab after = is part of the value)"
-        }
-      }
-    },
-    {
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "key01"
+            "name" : "good_message"
           },
           "value" : {
             "elements" : [
               {
                 "TextElement" : {
-                  "value" : "\tValue 01"
+                  "value" : "with good value"
                 }
               }
             ]
@@ -31,31 +24,26 @@
     {
       "Comment" : {
         "body" : {
-          "content" : "Error (tab before =)"
+          "content" : "NOT A GOOD MESSAGE"
         }
       }
     },
     {
       "Junk" : {
-        "content" : "key02\t= Value 02"
+        "content" : "good6message() = supeer"
       }
     },
     {
       "Comment" : {
         "body" : {
-          "content" : "Error (tab is not a valid indent)"
+          "content" : "Should recover from error "
         }
       }
     },
     {
-      "Junk" : {
-        "content" : "key03 =\tThis line isn't properly indented."
-      }
-    },
-    {
       "Comment" : {
         "body" : {
-          "content" : "Partial Error (tab is not a valid indent)"
+          "content" : "Hello"
         }
       }
     },
@@ -63,14 +51,13 @@
       "Message" : {
         "body" : {
           "id" : {
-            "name" : "key04"
+            "name" : "good_message2"
           },
           "value" : {
             "elements" : [
               {
-                "BlockTextElement" : {
-                  "indent" : 4,
-                  "value" : "This line is indented by 4 spaces,"
+                "TextElement" : {
+                  "value" : "with good value2"
                 }
               }
             ]
@@ -83,7 +70,7 @@
     },
     {
       "Junk" : {
-        "content" : "\twhereas this line by 1 tab."
+        "content" : ""
       }
     }
   ]

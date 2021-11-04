@@ -62,7 +62,185 @@
     },
     {
       "Junk" : {
-        "content" : "key01 = { -term }\nkey02 = { -term () }\nkey03 = { -term(arg: 1) }\nkey04 = { -term(\"positional\", narg1: 1, narg2: 2) }"
+        "content" : "key01 = { -term }"
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key02"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : null,
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key03"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : null,
+                                  "arguments" : {
+                                    "positional" : [
+                                    ],
+                                    "named" : [
+                                      {
+                                        "name" : {
+                                          "name" : "arg"
+                                        },
+                                        "value" : {
+                                          "NumberLiteral" : {
+                                            "value" : "1"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key04"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Inline" : {
+                              "body" : {
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : null,
+                                  "arguments" : {
+                                    "positional" : [
+                                      {
+                                        "StringLiteral" : {
+                                          "value" : "positional"
+                                        }
+                                      }
+                                    ],
+                                    "named" : [
+                                      {
+                                        "name" : {
+                                          "name" : "narg2"
+                                        },
+                                        "value" : {
+                                          "NumberLiteral" : {
+                                            "value" : "2"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "name" : {
+                                          "name" : "narg1"
+                                        },
+                                        "value" : {
+                                          "NumberLiteral" : {
+                                            "value" : "1"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
       }
     }
   ]

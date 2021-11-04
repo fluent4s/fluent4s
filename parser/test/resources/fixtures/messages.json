@@ -323,7 +323,160 @@
     },
     {
       "Junk" : {
-        "content" : "key07 =\n\n# JUNK Missing =\nkey08\n\nKEY09 = Value 09\n\nkey-10 = Value 10\nkey_11 = Value 11\nkey-12- = Value 12\nkey_13_ = Value 13\n\n# JUNK Invalid id\n0err-14 = Value 14\n\n# JUNK Invalid id\nerr-15? = Value 15\n\n# JUNK Invalid id\nerr-ąę-16 = Value 16"
+        "content" : "key07 ="
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing ="
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "key08"
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "KEY09"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 09"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key-10"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 10"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key_11"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 11"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key-12-"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 12"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "key_13_"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value 13"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Invalid id"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "0err-14 = Value 14"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Invalid id"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err-15? = Value 15"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Invalid id"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "err-ąę-16 = Value 16"
       }
     }
   ]

@@ -269,7 +269,31 @@
     },
     {
       "Junk" : {
-        "content" : "invalid-identifier =\n    { $sel ->\n       *[two words] value\n    }\n\n# ERROR\ninvalid-int =\n    { $sel ->\n       *[1 apple] value\n    }\n\n# ERROR\ninvalid-int =\n    { $sel ->\n       *[3.14 apples] value\n    }"
+        "content" : "invalid-identifier =    { $sel ->       *[two words] value    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "invalid-int =    { $sel ->       *[1 apple] value    }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "invalid-int =\n    { $sel ->\n       *[3.14 apples] value\n    }"
       }
     }
   ]

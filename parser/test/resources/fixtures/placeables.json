@@ -144,7 +144,43 @@
     },
     {
       "Junk" : {
-        "content" : "unmatched-open1 = { 1\n\n# ERROR Unmatched opening brace\nunmatched-open2 = {{ 1 }\n\n# ERROR Unmatched closing brace\nunmatched-close1 = 1 }\n\n# ERROR Unmatched closing brace\nunmatched-close2 = { 1 }}"
+        "content" : "unmatched-open1 = { 1"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Unmatched opening brace"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "unmatched-open2 = {{ 1 }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Unmatched closing brace"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "unmatched-close1 = 1 }"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "ERROR Unmatched closing brace"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "unmatched-close2 = { 1 }}"
       }
     }
   ]

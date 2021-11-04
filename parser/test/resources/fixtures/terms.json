@@ -81,7 +81,144 @@
     },
     {
       "Junk" : {
-        "content" : "-term03 =\n    .attr = Attribute\n\n# JUNK Missing value\n#        <  whitespace  >\n-term04 =                \n    .attr1 = Attribute 1\n\n# JUNK Missing value\n-term05 =\n\n# JUNK Missing value\n#        <  whitespace  >\n-term06 =                \n\n# JUNK Missing =\n-term07\n\n-term08=Value\n    .attr=Attribute\n\n-term09   =  Value\n    .attr  =   Attribute"
+        "content" : "-term03 =    .attr = Attribute"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing value"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "       <  whitespace  >"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "-term04 =                    .attr1 = Attribute 1"
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing value"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "-term05 ="
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing value"
+        }
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "       <  whitespace  >"
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "-term06 =                "
+      }
+    },
+    {
+      "Comment" : {
+        "body" : {
+          "content" : "JUNK Missing ="
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "-term07"
+      }
+    },
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "term08"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Term" : {
+        "body" : {
+          "id" : {
+            "name" : "term09"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "TextElement" : {
+                  "value" : "Value"
+                }
+              }
+            ]
+          },
+          "attributes" : [
+            {
+              "id" : {
+                "name" : "attr"
+              },
+              "value" : {
+                "elements" : [
+                  {
+                    "TextElement" : {
+                      "value" : "Attribute"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "comments" : null
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : ""
       }
     }
   ]

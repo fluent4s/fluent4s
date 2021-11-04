@@ -30,7 +30,39 @@
     },
     {
       "Junk" : {
-        "content" : "message-variant-list =\n    {\n       *[key] Value\n    }\n\n-term-variant-list =\n    {\n       *[key] Value\n    }\n\n\n## Variant expressions.\n\nmessage-variant-expression-placeable = {msg[case]}\nmessage-variant-expression-selector = {msg[case] ->\n   *[key] Value\n}\n\nterm-variant-expression-placeable = {-term[case]}\nterm-variant-expression-selector = {-term[case] ->\n   *[key] Value\n}"
+        "content" : "message-variant-list =    {       *[key] Value    }"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "-term-variant-list =    {       *[key] Value    }"
+      }
+    },
+    {
+      "GroupComment" : {
+        "body" : {
+          "content" : "Variant expressions."
+        }
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "message-variant-expression-placeable = {msg[case]}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "message-variant-expression-selector = {msg[case] ->   *[key] Value}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "term-variant-expression-placeable = {-term[case]}"
+      }
+    },
+    {
+      "Junk" : {
+        "content" : "term-variant-expression-selector = {-term[case] ->\n   *[key] Value\n}"
       }
     }
   ]
