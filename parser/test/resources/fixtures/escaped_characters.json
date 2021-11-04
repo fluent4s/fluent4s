@@ -249,40 +249,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-multiline-literal"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "StringLiteral" : {
-                                  "value" : "\n "
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-multiline-literal = {\" \"}"
       }
     },
     {

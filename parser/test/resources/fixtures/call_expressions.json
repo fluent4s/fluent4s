@@ -8,138 +8,18 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "valid-func-name-01"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "FUN1"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "valid-func-name-01 = {FUN1()}"
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "valid-func-name-02"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "FUN_FUN"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "valid-func-name-02 = {FUN_FUN()}"
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "valid-func-name-03"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "FUN-FUN"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "valid-func-name-03 = {FUN-FUN()}"
       }
     },
     {
@@ -162,48 +42,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-func-name-02"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "fun"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-func-name-02 = {fun()}"
       }
     },
     {
@@ -214,48 +54,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "invalid-func-name-03"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "Fun"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "invalid-func-name-03 = {Fun()}"
       }
     },
     {
@@ -561,86 +361,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "shuffled-args"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "FUN"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                      {
-                                        "MessageReference" : {
-                                          "id" : {
-                                            "name" : "msg"
-                                          },
-                                          "attribute" : null
-                                        }
-                                      },
-                                      {
-                                        "StringLiteral" : {
-                                          "value" : "a"
-                                        }
-                                      },
-                                      {
-                                        "NumberLiteral" : {
-                                          "value" : "1"
-                                        }
-                                      }
-                                    ],
-                                    "named" : [
-                                      {
-                                        "name" : {
-                                          "name" : "y"
-                                        },
-                                        "value" : {
-                                          "StringLiteral" : {
-                                            "value" : "Y"
-                                          }
-                                        }
-                                      },
-                                      {
-                                        "name" : {
-                                          "name" : "x"
-                                        },
-                                        "value" : {
-                                          "NumberLiteral" : {
-                                            "value" : "1"
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "shuffled-args = {FUN(1, x: 1, \"a\", y: \"Y\", msg)}"
       }
     },
     {
@@ -651,68 +373,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "duplicate-named-args"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "FUN"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                      {
-                                        "name" : {
-                                          "name" : "x"
-                                        },
-                                        "value" : {
-                                          "StringLiteral" : {
-                                            "value" : "X"
-                                          }
-                                        }
-                                      },
-                                      {
-                                        "name" : {
-                                          "name" : "x"
-                                        },
-                                        "value" : {
-                                          "NumberLiteral" : {
-                                            "value" : "1"
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "duplicate-named-args = {FUN(x: 1, x: \"X\")}"
       }
     },
     {

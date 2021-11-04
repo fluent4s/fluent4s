@@ -106,48 +106,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "message-callee-placeable"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "message"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "message-callee-placeable = {message()}"
       }
     },
     {
@@ -158,48 +118,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "mixed-case-callee-placeable"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "Function"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "mixed-case-callee-placeable = {Function()}"
       }
     },
     {
@@ -222,51 +142,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "term-attr-callee-placeable"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Inline" : {
-                              "body" : {
-                                "TermReference" : {
-                                  "id" : {
-                                    "name" : "term"
-                                  },
-                                  "attribute" : {
-                                    "name" : "attr"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "term-attr-callee-placeable = {-term.attr()}"
       }
     },
     {
@@ -431,69 +308,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "message-callee-selector"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Select" : {
-                              "selector" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "message"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              },
-                              "variants" : [
-                                {
-                                  "key" : {
-                                    "IdentifierKey" : {
-                                      "value" : {
-                                        "name" : "key"
-                                      }
-                                    }
-                                  },
-                                  "value" : {
-                                    "elements" : [
-                                      {
-                                        "TextElement" : {
-                                          "value" : "Value"
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "default" : true
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "message-callee-selector = {message() ->   *[key] Value}"
       }
     },
     {
@@ -504,69 +320,8 @@
       }
     },
     {
-      "Message" : {
-        "body" : {
-          "id" : {
-            "name" : "mixed-case-callee-selector"
-          },
-          "value" : {
-            "elements" : [
-              {
-                "Placeable" : {
-                  "expression" : {
-                    "Inline" : {
-                      "body" : {
-                        "PlaceableExpr" : {
-                          "expression" : {
-                            "Select" : {
-                              "selector" : {
-                                "FunctionReference" : {
-                                  "id" : {
-                                    "name" : "Function"
-                                  },
-                                  "arguments" : {
-                                    "positional" : [
-                                    ],
-                                    "named" : [
-                                    ]
-                                  }
-                                }
-                              },
-                              "variants" : [
-                                {
-                                  "key" : {
-                                    "IdentifierKey" : {
-                                      "value" : {
-                                        "name" : "key"
-                                      }
-                                    }
-                                  },
-                                  "value" : {
-                                    "elements" : [
-                                      {
-                                        "TextElement" : {
-                                          "value" : "Value"
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "default" : true
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "attributes" : [
-          ],
-          "comments" : null
-        }
+      "Junk" : {
+        "content" : "mixed-case-callee-selector = {Function() ->   *[key] Value}"
       }
     },
     {

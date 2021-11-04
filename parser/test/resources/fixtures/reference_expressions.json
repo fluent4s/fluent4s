@@ -324,8 +324,65 @@
       }
     },
     {
-      "Junk" : {
-        "content" : "term-reference-selector = {-term ->   *[key] Value}"
+      "Message" : {
+        "body" : {
+          "id" : {
+            "name" : "term-reference-selector"
+          },
+          "value" : {
+            "elements" : [
+              {
+                "Placeable" : {
+                  "expression" : {
+                    "Inline" : {
+                      "body" : {
+                        "PlaceableExpr" : {
+                          "expression" : {
+                            "Select" : {
+                              "selector" : {
+                                "TermReference" : {
+                                  "id" : {
+                                    "name" : "term"
+                                  },
+                                  "attribute" : null,
+                                  "arguments" : null
+                                }
+                              },
+                              "variants" : [
+                                {
+                                  "key" : {
+                                    "IdentifierKey" : {
+                                      "value" : {
+                                        "name" : "key"
+                                      }
+                                    }
+                                  },
+                                  "value" : {
+                                    "elements" : [
+                                      {
+                                        "TextElement" : {
+                                          "value" : "Value"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "default" : true
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attributes" : [
+          ],
+          "comments" : null
+        }
       }
     },
     {
@@ -338,7 +395,7 @@
     {
       "Comment" : {
         "body" : {
-          "content" : "Function references are invalid outside of call expressions, and this parses as a MessageReference which isn't a valid selector."
+          "content" : "parses as a MessageReference which isn't a valid selector."
         }
       }
     },

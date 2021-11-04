@@ -50,9 +50,9 @@ object Ftl {
       .map(Integer.parseInt(_, 16))
       .map(Character.toChars(_).mkString(""));
   private[parser] val quoted_char: P[String] = ((P
-    .not(special_quoted_char | P.end)
+    .not(special_quoted_char | line_end | P.end)
     .with1 *> any_char).backtrack | special_escape.backtrack)
-    .map(_.toString) | unicode_escape
+    .map(_.toString) | unicode_escape.backtrack
 
   /* Text elements */
   private[parser] val special_text_char: P[Unit] = P.char('{') | P.char('}');
@@ -132,24 +132,47 @@ object Ftl {
   private[parser] val argument_list: Parser0[List[FArgument]] =
     argument.backtrack.repSep0(P.char(',').surroundedBy(blank));
   private[parser] val call_argument: P[FCallArguments] =
-    (P.char('(').surroundedBy(blank) *> argument_list
+    (P.char('(').surroundedBy(blank).backtrack.soft *> argument_list
       <* (blank ~ P.char(')')))
-      .map(_.fold((List.empty[NamedArgument], List.empty[FInlineExpression])) {
+      .map(_.fold((List.empty[NamedArgument], List.empty[FInlineExpression], true)) {
         case (
-              (named: List[NamedArgument], pos: List[FInlineExpression]),
+              (named: List[NamedArgument], pos: List[FInlineExpression], valid: Boolean),
               arg: FArgument
             ) =>
           arg match {
-            case NamedArgument(name, value) =>
-              (new NamedArgument(name, value) :: named, pos)
-            case PositionalArgument(value) => (named, value :: pos)
+            case NamedArgument(name, value) => (new NamedArgument(name, value) :: named, pos, valid)
+            case PositionalArgument(value) => {
+              named.isEmpty match {
+                case true => (named, value :: pos, valid)
+                case false => (named, value :: pos, false)
+              }
+            }
           }
+      })
+      .withContext("Positional arg must not follow keyword args.")
+      .mapFilter({
+        case (named: List[NamedArgument], pos: List[FInlineExpression], true) => Some((named, pos)) 
+        case (_: List[NamedArgument], _: List[FInlineExpression], false) => None
+      })
+      .withContext("Named arguments must be unique.")
+      .mapFilter({
+        case (named: List[NamedArgument], pos: List[FInlineExpression]) => {
+          val unique = named.map(_.name).toSet.knownSize;
+          (named.length == unique) match {
+            case true => Some((named, pos))
+            case false => None
+          }
+        }
       })
       .map({ case (named: List[NamedArgument], pos: List[FInlineExpression]) =>
         new FCallArguments(pos, named)
       });
+
   private[parser] val function_reference: P[FunctionReference] =
-    (identifier ~ call_argument)
+    (identifier.withContext("Function identifier should be in UPPERCASE.").mapFilter({ case id => id.name.forall(_.isUpper) match {
+      case true => Some(id)
+      case false => None
+    }}).backtrack ~ call_argument)
       .map({ case (id: FIdentifier, arguments: FCallArguments) =>
         new FunctionReference(id, arguments)
       });
@@ -189,7 +212,12 @@ object Ftl {
     (select_expression
       .between(P.char('{') ~ blank, blank.? ~ P.char('}'))
       .backtrack orElse P
-      .defer(inline_expression)
+      .defer(inline_expression
+        .withContext("Term attributes may not be used in Placeables.")
+        .mapFilter({
+          case TermReference(_, Some(_), _) => None
+          case other => Some((other))
+      }))
       .between(P.char('{') ~ blank, blank.? ~ P.char('}'))
       .backtrack
       .map(new Inline(_)))
